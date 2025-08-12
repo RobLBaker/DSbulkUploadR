@@ -1,0 +1,101 @@
+######## audio recording ######
+
+#curl -X 'GET' \
+#'https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference#/2181922/Bibliography' \
+#-H 'accept: application/json'
+
+{
+  "title": "Original Sound Files - Acadia Anuran Calling Data",
+  "issued": null,
+  "edition": null,
+  "volume": null,
+  "issue": null,
+  "pageRange": null,
+  "dateRange": null,
+  "location": null,
+  "miscellaneousCode": null,
+  "meetingPlace": null,
+  "contentBegin": {
+    "bibliographic": "March 1, 2001",
+    "precision": "YYYYMMDD",
+    "year": 2001,
+    "yyyymmdd": "2001-03-01"
+  },
+  "contentEnd": {
+    "bibliographic": "September 1, 2001",
+    "precision": "YYYYMMDD",
+    "year": 2001,
+    "yyyymmdd": "2001-09-01"
+  },
+  "publisher": null,
+  "sizes": [
+    {
+      "index": 1,
+      "label": "Length of Recording",
+      "value": "9 Hours"
+    }
+  ],
+  "abstract": "Audio inventory of reptiles and amphibians in Acadia National Park",
+  "contacts": [
+    {
+      "index": 1,
+      "contactType": "Author(s)",
+      "contacts": [
+        {
+          "title": null,
+          "primaryName": "Brotherton",
+          "firstName": "David",
+          "middleName": "K.",
+          "suffix": null,
+          "affiliation": null,
+          "orcid": null
+        },
+        {
+          "title": null,
+          "primaryName": "Behler",
+          "firstName": "John",
+          "middleName": "L.",
+          "suffix": null,
+          "affiliation": null,
+          "orcid": null
+        },
+        {
+          "title": null,
+          "primaryName": "Cook",
+          "firstName": "Robert",
+          "middleName": "P.",
+          "suffix": null,
+          "affiliation": null,
+          "orcid": null
+        }
+      ]
+    }
+  ],
+  "notes": "12 tapes",
+  "purpose": null,
+  "tableOfContents": null,
+  "metadataStandard": null,
+  "licenseType": null
+}
+
+#curl -X 'GET' \
+#'https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference#/2181922/AccessConstraints' \
+#-H 'accept: application/json'
+
+#https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference#/2181922/AccessConstraints
+{
+  "internal": false,
+  "filesInternal": false,
+  "filesRestricted": false,
+  "sensitivity": null,
+  "sensitivityDetail": null,
+  "distribution": null,
+  "quality": null,
+  "additionalUserDefined": null,
+  "noDataMgrEdit": false,
+  "linksRestricted": false
+}
+
+
+bulk_reference_creation <- function(path = getwd(),
+                                    f
