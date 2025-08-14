@@ -96,6 +96,61 @@
   "linksRestricted": false
 }
 
+### unit codes:
 
-bulk_reference_creation <- function(path = getwd(),
+#curl -X 'GET' \
+  'https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference/2181922/Units' \
+  -H 'accept: application/json'
+
+#https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference/2181922/Units
+
+Response body
+Download
+[
+  {
+    "unitCode": "ACAD",
+    "unitName": "ACAD",
+    "approval": "Approved"
+  },
+  {
+    "unitCode": "NETN",
+    "unitName": "NETN",
+    "approval": "Approved"
+  }
+]
+POST:
+description:
+A Units to associate with a Reference, if not already associated.
+If new, the link approval will default to 'Pending' until approved or denied by the Point of Contact for that Unit.
+
+unitCode	string
+Identifier for the Unit to be associated with a given Reference.
+
+andLinkedUnits	boolean
+True to also associate any 'sub' Units that are linked to the submitted Unit Code.
+For example, if submitting the Unit Code for a Region, setting this to true will also associate all Units in that Region
+to the specified Reference.
+
+andBoundingBox	boolean
+True to also associate the geographical bounding coordinates of the Unit (and any linked Units) to the given Reference.
+
                                     f
+#### keywords
+curl -X 'GET' \
+  'https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference/2181922/Keywords' \
+  -H 'accept: application/json'
+Request URL
+https://irmadevservices.nps.gov/datastore-secure/v7/rest/Reference/2181922/Keywords
+[
+  "ACAD",
+  "acadia",
+  "Amphibians",
+  "audio files",
+  "Herpetofauna",
+  "NETN",
+  "Northeast Temperate Network",
+  "recording",
+  "Reptiles",
+  "Salamanders",
+  "Snakes"
+]
