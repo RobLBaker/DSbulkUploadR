@@ -36,28 +36,14 @@ check_iso_date_format <- function(mydate, date.format = "yyyymmdd") {
            error = function(err) {FALSE})
 }
 
-check_input_file <- function(upload_data) {
-
-  #loop through the uploaded dataframe:
-
-  #check that dates are is ISO format:
-  begin_iso <- !check_iso_date_format(upload_data$content_begin_date)
-  if (sum(begin_iso > 0)) {
-    cli::cli_abort("Some dates in the begin_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
-  }
-
-  end_iso <- !check_iso_date_format(upload_data$content_end_date)
-  if ( sum(end_iso > 0)) {
-    cli::cli_abort("Some dates in the end_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
-  }
-
-  #check that all producing and content units are valid units:
+check_units <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
 
   #get list of all units:
   f <- file.path(tempdir(), "irmadownload.xml")
   if (!file.exists(f)) {
-  # access all park codes from NPS xml file
-  curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+    # access all park codes from NPS xml file
+    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
   }
   result <- XML::xmlParse(file = f)
   dat <- XML::xmlToDataFrame(result)
@@ -74,7 +60,7 @@ check_input_file <- function(upload_data) {
 
   if (length(bad_prod_units > 0)) {
     cli::cli_abort("The following producing units are invalid. Please provide valid producing units: {bad_prod_units}.")
-    return()
+    return(FALSE)
   }
 
   #check for bad content units:
@@ -84,12 +70,30 @@ check_input_file <- function(upload_data) {
       append(content_units,
              unlist(stringr::str_split(upload_data$content_units[i], ", ")))
 
-    if (length(bad_content_units > 0)) {
-      cli::cli_abort("The following content units are invalid. Please provide valid content units: {bad_content_units}.")
-      return()
-    }
+    content_units <- unique(content_units)
+    bad_content_units <- content_units[!(content_units %in% dat$UnitCode)]
   }
 
+  if (length(bad_content_units > 0)) {
+    cli::cli_abort("The following content units are invalid. Please provide valid content units: {bad_content_units}.")
+    return(FALSE)
+  }
+  cli::cli_inform("All producing and content units are valid.")
+  return(TRUE)
+}
+
+check_ref_type <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  refs <- upload_data$reference_type
+
+  ### hit api to get list of valid reference types.
+
+}
+
+
+check_users <- function(filename, path = getwd()){
+
+  upload_data <- read.delim(file=paste0(path, "/", filename))
   #check for bad usernames:
   usr_name <- NULL
   for (i in 1:nrow(upload_data)) {
@@ -124,24 +128,58 @@ check_input_file <- function(upload_data) {
     if (length(orcid == 0)) {
       invalid_orcid <- append(invalid_orcid, usr_name)
     }
-    if (nchar(orcid) != 37) {
+    if (!grep('[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[A-Za-z0-9]{1}', orcid)) {
       invalid_orcid <- append(invalid_orcid, usr_name)
     }
   }
   if (!is.null(bad_usr)) {
     cli::abort("The following usernames are invalid. Please provide valid usernames: {bad_usr}.")
-    return()
+    return(FALSE)
   }
   if (!is.null(invalid_oricd)) {
-    cli::inform("The following usernames do not have ORCIDs (or have invalid ORCIDs) associated with them. Plase have the users add valid ORCIDs (https://orcid.org) to their Active Directory account at https://myaccount.nps.gov/: {invalid_orcid}.")
+    cli::abort("The following usernames do not have ORCIDs (or have invalid ORCIDs) associated with them. Plase have the users add valid ORCIDs (https://orcid.org) to their Active Directory account at https://myaccount.nps.gov/: {invalid_orcid}.")
+    return(FALSE)
   }
   cli::inform("The file upload spreadsheet has been checked for errors.")
+  return(TRUE)
+}
+
+check_input_file <- function(filename, path = getwd()) {
+
+  #loop through the uploaded dataframe:
+
+  #check that dates are is ISO format:
+  begin_iso <- !check_iso_date_format(upload_data$content_begin_date)
+  if (sum(begin_iso > 0)) {
+    cli::cli_abort("Some dates in the begin_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
+    return(FALSE)
+  }
+
+  end_iso <- !check_iso_date_format(upload_data$content_end_date)
+  if ( sum(end_iso > 0)) {
+    cli::cli_abort("Some dates in the end_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
+    return(FALSE)
+  }
+
+  #check that producing units and content units are valid units:
+  units_valid <- check_units(filename = filename, path = path)
+  if (units_valid != TRUE){
+    return(FALSE)
+  }
+
+  #check that user names are valid and have valid orcids:
+  users_valid <- check_users(filename = filename, path = path)
+  if (users_valid != TRUE){
+    return(FALSE)
+  }
+  cli::cli_inform("Your file for bulk uploads has passed all data validation steps.")
+  return(TRUE)
 }
 
 #creates a draft reference; returns the new reference code:
 create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
-                                   dev = FALSE+) {
+                                   dev = FALSE) {
   #generate draft title:
   dynamic_title <- draft_title
   #generate json body for rest api call:
@@ -181,13 +219,21 @@ create_draft_reference <- function(draft_title = "Temp Title",
 bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
-  check_input_file(upload_data = upload_data)
+  validation <- check_input_file(upload_data = upload_data)
+  if (validation != TRUE) {
+    cli::cli_abort("Please ensure you have supplied valid upload information and have addressed all the issues identified before proceeding with the bulk upload.")
+    return()
+  } else {
+    ref_count <- nrow(upload_data)
+    cli::cli_inform("Would you like to upload all of your files and create {ref_count} new references on DataStore?")
+  }
 
   today <- Sys.Date()
 
   for (i in 1:nrow(upload_data)) {
     create_draft_reference(draft_title = upload_data$title[i],
-                           ref_type, dev = dev)
+                           ref_type,
+                           dev = dev)
 
     #create a draft reference and return the draft reference code:
     ref_code <- create_draft_reference(upload_data$title[i],
