@@ -359,13 +359,10 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
                    purpose = upload_data$purpose[i],
                    tableOfContents = "",
                    publisher = "Fort Collins, CO",
-                   sizes = list(list(index = 1,
-                                label = "Length of Recording",
-                                value = upload_data$length_of_recording[i])),
-                   abstract = upload_data$description[i],
+                   size1 = upload_data$length_of_recording[i],
                    contacts1 = list(contacts),
-                   metadataStandard = "",
-                   licenseType = upload_data$license[i])
+                   metadataStandardID = "",
+                   licenseTypeID = upload_data$license[i])
 
     #for testing purposes and to look at the json sent:
     #x <- rjson::toJSON(mylist)
