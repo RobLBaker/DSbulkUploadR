@@ -330,7 +330,13 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
       contacts <- append(contacts, author)
     }
 
-    #somehow build author lists?
+    #dynamically set publisher because not all ref types have publishers.
+    pub_place <- NULL
+    if (upload_data$reference_type[i] == "audioRecording") {
+      pub_place <- ""
+    } else {
+      pub_place <- "Fort Collins, CO"
+    }
 
     #generate json body for rest api call:
     mylist <- list(title = upload_data$title[i],
@@ -358,7 +364,7 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
                    notes = upload_data$notes[i],
                    purpose = upload_data$purpose[i],
                    tableOfContents = "",
-                   publisher = "Fort Collins, CO",
+                   publisher = pub_place,
                    size1 = upload_data$length_of_recording[i],
                    contacts1 = list(contacts),
                    metadataStandardID = "",
