@@ -1,4 +1,7 @@
 #setup/helper functions:
+#initiate new environment accessible from within package:
+.pkgglobalenv <- new.env(parent=emptyenv())
+
 #data_store API base URL:
 assign("ds_api",
        "https://irmaservices.nps.gov/datastore/v7/rest/",
@@ -60,7 +63,6 @@ check_units <- function(filename, path = getwd()){
 
   if (length(bad_prod_units > 0)) {
     cli::cli_abort("The following producing units are invalid. Please provide valid producing units: {bad_prod_units}.")
-    return(FALSE)
   }
 
   #check for bad content units:
@@ -76,7 +78,6 @@ check_units <- function(filename, path = getwd()){
 
   if (length(bad_content_units > 0)) {
     cli::cli_abort("The following content units are invalid. Please provide valid content units: {bad_content_units}.")
-    return(FALSE)
   }
   cli::cli_inform("All producing and content units are valid.")
   return(TRUE)
@@ -86,10 +87,37 @@ check_ref_type <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   refs <- upload_data$reference_type
 
-  ### hit api to get list of valid reference types.
+  url <- paste0(.ds_secure_api(), "FixedList/ReferenceTypes")
+  #API call to look for an existing reference:
+  req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+  status_code <- httr::stop_for_status(req)$status_code
 
+  #if API call fails, alert user and remind them to log on to VPN:
+  if(!status_code == 200){
+    stop("DataStore connection failed.")
+  }
+
+  refs_json <- httr::content(req, "text")
+  refs_rjson <- jsonlite::fromJSON(refs_json)
+
+  refs <- unique(refs)
+  bad_refs <- refs[!(refs %in% refs_rjson$key)]
+
+  if (length(bad_refs > 0)) {
+    cli::cli_abort("Please use valid reference types. The following reference types are invalid: {bad_refs}.")
+  }
+  cli::cli_inform("All reference types are valid.")
+  return(TRUE)
 }
 
+check_license_type <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
+  if (valid_license > 0) {
+    cli::cli_abort("You have supplied an invalid license code. Please supply a valid license code.")
+  }
+  return(TRUE)
+}
 
 check_users <- function(filename, path = getwd()){
 
@@ -146,19 +174,21 @@ check_users <- function(filename, path = getwd()){
 
 check_input_file <- function(filename, path = getwd()) {
 
-  #loop through the uploaded dataframe:
+  #check reference type:
+  refs <- check_ref_type(filename = filename, path = path)
+  if (refs != TRUE){
+    return(FALSE)
+  }
 
   #check that dates are is ISO format:
   begin_iso <- !check_iso_date_format(upload_data$content_begin_date)
   if (sum(begin_iso > 0)) {
     cli::cli_abort("Some dates in the begin_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
-    return(FALSE)
   }
 
   end_iso <- !check_iso_date_format(upload_data$content_end_date)
   if ( sum(end_iso > 0)) {
     cli::cli_abort("Some dates in the end_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
-    return(FALSE)
   }
 
   #check that producing units and content units are valid units:
@@ -180,6 +210,7 @@ check_input_file <- function(filename, path = getwd()) {
 create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
                                    dev = FALSE) {
+
   #generate draft title:
   dynamic_title <- draft_title
   #generate json body for rest api call:
@@ -217,30 +248,37 @@ create_draft_reference <- function(draft_title = "Temp Title",
 
 
 bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
+
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
+  #check upload file validity:
   validation <- check_input_file(upload_data = upload_data)
   if (validation != TRUE) {
     cli::cli_abort("Please ensure you have supplied valid upload information and have addressed all the issues identified before proceeding with the bulk upload.")
     return()
-  } else {
-    ref_count <- nrow(upload_data)
-    cli::cli_inform("Would you like to upload all of your files and create {ref_count} new references on DataStore?")
   }
 
+  #ask to proceed; verify number of refs to create:
+  ref_count <- nrow(upload_data)
+  cli::cli_inform("Would you like to upload all of your files and create {ref_count} new references on DataStore?")
+  var1 <- readline(prompt = "1: Yes\n2: No\n")
+  if (var1 == 2) {
+    cli::cli_inform("Exiting the function.")
+    return()
+  }
+
+  #get system date
   today <- Sys.Date()
 
   for (i in 1:nrow(upload_data)) {
-    create_draft_reference(draft_title = upload_data$title[i],
-                           ref_type,
-                           dev = dev)
-
-    #create a draft reference and return the draft reference code:
-    ref_code <- create_draft_reference(upload_data$title[i],
-                                       upload_data$reference_type[i])
+    #create draft reference:
+    ref_code <- create_draft_reference(draft_title = upload_data$title[i],
+                                       ref_type,
+                                       dev = dev)
+    cli::cli_inform("Creating draft reference {ref_code}.")
+    cli::cli_inform("Populating draft reference {ref_code}.")
 
     #populate reference using bibliography API:
-
     begin_date <- upload_data$content_begin_date[i]
     end_date <- upload_data$content_end_date[i]
 
@@ -296,7 +334,6 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
 
     #generate json body for rest api call:
     mylist <- list(title = upload_data$title[i],
-                   title = dynamic_title,
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
                                      day = lubridate::day(today),
@@ -322,13 +359,32 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
                    purpose = upload_data$purpose[i],
                    tableOfContents = "",
                    publisher = "Fort Collins, CO",
-                   sizes = list(index = 1,
+                   sizes = list(list(index = 1,
                                 label = "Length of Recording",
-                                value = upload_data$length_of_recording[i]),
+                                value = upload_data$length_of_recording[i])),
                    abstract = upload_data$description[i],
-                   contacts1 = contacts,
+                   contacts1 = list(contacts),
                    metadataStandard = "",
                    licenseType = upload_data$license[i])
+
+    #for testing purposes and to look at the json sent:
+    #x <- rjson::toJSON(mylist)
+    #jsonlite::prettify(x)
+
+    if (dev == TRUE) {
+      api_url <- paste0(.ds_dev_api(),
+                        "Reference/",  ref_code, "/Bibliography")
+    } else {
+      api_url <- paste0(.ds_secure_api(),
+                        "Reference/",  ref_code , "/Bibliography")
+    }
+
+    req <- httr::PUT(
+      url = api_url,
+      httr::add_headers('Content-Type' = 'application/json'),
+      httr::authenticate(":", "", "ntlm"),
+      body = rjson::toJSON(mylist))
+
 
 
 
