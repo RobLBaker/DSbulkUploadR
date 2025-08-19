@@ -83,6 +83,20 @@ check_units <- function(filename, path = getwd()){
   return(TRUE)
 }
 
+check_files_exist <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  bad_files <- NULL
+  for (i in 1:nrow(upload_data)) {
+   if (!file.exists(path = upload_data$file_path[i])) {
+     bad_files <- append(bad_files, upload_data$title[i])
+   }
+  }
+  if (!is.null(bad_files)) {
+      cli::cli_abort("All references must have files to upload. The following references have a bad file path or no files associated with them:\n {bad_files} ")
+    }
+  return(TRUE)
+}
+
 check_ref_type <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   refs <- upload_data$reference_type
@@ -180,6 +194,11 @@ check_input_file <- function(filename, path = getwd()) {
     return(FALSE)
   }
 
+  files <- check_files_exist(filename = filename, path = path)
+  if (refs != TRUE) {
+    return(FALSE)
+  }
+
   #check that dates are is ISO format:
   begin_iso <- !check_iso_date_format(upload_data$content_begin_date)
   if (sum(begin_iso > 0)) {
@@ -246,8 +265,120 @@ create_draft_reference <- function(draft_title = "Temp Title",
   refturn(ds_ref)
 }
 
+#largely borrowed from Sarah's NPSdatastore package:
+upload_files <- function(filename,
+                         path,
+                         reference_id,
+                         is508 = FALSE,
+                         chunk_size_mb = 1,
+                         retry = 1,
+                         dev = FALSE) {
 
-bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
+  file_name <- paste0(path, "/", filename)
+
+  # Get a token, which we need for a multi-chunk upload
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api())
+  } else {
+    post_url <- paste0(.ds_secure_api())
+  }
+  req <- httr2::req_options(httr2::request(post_url),
+                            httpauth = 4L,
+                            userpwd = ":::")
+
+  upload_token <- req |>
+    httr2::req_url_path_append("Reference",
+                               reference_id,
+                               "UploadFile",
+                               "TokenRequest") |>
+    httr2::req_body_json(list(Name = file_name,
+                              Is508Compliant = is_508),
+                         type = "application/json") |>
+    httr2::req_error(is_error = \(resp) FALSE) |>
+    httr2::req_perform()
+
+  .validate_resp(upload_token,
+                 nice_msg_400 = "Could not retrieve upload token. This usually happens if you don't have permissions to edit the reference or if you are not connected to the DOI/NPS network."
+  )
+
+  upload_url <- upload_token$headers$Location
+
+  # Get file size, set chunk size, determine number of chunks
+  file_size_bytes <- file.size(file_name)
+  chunk_size_bytes <- round(chunk_size_mb * 1024 * 1024)
+  n_chunks <- ceiling(file_size_bytes/chunk_size_bytes)
+
+  # Open file connection in binary mode
+  file_con <- file(file_path, "rb")
+
+  # Initialize variables and progress bar to track upload progress
+  status <- NA
+  total_bytes <- 0
+  cli::cli_progress_bar("Uploading file", total = n_chunks)
+
+  # Upload one chunk at a time
+  for (i in 0:(n_chunks - 1)) {
+
+    # Starting byte and ending byte for this chunk
+    start <- i * chunk_size_bytes
+    end <- start + chunk_size_bytes - 1
+
+    # If we've exceeded the file size, reset ending byte
+    if (end >= file_size_bytes) {
+      end <- file_size_bytes - 1
+    }
+
+    n_bytes <- length(start:end)  # this should be chunk_size_bytes except on the last iteration
+    total_bytes <- total_bytes + n_bytes  # total bytes uploaded so far
+
+    # Reset the number of retries for each new chunk
+    n_retries <- retry
+
+    # Upload a single chunk. Potentially try again if it fails (retry > 0)
+    while (n_retries >= 0) {
+      upload_resp <- httr2::request(upload_url) |>
+        httr2::req_method("PUT") |>
+        httr2::req_headers(`Content-Length` = n_bytes,
+                           `Content-Range` = glue::glue("bytes {start}-{end}/{file_size_bytes}")) |>
+        httr2::req_body_raw(readBin(file_con, raw(), n = n_bytes)) |>
+        httr2::req_options(httpauth = 4L, userpwd = ":::") |>
+        httr2::req_error(is_error = \(resp) FALSE) |>
+        httr2::req_perform()
+
+      if (!httr2::resp_is_error(upload_resp) || httr2::resp_status(upload_resp) == 410) {
+        # If upload is successful, or if error is due to token problem, don't retry
+        n_retries <- -1
+      } else {
+        # Decrement retries remaining
+        n_retries <- n_retries - 1
+      }
+    }
+
+    # Throw an error if the chunk ultimately fails
+    if (httr2::resp_status(upload_resp) == 410) {
+      err_msg <- "Your upload token is invalid or has expired. Please try again. If the problem persists, contact the package maintainer or the DataStore helpdesk."
+    } else {
+      err_msg <- "File upload was unsuccessful. Please try again. If the problem persists, contact the package maintainer or the DataStore helpdesk."
+    }
+    .validate_resp(upload_resp,
+                   nice_msg_400 = err_msg)
+
+
+    cli::cli_progress_update()
+  }
+  cli::cli_progress_done()
+
+  close(file_con)
+
+  # TODO: Return details on uploaded file
+  file_info <- list(url = upload_resp$headers$Location,
+                    file_id = httr2::resp_body_json(upload_resp))
+
+  return(file_info)
+}
+
+
+bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
 
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
@@ -271,12 +402,13 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
   today <- Sys.Date()
 
   for (i in 1:nrow(upload_data)) {
-    #create draft reference:
+    # create draft reference ----------
     ref_code <- create_draft_reference(draft_title = upload_data$title[i],
                                        ref_type,
                                        dev = dev)
     cli::cli_inform("Creating draft reference {ref_code}.")
     cli::cli_inform("Populating draft reference {ref_code}.")
+    # populate draft reference bibliography ----
 
     #populate reference using bibliography API:
     begin_date <- upload_data$content_begin_date[i]
@@ -388,10 +520,30 @@ bulk_reference_creation <- function(filename, path = getwd(), dev = FALSE) {
       httr::authenticate(":", "", "ntlm"),
       body = rjson::toJSON(mylist))
 
+    # upload files to reference ----
 
+    #translate 508compliance:
+    complaint <- NULL
+    if (upload_data$file_508_compliant[i] == "yes") {
+      compliant <- TRUE
+    } else {
+      compliant <- FALSE
+    }
 
+    file_list <- list.files(path = path, full.names = TRUE)
 
+    for (j in 1:length(list.files)) {
+
+    upload_files(filename,
+                 path = file_list[j],
+                 reference_id = ref_code,
+                 is508 = compliant,
+                 chunk_size_mb = 1,
+                 retry = 1,
+                 dev = FALSE)
+    }
+  #add reference id column to dataframe to make it easier to find them all
+  upload_data$reference_id[i] <- ref_code
   }
-
-
+  return(upload_data)
 }
