@@ -30,7 +30,7 @@ assign("ds_dev_api",
 }
 
 
-##### Helper functions:
+# Helper functions ----
 
 #check for iso dates:
 #returns a vector of TRUE/FALSE values where TRUE is iso and FALSE is not.
@@ -62,7 +62,9 @@ check_units <- function(filename, path = getwd()){
   bad_prod_units <- producing_units[!(producing_units %in% dat$UnitCode)]
 
   if (length(bad_prod_units > 0)) {
-    cli::cli_abort("The following producing units are invalid. Please provide valid producing units: {bad_prod_units}.")
+    msg <- paste0("The following producing units are invalid. ",
+                  "Please provide valid producing units: {bad_prod_units}.")
+    cli::cli_abort("msg")
   }
 
   #check for bad content units:
@@ -77,7 +79,9 @@ check_units <- function(filename, path = getwd()){
   }
 
   if (length(bad_content_units > 0)) {
-    cli::cli_abort("The following content units are invalid. Please provide valid content units: {bad_content_units}.")
+    msg <- paste0("The following content units are invalid. ",
+                  "Please provide valid content units: {bad_content_units}.")
+    cli::cli_abort(msg)
   }
   cli::cli_inform("All producing and content units are valid.")
   return(TRUE)
@@ -92,7 +96,10 @@ check_files_exist <- function(filename, path = getwd()){
    }
   }
   if (!is.null(bad_files)) {
-      cli::cli_abort("All references must have files to upload. The following references have a bad file path or no files associated with them:\n {bad_files} ")
+    msg <- paste0("All references must have files to upload. ",
+                  "The following references have a bad file path ",
+                  "or no files associated with them:\n {bad_files}")
+      cli::cli_abort("msg")
     }
   return(TRUE)
 }
@@ -118,7 +125,9 @@ check_ref_type <- function(filename, path = getwd()) {
   bad_refs <- refs[!(refs %in% refs_rjson$key)]
 
   if (length(bad_refs > 0)) {
-    cli::cli_abort("Please use valid reference types. The following reference types are invalid: {bad_refs}.")
+    msg <- paste0("Please use valid reference types. The following ",
+                  "reference types are invalid: {bad_refs}.")
+    cli::cli_abort(msg)
   }
   cli::cli_inform("All reference types are valid.")
   return(TRUE)
@@ -128,7 +137,9 @@ check_license_type <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
   if (valid_license > 0) {
-    cli::cli_abort("You have supplied an invalid license code. Please supply a valid license code.")
+    msg <- paste0("You have supplied an invalid license code. ",
+                  "Please supply a valid license code.")
+    cli::cli_abort(msg)
   }
   return(TRUE)
 }
@@ -186,6 +197,19 @@ check_users <- function(filename, path = getwd()){
   return(TRUE)
 }
 
+check_508_format <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
+    tolower(upload_data$files_508_compliant) != "no"
+  if (is_508 > 0) {
+    msg <- paste0('All files must have a 508 compiance status of "yes" ',
+                  'or "no". Please provide valid 508 compliance for ',
+                  'each reference.')
+    cli::cli_abort(msg)
+  }
+  return(TRUE)
+}
+
 check_input_file <- function(filename, path = getwd()) {
 
   #check reference type:
@@ -195,19 +219,28 @@ check_input_file <- function(filename, path = getwd()) {
   }
 
   files <- check_files_exist(filename = filename, path = path)
-  if (refs != TRUE) {
+  if (files != TRUE) {
+    return(FALSE)
+  }
+
+  is508 <- check_508_format(filename = filename, path = path)
+  if (is508 != TRUE) {
     return(FALSE)
   }
 
   #check that dates are is ISO format:
   begin_iso <- !check_iso_date_format(upload_data$content_begin_date)
   if (sum(begin_iso > 0)) {
-    cli::cli_abort("Some dates in the begin_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
+    msg <- paste0("Some dates in the begin_content_date column are not ",
+                  "in ISO 8601 format (yyyymmdd). Please correct this error.")
+    cli::cli_abort(msg)
   }
 
   end_iso <- !check_iso_date_format(upload_data$content_end_date)
   if ( sum(end_iso > 0)) {
-    cli::cli_abort("Some dates in the end_content_date column are not in ISO 8601 format (yyyymmdd). Please correct this error.")
+    msg <- paste0("Some dates in the end_content_date column are not ",
+                  "in ISO 8601 format (yyyymmdd). Please correct this error.")
+    cli::cli_abort(msg)
   }
 
   #check that producing units and content units are valid units:
@@ -221,7 +254,9 @@ check_input_file <- function(filename, path = getwd()) {
   if (users_valid != TRUE){
     return(FALSE)
   }
-  cli::cli_inform("Your file for bulk uploads has passed all data validation steps.")
+  msg <- paste0("Your file for bulk uploads has passed all data ",
+                "validation steps.")
+  cli::cli_inform(msg)
   return(TRUE)
 }
 
@@ -378,20 +413,29 @@ upload_files <- function(filename,
 }
 
 
-bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
+# BULK FILE GENERATION ----
+bulk_reference_geneation <- function(filename,
+                                     path = getwd(),
+                                     dev = FALSE) {
 
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
   #check upload file validity:
   validation <- check_input_file(upload_data = upload_data)
   if (validation != TRUE) {
-    cli::cli_abort("Please ensure you have supplied valid upload information and have addressed all the issues identified before proceeding with the bulk upload.")
+    msg <- paste0("Please ensure you have supplied valid upload ",
+                  "information and have addressed all the issues ",
+                  "identified before proceeding with the bulk upload.")
+    cli::cli_abort(msg)
     return()
   }
 
   #ask to proceed; verify number of refs to create:
   ref_count <- nrow(upload_data)
-  cli::cli_inform("Would you like to upload all of your files and create {ref_count} new references on DataStore?")
+  msg <- paste0("Would you like to upload all of your files and create ",
+                "{ref_count} ",
+                "new references on DataStore?")
+  cli::cli_inform(msg)
   var1 <- readline(prompt = "1: Yes\n2: No\n")
   if (var1 == 2) {
     cli::cli_inform("Exiting the function.")
@@ -402,22 +446,21 @@ bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
   today <- Sys.Date()
 
   for (i in 1:nrow(upload_data)) {
-    # create draft reference ----------
+    # create draft reference ----
     ref_code <- create_draft_reference(draft_title = upload_data$title[i],
                                        ref_type,
                                        dev = dev)
     cli::cli_inform("Creating draft reference {ref_code}.")
     cli::cli_inform("Populating draft reference {ref_code}.")
-    # populate draft reference bibliography ----
 
-    #populate reference using bibliography API:
+    # populate draft reference bibliography ----
     begin_date <- upload_data$content_begin_date[i]
     end_date <- upload_data$content_end_date[i]
 
-    #create author list:
+    #create author list ====
     usr_name <- unlist(stringr::str_split(upload_data$author_upn_list[i],
                                           ", "))
-    #access active directory for each user name:
+    # access active directory for each user name ####
     contacts <- NULL
     for (i in 1:length(usr_name)) {
       powershell_command <- paste0('([adsisearcher]\\"(samaccountname=',
@@ -429,7 +472,7 @@ bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
                                     powershell_command),
                            stdout = TRUE)
 
-      #get orcid:
+      # get orcid ####
       orcid <- AD_output[which(AD_output %>%
                                  stringr::str_detect("extensionattribute2\\b"))]
       # extract orcid
@@ -437,19 +480,19 @@ bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
       # remove curly braces:
       orcid <- stringr::str_remove_all(orcid, "[{}]")
 
-      #get surname:
+      #get surname ####
       surname <- AD_output[which(AD_output %>%
                                    stringr::str_detect("sn\\b"))]
       surname <- stringr::str_extract(surname, "\\{.*?\\}")
       surname <- stringr::str_remove_all(surname, "[{}]")
 
-      #get given name:
+      #get given name ####
       given <- AD_output[which(AD_output %>%
                                    stringr::str_detect("given"))]
       given <- stringr::str_extract(given, "\\{.*?\\}")
       given <- stringr::str_remove_all(given, "[{}]")
 
-      #create author list:
+      #create author list ####
       author <- list(title = "",
                       primaryName = surname,
                       firstName = given,
@@ -462,7 +505,7 @@ bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
       contacts <- append(contacts, author)
     }
 
-    #dynamically set publisher because not all ref types have publishers.
+    # dynamically set publisher because not all ref types have publishers ====
     pub_place <- NULL
     if (upload_data$reference_type[i] == "audioRecording") {
       pub_place <- ""
@@ -470,7 +513,7 @@ bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
       pub_place <- "Fort Collins, CO"
     }
 
-    #generate json body for rest api call:
+    # generate json body for rest api call ====
     mylist <- list(title = upload_data$title[i],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
@@ -506,6 +549,7 @@ bulk_reference_geneation <- function(filename, path = getwd(), dev = FALSE) {
     #x <- rjson::toJSON(mylist)
     #jsonlite::prettify(x)
 
+    # make request to populate reference ====
     if (dev == TRUE) {
       api_url <- paste0(.ds_dev_api(),
                         "Reference/",  ref_code, "/Bibliography")
