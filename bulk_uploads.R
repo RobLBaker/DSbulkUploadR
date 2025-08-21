@@ -31,24 +31,37 @@ assign("ds_dev_api",
 
 
 # Helper functions ----
-
-#' Checks whether dates are in ISO 8601 format
-#'
-#' This function can accept a single date or vector of dates, evaluates each one and return a vector of TRUE and FALSE values where TRUE indicates the date is in ISO 8601 format (yyyymmdd) and FALSE indicates it is not.
-#'
-#' @param mydate date or list of dates
-#'
-#' @returns vector of TRUE/FALSE
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_iso_date_format(12/12/2025)
-#' }
-check_iso_date_format <- function(mydate) {
-  tryCatch(!is.na(as.Date(mydate, date.format = "yyyymmdd")),
-           error = function(err) {FALSE})
+check_start_date <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  start_dates <- upload_data$content_begin_date
+  valid_dates <- is.na(as.Date(start_dates, date.format = "yyyymmdd"))
+  if (sum(valid_dates) < nrow(upload_data)) {
+    msg <- paste0("Some content begin dates are not in ISO 8601 format ",
+                  "(yyyymmdd). Please supply all dates in ISO 8601 format.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All content begin dates are supplied ",
+                  "in the correct format.")
+    cli::cli_inform(c("v" = msg))
+  }
 }
+
+check_end_date <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  end_dates <- upload_data$content_end_date
+  valid_dates <- is.na(as.Date(end_dates, date.format = "yyyymmdd"))
+  if (sum(valid_dates) < nrow(upload_data)) {
+    msg <- paste0("Some content end dates are not in ISO 8601 format ",
+                  "(yyyymmdd). Please supply all dates in ISO 8601 format.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All content end dates are supplied ",
+                  "in the correct format.")
+    cli::cli_inform(c("v" = msg))
+  }
+}
+
+
 
 #' Checks for valid content and producing unit codes
 #'
@@ -124,9 +137,11 @@ check_files_exist <- function(filename, path = getwd()){
     msg <- paste0("All references must have files to upload. ",
                   "The following references have a bad file path ",
                   "or no files associated with them:\n {bad_files}")
-      cli::cli_abort("msg")
+      cli::cli_abort(c("x" = msg))
+  } else {
+      msg <- paste0("All file paths contain file for upload.")
+      cli::cli_inform(c("v" = msg))
     }
-  return(TRUE)
 }
 
 #error if > file_number_error; warn if > 50% of file_number_error
@@ -134,25 +149,26 @@ check_file_number <- function(filename,
                               path = getwd(),
                               file_number_error = 500) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
-  file_num <- NULL
+  file_num <- 0
   for (i in 1:nrow(upload_data)) {
-    files_per_ref <- length(list.files(upoad_data$file_path[i]))
-    file_num <- file_num + files_per_ref
+    files_per_ref <- length(list.files(upload_data$file_path[i]))
+    file_num <- (file_num + files_per_ref)
   }
-  if (file_num > error) {
+  if (file_num > file_number_error) {
     msg <- paste0("You are attempting to upload {file_num} files, ",
                   "which exceeds the maximum allowable number, ",
                   "({error} files). Please either adjust the maximum number ",
                   "of files or attempt to upload fewer files.")
-    cli::cli_abort(msg)
-  }
-  if (file_num > (error * 0.5)) {
-    msg <- paste0("You are attempting to upload {file_num} files, ",
+    cli::cli_abort(c("x" = msg))
+  } else if (file_num > (file_number_error * 0.5)) {
+      msg <- paste0("You are attempting to upload {file_num} files, ",
                   "which has triggered a warning. Please make sure you ",
                   "want to upload this many files.")
-    cli::cli_inform(msg)
+      cli::cli_warn(c("!" = msg))
+  } else {
+    msg <- paste0("The files to upload does not exceed the maximum number.")
+    cli::cli_inform(c("v" = msg))
   }
-  return(TRUE)
 }
 
 #WARN AND ERROR GIVIN IN GB
@@ -161,10 +177,10 @@ check_file_size <- function(filename,
                             path = getwd(),
                             file_size_error = 100) {
   #convert gb to bytes:
-  error_bytes <- error * 1073741824
+  error_bytes <- file_size_error * 1073741824
   warn_bytes <- error_bytes * 0.5
   upload_data <- read.delim(file=paste0(path, "/", filename))
-  file_size <- NULL
+  file_size <- 0
   for (i in 1:nrow(upload_data)) {
     file_size <- file_size +
       sum(file.info(list.files(upload_data$file_path[i],
@@ -175,17 +191,18 @@ check_file_size <- function(filename,
     msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
                   "which exceeds the maximum allowable number, ",
                   "({error} GB) per bulk upload. Please either adjust ",
-                  "the maximum number data upload amount, or attempt to ",
+                  "the maximum data upload amount, or attempt to ",
                   "upload less data.")
-    cli::cli_abort(msg)
-  }
-  if (file_num > warn_bytes) {
+    cli::cli_abort(c("x" = msg))
+  } else if (file_size > warn_bytes) {
     msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
                   "which has triggered a warning. Please make sure you ",
                   "want to upload this much data.")
-    cli::cli_inform(msg)
-  }
-  return(TRUE)
+    cli::cli_inform(c("!" = msg))
+  } else
+    msg <- paste0("The cumulative file size to upload does ",
+                  "not exeed the maximum allowable.")
+    cli::cli_inform(c("v" = msg))
 }
 
 check_ref_type <- function(filename, path = getwd()) {
@@ -211,10 +228,9 @@ check_ref_type <- function(filename, path = getwd()) {
   if (length(bad_refs > 0)) {
     msg <- paste0("Please use valid reference types. The following ",
                   "reference types are invalid: {bad_refs}.")
-    cli::cli_abort(msg)
+    cli::cli_abort(c("x" = msg))
   }
-  cli::cli_inform("All reference types are valid.")
-  return(TRUE)
+  cli::cli_inform(c("v" = "All reference types are valid."))
 }
 
 check_license_type <- function(filename, path = getwd()) {
@@ -223,12 +239,15 @@ check_license_type <- function(filename, path = getwd()) {
   if (valid_license > 0) {
     msg <- paste0("You have supplied an invalid license code. ",
                   "Please supply a valid license code.")
-    cli::cli_abort(msg)
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(c("v" = "All license codes are valid."))
   }
   return(TRUE)
 }
 
-check_users_email <- function(filename, path = getwd()) {
+#uses API to verify user email addresses
+check_author_email <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
   usr_email <- NULL
@@ -247,22 +266,23 @@ check_users_email <- function(filename, path = getwd()) {
                     body = rjson::toJSON(bdy))
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
-    stop("ERROR: DataStore connection failed.")
+    cli::cli_abort(c("x" = "ERROR: Datastore connection failed."))
   }
   json <- httr::content(req, "text")
   rjson <- jsonlite::fromJSON(json)
 
   if (all(rjson$found)) {
-    return(TRUE)
+    cli::cli_inform(c("v" = "All author emails are valid."))
   } else {
     bad_usr_emails <- dplyr::filter(rjson, found==FALSE)$searchTerm
     msg <- paste0("Please supply valid emails. The following emails ",
                   "are invalid: {bad_usr_emails}.")
-    cli::cli_abort(msg)
+    cli::cli_abort(c("x" = msg))
   }
 }
 
-check_user_orcid <- function(filename, path = getwd()) {
+#checks to make sure all users have orcids and that orcids are correctly formatted. Does not check whether orcids are valid/associated with the correct username.
+check_authors_orcid <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
   usr_email <- NULL
@@ -296,27 +316,46 @@ check_user_orcid <- function(filename, path = getwd()) {
                   "prior to proceeding with reference creation: {no_orcid}.")
     cli::cli_abort(c("x" = msg))
   }
+}
 
+check_orcid_format <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  usr_email <- NULL
+  for (i in 1:nrow(upload_data)) {
+    usr_email <-
+      append(usr_email,
+             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+  }
+  usr_email <- stringr::str_trim(usr_email)
+  usr_email <- unique(usr_email)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  bdy <- usr_email
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    stop("ERROR: DataStore connection failed.")
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
   # test whether orcids are valid:
   rjson$orcid_format <- grepl('[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[A-Za-z0-9]{1}', rjson$extensionAttribute2)
-  if (sum(rjson$orcid_format) == nrow(rjson$orcid_format)) {
+  if (sum(rjson$orcid_format) == nrow(rjson)) {
     cli::cli_inform(c("v" = "All ORCiDs have a valid format"))
   } else {
     rjson2 <- rjson %>% dplyr::filter(rjson$orcid_format == FALSE)
     msg <- paste0("All authors must have ORCiDs with valid formats. ",
-                  "The following authors have ORCiDs with invalid formats",
-                  "listed in Active Dirctory: {rjson2$searchTerm}.")
+                  "The following authors have ORCiDs with invalid formats ",
+                  "(which may include lack of any ORCiD) listed in Active ",
+                  "Dirctory: {rjson2$searchTerm}.")
     cli::cli_abort(c("x" = msg))
   }
-  return(TRUE)
 }
 
-
-
-
-
-}
-
+#uses AD to verify users upn. Will not work after transition to entraID.
 check_users_AD <- function(filename, path = getwd()){
 
   upload_data <- read.delim(file=paste0(path, "/", filename))
@@ -374,13 +413,15 @@ check_508_format <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
   is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
     tolower(upload_data$files_508_compliant) != "no"
-  if (is_508 > 0) {
+  if (sum(is_508) > 0) {
     msg <- paste0('All files must have a 508 compiance status of "yes" ',
                   'or "no". Please provide valid 508 compliance for ',
                   'each reference.')
-    cli::cli_abort(msg)
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(
+      c("v" = "All files have a valid 508 compliance designation"))
   }
-  return(TRUE)
 }
 
 #file_size_error in GB
@@ -389,41 +430,28 @@ check_input_file <- function(filename, path = getwd(),
                              file_number_error = 500) {
 
   #check reference type:
-  refs <- check_ref_type(filename = filename, path = path)
-  if (refs != TRUE){
-    return(FALSE)
-  }
+  check_ref_type(filename = filename, path = path)
 
-  files <- check_files_exist(filename = filename, path = path)
-  if (files != TRUE) {
-    return(FALSE)
-  }
 
-  file_number <- check_file_number(filename,
-                                   path = path,
-                                   file_number_error = file_number_error)
-  if (file_number !=TRUE) {
-    return(FALSE)
-  }
+  check_files_exist(filename = filename, path = path)
 
-  file_size <- check_file_size(filename,
-                               path = path,
-                               file_size_error = file_size_error)
-  if (file_size != TRUE) {
-    return(FALSE)
-  }
 
-  is508 <- check_508_format(filename = filename, path = path)
-  if (is508 != TRUE) {
-    return(FALSE)
-  }
+  check_file_number(filename,
+                    path = path,
+                    file_number_error = file_number_error)
+
+  check_file_size(filename,
+                  path = path,
+                  file_size_error = file_size_error)
+
+  check_508_format(filename = filename, path = path)
 
   #check that dates are is ISO format:
-  begin_iso <- !check_iso_date_format(upload_data$content_begin_date)
+  check_iso_date_format(upload_data$content_begin_date)
   if (sum(begin_iso > 0)) {
     msg <- paste0("Some dates in the begin_content_date column are not ",
                   "in ISO 8601 format (yyyymmdd). Please correct this error.")
-    cli::cli_abort(msg)
+    cli::cli_abort(c("x" = msg))
   }
 
   end_iso <- !check_iso_date_format(upload_data$content_end_date)
@@ -440,7 +468,7 @@ check_input_file <- function(filename, path = getwd(),
   }
 
   #check that user names are valid and have valid orcids:
-  users_valid <- check_users(filename = filename, path = path)
+  check_authors_email <- check_authors_email(filename = filename, path = path)
   if (users_valid != TRUE){
     return(FALSE)
   }
@@ -448,6 +476,11 @@ check_input_file <- function(filename, path = getwd(),
                 "validation steps.")
   cli::cli_inform(msg)
   return(TRUE)
+
+  check_author_orcid(filename = filename, path = path)
+
+
+
 }
 
 #creates a draft reference; returns the new reference code:
