@@ -34,10 +34,11 @@ assign("ds_dev_api",
 check_start_date <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   start_dates <- upload_data$content_begin_date
-  valid_dates <- is.na(as.Date(start_dates, date.format = "yyyymmdd"))
+  #valid dates are "TRUE"
+  valid_dates <- !is.na(suppressWarnings(lubridate::ymd(start_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
     msg <- paste0("Some content begin dates are not in ISO 8601 format ",
-                  "(yyyymmdd). Please supply all dates in ISO 8601 format.")
+                  "(yyyy-mm-dd). Please supply all dates in ISO 8601 format.")
     cli::cli_abort(c("x" = msg))
   } else {
     msg <- paste0("All content begin dates are supplied ",
@@ -49,10 +50,10 @@ check_start_date <- function(filename, path = getwd()) {
 check_end_date <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   end_dates <- upload_data$content_end_date
-  valid_dates <- is.na(as.Date(end_dates, date.format = "yyyymmdd"))
+  valid_dates <- !is.na(suppressWarnings(lubridate::ymd(end_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
     msg <- paste0("Some content end dates are not in ISO 8601 format ",
-                  "(yyyymmdd). Please supply all dates in ISO 8601 format.")
+                  "(yyyy-mm-dd). Please supply all dates in ISO 8601 format.")
     cli::cli_abort(c("x" = msg))
   } else {
     msg <- paste0("All content end dates are supplied ",
