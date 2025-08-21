@@ -104,6 +104,65 @@ check_files_exist <- function(filename, path = getwd()){
   return(TRUE)
 }
 
+#error if > file_number_error; warn if > 50% of file_number_error
+check_file_number <- function(filename,
+                              path = getwd(),
+                              file_number_error = 500) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  file_num <- NULL
+  for (i in 1:nrow(upload_data)) {
+    files_per_ref <- length(list.files(upoad_data$file_path[i]))
+    file_num <- file_num + files_per_ref
+  }
+  if (file_num > error) {
+    msg <- paste0("You are attempting to upload {file_num} files, ",
+                  "which exceeds the maximum allowable number, ",
+                  "({error} files). Please either adjust the maximum number ",
+                  "of files or attempt to upload fewer files.")
+    cli::cli_abort(msg)
+  }
+  if (file_num > (error * 0.5)) {
+    msg <- paste0("You are attempting to upload {file_num} files, ",
+                  "which has triggered a warning. Please make sure you ",
+                  "want to upload this many files.")
+    cli::cli_inform(msg)
+  }
+  return(TRUE)
+}
+
+#WARN AND ERROR GIVIN IN GB
+#error if > file error size; warn if > 50% error size
+check_file_size <- function(filename,
+                            path = getwd(),
+                            file_size_error = 100) {
+  #convert gb to bytes:
+  error_bytes <- error * 1073741824
+  warn_bytes <- error_bytes * 0.5
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  file_size <- NULL
+  for (i in 1:nrow(upload_data)) {
+    file_size <- file_size +
+      sum(file.info(list.files(upload_data$file_path[i],
+                               full.names = TRUE))$size)
+  }
+  file_gb <- file_size/1073741824
+  if (file_size > error_bytes) {
+    msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
+                  "which exceeds the maximum allowable number, ",
+                  "({error} GB) per bulk upload. Please either adjust ",
+                  "the maximum number data upload amount, or attempt to ",
+                  "upload less data.")
+    cli::cli_abort(msg)
+  }
+  if (file_num > warn_bytes) {
+    msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
+                  "which has triggered a warning. Please make sure you ",
+                  "want to upload this much data.")
+    cli::cli_inform(msg)
+  }
+  return(TRUE)
+}
+
 check_ref_type <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   refs <- upload_data$reference_type
@@ -210,7 +269,10 @@ check_508_format <- function(filename, path = getwd()){
   return(TRUE)
 }
 
-check_input_file <- function(filename, path = getwd()) {
+#file_size_error in GB
+check_input_file <- function(filename, path = getwd(),
+                             file_size_error = 100,
+                             file_number_error = 500) {
 
   #check reference type:
   refs <- check_ref_type(filename = filename, path = path)
@@ -220,6 +282,20 @@ check_input_file <- function(filename, path = getwd()) {
 
   files <- check_files_exist(filename = filename, path = path)
   if (files != TRUE) {
+    return(FALSE)
+  }
+
+  file_number <- check_file_number(filename,
+                                   path = path,
+                                   file_number_error = file_number_error)
+  if (file_number !=TRUE) {
+    return(FALSE)
+  }
+
+  file_size <- check_file_size(filename,
+                               path = path,
+                               file_size_error = file_size_error)
+  if (file_size != TRUE) {
     return(FALSE)
   }
 
