@@ -32,13 +32,38 @@ assign("ds_dev_api",
 
 # Helper functions ----
 
-#check for iso dates:
-#returns a vector of TRUE/FALSE values where TRUE is iso and FALSE is not.
-check_iso_date_format <- function(mydate, date.format = "yyyymmdd") {
-  tryCatch(!is.na(as.Date(mydate, date.format)),
+#' Checks whether dates are in ISO 8601 format
+#'
+#' This function can accept a single date or vector of dates, evaluates each one and return a vector of TRUE and FALSE values where TRUE indicates the date is in ISO 8601 format (yyyymmdd) and FALSE indicates it is not.
+#'
+#' @param mydate date or list of dates
+#'
+#' @returns vector of TRUE/FALSE
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_iso_date_format(12/12/2025)
+#' }
+check_iso_date_format <- function(mydate) {
+  tryCatch(!is.na(as.Date(mydate, date.format = "yyyymmdd")),
            error = function(err) {FALSE})
 }
 
+#' Checks for valid content and producing unit codes
+#'
+#' Loads an input file (.txt) and checks two coluns of data (producing_units and content_units) against the NPS Units Service API to see if they are valid units. Accepts a list of comma-separated (or individual) unit codes. If invalid producing units are encountered, the function will abort with a list of invalid producing units. If all producing units are valid, the function continues on to check content units. If any invalid content units are encountered, the function will abort with an error message listing the invalid content units. If all units are valid, the function returns TRUE.
+#'
+#' @param filename input file name
+#' @param path input file path. Defaults to the current working directory
+#'
+#' @returns TRUE or NULL
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_units("example_input_file.txt")
+#' }
 check_units <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
@@ -203,7 +228,96 @@ check_license_type <- function(filename, path = getwd()) {
   return(TRUE)
 }
 
-check_users <- function(filename, path = getwd()){
+check_users_email <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  usr_email <- NULL
+  for (i in 1:nrow(upload_data)) {
+    usr_email <-
+      append(usr_email,
+             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+  }
+  usr_email <- stringr::str_trim(usr_email)
+  usr_email <- unique(usr_email)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  bdy <- usr_email
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    stop("ERROR: DataStore connection failed.")
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  if (all(rjson$found)) {
+    return(TRUE)
+  } else {
+    bad_usr_emails <- dplyr::filter(rjson, found==FALSE)$searchTerm
+    msg <- paste0("Please supply valid emails. The following emails ",
+                  "are invalid: {bad_usr_emails}.")
+    cli::cli_abort(msg)
+  }
+}
+
+check_user_orcid <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  usr_email <- NULL
+  for (i in 1:nrow(upload_data)) {
+    usr_email <-
+      append(usr_email,
+             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+  }
+  usr_email <- stringr::str_trim(usr_email)
+  usr_email <- unique(usr_email)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  bdy <- usr_email
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    stop("ERROR: DataStore connection failed.")
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  # test whether orcids exist in active directory:
+  if(sum(is.na(rjson$extensionAttribute2)) == 0) {
+    cli::cli_inform(c("v" = "All users have ORCiDs."))
+  } else {
+    no_orcid <- dplyr::filter(rjson, is.na(rjson$extensionAttribute2))$searchTerm
+    msg <- paste0("All authors must have ORCiDs. Please have the ",
+                  "following authors add ORCiDs to Active Directory ",
+                  "prior to proceeding with reference creation: {no_orcid}.")
+    cli::cli_abort(c("x" = msg))
+  }
+
+  # test whether orcids are valid:
+  rjson$orcid_format <- grepl('[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[A-Za-z0-9]{1}', rjson$extensionAttribute2)
+  if (sum(rjson$orcid_format) == nrow(rjson$orcid_format)) {
+    cli::cli_inform(c("v" = "All ORCiDs have a valid format"))
+  } else {
+    rjson2 <- rjson %>% dplyr::filter(rjson$orcid_format == FALSE)
+    msg <- paste0("All authors must have ORCiDs with valid formats. ",
+                  "The following authors have ORCiDs with invalid formats",
+                  "listed in Active Dirctory: {rjson2$searchTerm}.")
+    cli::cli_abort(c("x" = msg))
+  }
+  return(TRUE)
+}
+
+
+
+
+
+}
+
+check_users_AD <- function(filename, path = getwd()){
 
   upload_data <- read.delim(file=paste0(path, "/", filename))
   #check for bad usernames:
