@@ -1,4 +1,200 @@
 # Helper functions ----
+
+#' Checks the reference types in a file are valid Data Store reference types
+#'
+#' Reads in a .txt file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
+#'
+#' @param filename String. Input file to check.
+#' @param path String. Path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_ref_type("test_file.txt")}
+check_ref_type <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  refs <- upload_data$reference_type
+
+  url <- paste0(.ds_secure_api(), "FixedList/ReferenceTypes")
+  #API call to look for an existing reference:
+  req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
+  status_code <- httr::stop_for_status(req)$status_code
+
+  #if API call fails, alert user and remind them to log on to VPN:
+  if(!status_code == 200){
+    stop("DataStore connection failed.")
+  }
+
+  refs_json <- httr::content(req, "text")
+  refs_rjson <- jsonlite::fromJSON(refs_json)
+
+  refs <- unique(refs)
+  bad_refs <- refs[!(refs %in% refs_rjson$key)]
+
+  if (length(bad_refs > 0)) {
+    msg <- paste0("Please use valid reference types. The following ",
+                  "reference types are invalid: {bad_refs}.")
+    cli::cli_abort(c("x" = msg))
+  }
+  cli::cli_inform(c("v" = "All reference types are valid."))
+  return(invisible(NULL))
+}
+
+#' Checks that each file_path in a file contains files
+#'
+#' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
+#'
+#' @param filename String. The input file to check.
+#' @param path String. Path to the input file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_files_exist("test_file.txt")
+#' }
+check_files_exist <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  bad_files <- NULL
+  for (i in 1:nrow(upload_data)) {
+    if (!file.exists(path = upload_data$file_path[i])) {
+      bad_files <- append(bad_files, upload_data$title[i])
+    }
+  }
+  if (!is.null(bad_files)) {
+    msg <- paste0("All references must have files to upload. ",
+                  "The following references have a bad file path ",
+                  "or no files associated with them:\n {bad_files}")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All file paths contain file for upload.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisble(NULL))
+}
+
+#' Checks whether the total number of file to upload exceeds a threshold
+#'
+#' Reads in a .txt file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
+#'
+#' @param filename String. Name of the file to check.
+#' @param path String. Path to the file to check. Defaults to the current working directory.
+#' @param file_number_error. Integer. Maximum allowable number of files. Defaults to 500.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_file_number("test_file.txt")
+#' }
+check_file_number <- function(filename,
+                              path = getwd(),
+                              file_number_error = 500) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  file_num <- 0
+  for (i in 1:nrow(upload_data)) {
+    files_per_ref <- length(list.files(upload_data$file_path[i]))
+    file_num <- (file_num + files_per_ref)
+  }
+  if (file_num > file_number_error) {
+    msg <- paste0("You are attempting to upload {file_num} files, ",
+                  "which exceeds the maximum allowable number, ",
+                  "({error} files). Please either adjust the maximum number ",
+                  "of files or attempt to upload fewer files.")
+    cli::cli_abort(c("x" = msg))
+  } else if (file_num > (file_number_error * 0.5)) {
+    msg <- paste0("You are attempting to upload {file_num} files, ",
+                  "which has triggered a warning. Please make sure you ",
+                  "want to upload this many files.")
+    cli::cli_warn(c("!" = msg))
+  } else {
+    msg <- paste0("The files to upload does not exceed the maximum number.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisible(NULL))
+}
+
+#' Checks whether the total file size to upload exceeds some threshold
+#'
+#'  Reads in a .txt file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
+#'
+#' @param filename String. The file to check,
+#' @param path String. Path to the file. Defaults to the current working directory.
+#' @param file_size_error Integer. The maximum allowable total file size in GB. Defaults to 100 GB.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_file_size("test_file.txt")
+#' }
+check_file_size <- function(filename,
+                            path = getwd(),
+                            file_size_error = 100) {
+  #convert gb to bytes:
+  error_bytes <- file_size_error * 1073741824
+  warn_bytes <- error_bytes * 0.5
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  file_size <- 0
+  for (i in 1:nrow(upload_data)) {
+    file_size <- file_size +
+      sum(file.info(list.files(upload_data$file_path[i],
+                               full.names = TRUE))$size)
+  }
+  file_gb <- file_size/1073741824
+  if (file_size > error_bytes) {
+    msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
+                  "which exceeds the maximum allowable number, ",
+                  "({error} GB) per bulk upload. Please either adjust ",
+                  "the maximum data upload amount, or attempt to ",
+                  "upload less data.")
+    cli::cli_abort(c("x" = msg))
+  } else if (file_size > warn_bytes) {
+    msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
+                  "which has triggered a warning. Please make sure you ",
+                  "want to upload this much data.")
+    cli::cli_inform(c("!" = msg))
+  } else
+    msg <- paste0("The cumulative file size to upload does ",
+                  "not exeed the maximum allowable.")
+  cli::cli_inform(c("v" = msg))
+  return(invisible(NULL))
+}
+
+#' Checks a column within a supplied file to ascertain whether 508 status has been supplied.
+#'
+#' Reads in a .txt file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
+#'
+#' @param filename String. The file to check.
+#' @param path String. The path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_508_format("test_file.txt")}
+check_508_format <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
+    tolower(upload_data$files_508_compliant) != "no"
+  if (sum(is_508) > 0) {
+    msg <- paste0('All files must have a 508 compiance status of "yes" ',
+                  'or "no". Please provide valid 508 compliance for ',
+                  'each reference.')
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(
+      c("v" = "All files have a valid 508 compliance designation"))
+  }
+  return(invisible(NULL))
+}
+
 #' Checks the begin_content_date column of an input file for ISO 8601 formatting
 #'
 #' Reads in a .txt file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
@@ -119,299 +315,6 @@ check_dates_past <- function(filename, path = getwd){
   } else {
     msg <- paste0("All content start and end dates occur in the past.")
     cli::cli_inform(c("v" = msg))
-  }
-  return(invisible(NULL))
-}
-
-
-#' Checks for valid producing unit codes in a file
-#'
-#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
-#'
-#' @param filename String. Name of file to check
-#' @param path String. Path to the file. Defaults to the current working directory
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_units("test_file.txt")
-#' }
-check_prod_units <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-
-  #get list of all units:
-  f <- file.path(tempdir(), "irmadownload.xml")
-  if (!file.exists(f)) {
-    # access all park codes from NPS xml file
-    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
-  }
-  result <- XML::xmlParse(file = f)
-  dat <- XML::xmlToDataFrame(result)
-
-  #check for bad producing units:
-  producing_units <- NULL
-  for (i in 1:nrow(upload_data)) {
-    producing_units <-
-      append(producing_units,
-             unlist(stringr::str_split(upload_data$producing_units[i], ", ")))
-  }
-  producing_units <- unique(producing_units)
-  bad_prod_units <- producing_units[!(producing_units %in% dat$UnitCode)]
-
-  if (length(bad_prod_units > 0)) {
-    msg <- paste0("The following producing units are invalid. ",
-                  "Please provide valid producing units: {bad_prod_units}.")
-    cli::cli_abort(c("x" = msg))
-  } else {
-    msg <- paste0("All producing units are valid.")
-    cli::cli_inform(c("v" = msg))
-  }
-  return(invisible(NULL))
-}
-
-#' Checks for valid content unit codes in a file
-#'
-#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
-#'
-#' @param filename String. Name of file to check
-#' @param path String. Path to the file. Defaults to the current working directory
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_content_units("test_file.txt")}
-check_content_units <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-
-  #get list of all units:
-  f <- file.path(tempdir(), "irmadownload.xml")
-  if (!file.exists(f)) {
-    # access all park codes from NPS xml file
-    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
-  }
-  result <- XML::xmlParse(file = f)
-  dat <- XML::xmlToDataFrame(result)
-
-  #check for bad conten units:
-  content_units <- NULL
-  for (i in 1:nrow(upload_data)) {
-    content_units <-
-      append(content_units,
-             unlist(stringr::str_split(upload_data$content_units[i], ", ")))
-  }
-  content_units <- unique(content_units)
-  bad_content_units <- content_units[!(content_units %in% dat$UnitCode)]
-
-  if (length(bad_content_units > 0)) {
-    msg <- paste0("Please provide valid content units. The following ",
-                  "content units are invalid: {bad_content_units}.")
-    cli::cli_abort(c("x" = msg))
-  } else {
-    msg <- paste0("All content units are valid.")
-    cli::cli_inform(c("v" = msg))
-  }
-  return(invisible(NULL))
-}
-
-#' Checks that each file_path in a file contains files
-#'
-#' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
-#'
-#' @param filename String. The input file to check.
-#' @param path String. Path to the input file. Defaults to the current working directory
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_files_exist("test_file.txt")
-#' }
-check_files_exist <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-  bad_files <- NULL
-  for (i in 1:nrow(upload_data)) {
-    if (!file.exists(path = upload_data$file_path[i])) {
-      bad_files <- append(bad_files, upload_data$title[i])
-    }
-  }
-  if (!is.null(bad_files)) {
-    msg <- paste0("All references must have files to upload. ",
-                  "The following references have a bad file path ",
-                  "or no files associated with them:\n {bad_files}")
-    cli::cli_abort(c("x" = msg))
-  } else {
-    msg <- paste0("All file paths contain file for upload.")
-    cli::cli_inform(c("v" = msg))
-  }
-  return(invisble(NULL))
-}
-
-
-#' Checks whether the total number of file to upload exceeds a threshold
-#'
-#' Reads in a .txt file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
-#'
-#' @param filename String. Name of the file to check.
-#' @param path String. Path to the file to check. Defaults to the current working directory.
-#' @param file_number_error. Integer. Maximum allowable number of files. Defaults to 500.
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_file_number("test_file.txt")
-#' }
-check_file_number <- function(filename,
-                              path = getwd(),
-                              file_number_error = 500) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-  file_num <- 0
-  for (i in 1:nrow(upload_data)) {
-    files_per_ref <- length(list.files(upload_data$file_path[i]))
-    file_num <- (file_num + files_per_ref)
-  }
-  if (file_num > file_number_error) {
-    msg <- paste0("You are attempting to upload {file_num} files, ",
-                  "which exceeds the maximum allowable number, ",
-                  "({error} files). Please either adjust the maximum number ",
-                  "of files or attempt to upload fewer files.")
-    cli::cli_abort(c("x" = msg))
-  } else if (file_num > (file_number_error * 0.5)) {
-    msg <- paste0("You are attempting to upload {file_num} files, ",
-                  "which has triggered a warning. Please make sure you ",
-                  "want to upload this many files.")
-    cli::cli_warn(c("!" = msg))
-  } else {
-    msg <- paste0("The files to upload does not exceed the maximum number.")
-    cli::cli_inform(c("v" = msg))
-  }
-  return(invisible(NULL))
-}
-
-#WARN AND ERROR GIVIN IN GB
-#error if > file error size; warn if > 50% error size
-#' Checks whether the total file size to upload exceeds some threshold
-#'
-#'  Reads in a .txt file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
-#'
-#' @param filename String. The file to check,
-#' @param path String. Path to the file. Defaults to the current working directory.
-#' @param file_size_error Integer. The maximum allowable total file size in GB. Defaults to 100 GB.
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_file_size("test_file.txt")
-#' }
-check_file_size <- function(filename,
-                            path = getwd(),
-                            file_size_error = 100) {
-  #convert gb to bytes:
-  error_bytes <- file_size_error * 1073741824
-  warn_bytes <- error_bytes * 0.5
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-  file_size <- 0
-  for (i in 1:nrow(upload_data)) {
-    file_size <- file_size +
-      sum(file.info(list.files(upload_data$file_path[i],
-                               full.names = TRUE))$size)
-  }
-  file_gb <- file_size/1073741824
-  if (file_size > error_bytes) {
-    msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
-                  "which exceeds the maximum allowable number, ",
-                  "({error} GB) per bulk upload. Please either adjust ",
-                  "the maximum data upload amount, or attempt to ",
-                  "upload less data.")
-    cli::cli_abort(c("x" = msg))
-  } else if (file_size > warn_bytes) {
-    msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
-                  "which has triggered a warning. Please make sure you ",
-                  "want to upload this much data.")
-    cli::cli_inform(c("!" = msg))
-  } else
-    msg <- paste0("The cumulative file size to upload does ",
-                  "not exeed the maximum allowable.")
-  cli::cli_inform(c("v" = msg))
-  return(invisible(NULL))
-}
-
-#' Checks the reference types in a file are valid Data Store reference types
-#'
-#' Reads in a .txt file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
-#'
-#' @param filename String. Input file to check.
-#' @param path String. Path to the file. Defaults to the current working directory.
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_ref_type("test_file.txt")}
-check_ref_type <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-  refs <- upload_data$reference_type
-
-  url <- paste0(.ds_secure_api(), "FixedList/ReferenceTypes")
-  #API call to look for an existing reference:
-  req <- httr::GET(url, httr::authenticate(":", ":", "ntlm"))
-  status_code <- httr::stop_for_status(req)$status_code
-
-  #if API call fails, alert user and remind them to log on to VPN:
-  if(!status_code == 200){
-    stop("DataStore connection failed.")
-  }
-
-  refs_json <- httr::content(req, "text")
-  refs_rjson <- jsonlite::fromJSON(refs_json)
-
-  refs <- unique(refs)
-  bad_refs <- refs[!(refs %in% refs_rjson$key)]
-
-  if (length(bad_refs > 0)) {
-    msg <- paste0("Please use valid reference types. The following ",
-                  "reference types are invalid: {bad_refs}.")
-    cli::cli_abort(c("x" = msg))
-  }
-  cli::cli_inform(c("v" = "All reference types are valid."))
-  return(invisible(NULL))
-}
-
-#' Checks an file for valid license types
-#'
-#' Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
-#'
-#' @param filename String. File to check.
-#' @param path String. Path to file. Defaults to the current working directory.
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_license_type("test_file.txt")}
-check_license_type <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-  if (any(is.na(upload_data$license_code))) {
-    msg <- paste0("You must supply a license type for all references.")
-    cli::cli_abort(c("x" = msg))
-  }
-  valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
-  if (valid_license > 0) {
-    msg <- paste0("You have supplied an invalid license code. ",
-                  "Please supply a valid license code.")
-    cli::cli_abort(c("x" = msg))
-  } else {
-    cli::cli_inform(c("v" = "All license codes are valid."))
   }
   return(invisible(NULL))
 }
@@ -566,12 +469,135 @@ check_orcid_format <- function(filename, path = getwd()){
   return(invisible(NULL))
 }
 
+#' Checks an file for valid license types
+#'
+#' Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
+#'
+#' @param filename String. File to check.
+#' @param path String. Path to file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_license_type("test_file.txt")}
+check_license_type <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  if (any(is.na(upload_data$license_code))) {
+    msg <- paste0("You must supply a license type for all references.")
+    cli::cli_abort(c("x" = msg))
+  }
+  valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
+  if (valid_license > 0) {
+    msg <- paste0("You have supplied an invalid license code. ",
+                  "Please supply a valid license code.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(c("v" = "All license codes are valid."))
+  }
+  return(invisible(NULL))
+}
+
+#' Checks for valid producing unit codes in a file
+#'
+#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+#'
+#' @param filename String. Name of file to check
+#' @param path String. Path to the file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_units("test_file.txt")
+#' }
+check_prod_units <- function(filename, path = getwd()){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  #get list of all units:
+  f <- file.path(tempdir(), "irmadownload.xml")
+  if (!file.exists(f)) {
+    # access all park codes from NPS xml file
+    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+  }
+  result <- XML::xmlParse(file = f)
+  dat <- XML::xmlToDataFrame(result)
+
+  #check for bad producing units:
+  producing_units <- NULL
+  for (i in 1:nrow(upload_data)) {
+    producing_units <-
+      append(producing_units,
+             unlist(stringr::str_split(upload_data$producing_units[i], ", ")))
+  }
+  producing_units <- unique(producing_units)
+  bad_prod_units <- producing_units[!(producing_units %in% dat$UnitCode)]
+
+  if (length(bad_prod_units > 0)) {
+    msg <- paste0("The following producing units are invalid. ",
+                  "Please provide valid producing units: {bad_prod_units}.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All producing units are valid.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisible(NULL))
+}
+
+#' Checks for valid content unit codes in a file
+#'
+#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+#'
+#' @param filename String. Name of file to check
+#' @param path String. Path to the file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_content_units("test_file.txt")}
+check_content_units <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  #get list of all units:
+  f <- file.path(tempdir(), "irmadownload.xml")
+  if (!file.exists(f)) {
+    # access all park codes from NPS xml file
+    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+  }
+  result <- XML::xmlParse(file = f)
+  dat <- XML::xmlToDataFrame(result)
+
+  #check for bad conten units:
+  content_units <- NULL
+  for (i in 1:nrow(upload_data)) {
+    content_units <-
+      append(content_units,
+             unlist(stringr::str_split(upload_data$content_units[i], ", ")))
+  }
+  content_units <- unique(content_units)
+  bad_content_units <- content_units[!(content_units %in% dat$UnitCode)]
+
+  if (length(bad_content_units > 0)) {
+    msg <- paste0("Please provide valid content units. The following ",
+                  "content units are invalid: {bad_content_units}.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All content units are valid.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisible(NULL))
+}
+
 #uses AD to verify users upn. Will not work after transition to entraID.
 #' Checks whether a upn supplied is valid.
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the acccounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
+#' Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the accounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
 #'
 #' @param filename String. File to check.
 #' @param path String. Path to file. Defaults to the current working directory.
@@ -641,34 +667,5 @@ check_users_AD <- function(filename, path = getwd()){
   }
   msg <- "All users have NPS accounts and valid ORCiDs associated with them."
   cli::inform(c("v" = msg))
-  return(invisible(NULL))
-}
-
-#' Checks a column within a supplied file to ascertain whether 508 status has been supplied.
-#'
-#' Reads in a .txt file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
-#'
-#' @param filename String. The file to check.
-#' @param path String. The path to the file. Defaults to the current working directory.
-#'
-#' @returns NULL (invisibly)
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' check_508_format("test_file.txt")}
-check_508_format <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-  is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
-    tolower(upload_data$files_508_compliant) != "no"
-  if (sum(is_508) > 0) {
-    msg <- paste0('All files must have a 508 compiance status of "yes" ',
-                  'or "no". Please provide valid 508 compliance for ',
-                  'each reference.')
-    cli::cli_abort(c("x" = msg))
-  } else {
-    cli::cli_inform(
-      c("v" = "All files have a valid 508 compliance designation"))
-  }
   return(invisible(NULL))
 }

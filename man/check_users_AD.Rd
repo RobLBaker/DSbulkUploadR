@@ -18,7 +18,7 @@ NULL (invisibly)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
-Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the acccounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
+Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the accounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
 }
 \examples{
 \dontrun{

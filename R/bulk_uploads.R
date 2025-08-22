@@ -6,6 +6,19 @@
 
 
 #creates a draft reference; returns the new reference code:
+#' Creates a draft reference on DataStore
+#'
+#' @param draft_title String. The title for the reference.
+#' @param ref_type String. The reference type.
+#' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.
+#'
+#' @returns String. The DataStore reference number.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' create_draft_reference(draft_title = "DRAFT TITLE",
+#'                         ref_type = "AudioRecording")}
 create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
                                    dev = FALSE) {
@@ -158,28 +171,76 @@ upload_files <- function(filename,
 }
 
 
-# BULK FILE GENERATION ----
-bulk_reference_geneation <- function(filename,
+
+#' Launch bulk reference creation and file upload tool
+#'
+#' The function will first run `run_input_validation` on the supplied .txt of information and enforce data validation. All errors must be resolved before the function will proceed.
+#'
+#' The function will inform the user of the total number of references to be created, the number of files to be uploaded, and the total volume of data to be uploaded (in GB) and ask the user if they are sure they want to proceed.
+#'
+#' The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference.
+#'
+#' A the original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
+#'
+#'
+#' @param filename String. The name of the file with information on what will be uploaded.
+#' @param path String. Path to the file.
+#' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
+#' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
+#' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to FALSE
+#'
+#' @returns Dataframe
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' bulk_reference_generation(filename = "test_file.txt")}
+bulk_reference_generation <- function(filename,
                                      path = getwd(),
+                                     max_file_upload = 500,
+                                     max_data_upload = 10,
                                      dev = FALSE) {
 
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
   #check upload file validity:
-  validation <- check_input_file(upload_data = upload_data)
-  if (validation != TRUE) {
+  validation <- run_input_validation(filename = filename,
+                                     path = path,
+                                     max_file_upload = max_file_upload,
+                                     max_data_upload = max_data_upload,
+                                     dev = dev)
+
+  #force user to fix all errors:
+  if (validation[1] > 0) {
     msg <- paste0("Please ensure you have supplied valid upload ",
-                  "information and have addressed all the issues ",
+                  "information and have addressed all the errors ",
                   "identified before proceeding with the bulk upload.")
     cli::cli_abort(msg)
     return()
   }
 
-  #ask to proceed; verify number of refs to create:
+  #calculate number of files to upload:
+  file_num <- 0
+  for (i in 1:nrow(upload_data)) {
+    files_per_ref <- length(list.files(upload_data$file_path[i]))
+    file_num <- (file_num + files_per_ref)
+  }
+
+  #calculate total file size to upload:
+  file_size <- 0
+  for (i in 1:nrow(upload_data)) {
+    file_size <- file_size +
+      sum(file.info(list.files(upload_data$file_path[i],
+                               full.names = TRUE))$size)
+  }
+  file_gb <- file_size/1073741824
+
+  #ask to proceed; verify number of refs to create, files to upload, and total upload size:
   ref_count <- nrow(upload_data)
   msg <- paste0("Would you like to upload all of your files and create ",
-                "{ref_count} ",
-                "new references on DataStore?")
+                "{ref_count} new references on DataStore? This will ",
+                "involve uploading {file_num} files and ",
+                "{file_gb} GB of data.")
   cli::cli_inform(msg)
   var1 <- readline(prompt = "1: Yes\n2: No\n")
   if (var1 == 2) {
