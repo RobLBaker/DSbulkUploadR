@@ -6,6 +6,19 @@
 
 
 #creates a draft reference; returns the new reference code:
+#' Creates a draft reference on DataStore
+#'
+#' @param draft_title String. The title for the reference.
+#' @param ref_type String. The reference type.
+#' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.
+#'
+#' @returns String. The DataStore reference number.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' create_draft_reference(draft_title = "DRAFT TITLE",
+#'                         ref_type = "AudioRecording")}
 create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
                                    dev = FALSE) {
