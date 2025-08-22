@@ -62,6 +62,39 @@ check_end_date <- function(filename, path = getwd()) {
   }
 }
 
+check_end_after_start <- function(filename, path = getwd){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  end_dates <- lubridate::ymd(upload_data$content_end_date)
+  start_dates <- lubridate::ymd(upload_data$content_begin_date)
+  time_dif <- lubridate::interval(start_dates, end_dates)
+  if (any(time_dif < 0)) {
+    msg <- paste0("Some content end dates predate content start dates. ",
+                  "Please make sure end dates are after start dates.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All end dates occur after start dates.")
+    cli::cli_inform(c("v" = msg))
+  }
+}
+
+check_dates_past <- function(filename, pathe = getwd){
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  end_dates <- lubridate::ymd(upload_data$content_end_date)
+  start_dates <- lubridate::ymd(upload_data$content_begin_date)
+  today <- Sys.Date()
+
+  check_start <- lubridate::interval(start_dates, today)
+  check_end <- lubridate::interval(end_dates, today)
+
+  if (any(check_start < 0) | any(check_end < 0)) {
+    msg <- paste0("Some of your content start or end dates occur in the ",
+                  "future. Please make sure all dates occur in the past.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All content start and end dates occur in the past.")
+    cli::cli_inform(c("v" = msg))
+  }
+}
 
 
 #' Checks for valid content and producing unit codes
@@ -78,7 +111,7 @@ check_end_date <- function(filename, path = getwd()) {
 #' \dontrun{
 #' check_units("example_input_file.txt")
 #' }
-check_units <- function(filename, path = getwd()){
+check_prod_units <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
   #get list of all units:
@@ -103,27 +136,43 @@ check_units <- function(filename, path = getwd()){
   if (length(bad_prod_units > 0)) {
     msg <- paste0("The following producing units are invalid. ",
                   "Please provide valid producing units: {bad_prod_units}.")
-    cli::cli_abort("msg")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All producing units are valid.")
+    cli::cli_inform(c("v" = msg))
   }
+}
 
-  #check for bad content units:
+check_content_units <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  #get list of all units:
+  f <- file.path(tempdir(), "irmadownload.xml")
+  if (!file.exists(f)) {
+    # access all park codes from NPS xml file
+    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+  }
+  result <- XML::xmlParse(file = f)
+  dat <- XML::xmlToDataFrame(result)
+
+  #check for bad conten units:
   content_units <- NULL
   for (i in 1:nrow(upload_data)) {
     content_units <-
       append(content_units,
              unlist(stringr::str_split(upload_data$content_units[i], ", ")))
-
-    content_units <- unique(content_units)
-    bad_content_units <- content_units[!(content_units %in% dat$UnitCode)]
   }
+  content_units <- unique(content_units)
+  bad_content_units <- content_units[!(content_units %in% dat$UnitCode)]
 
   if (length(bad_content_units > 0)) {
-    msg <- paste0("The following content units are invalid. ",
-                  "Please provide valid content units: {bad_content_units}.")
-    cli::cli_abort(msg)
+    msg <- paste0("Please provide valid content units. The following ",
+                  "content units are invalid: {bad_content_units}.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All content units are valid.")
+    cli::cli_inform(c("v" = msg))
   }
-  cli::cli_inform("All producing and content units are valid.")
-  return(TRUE)
 }
 
 check_files_exist <- function(filename, path = getwd()){
@@ -445,40 +494,24 @@ check_input_file <- function(filename, path = getwd(),
                   path = path,
                   file_size_error = file_size_error)
 
+
   check_508_format(filename = filename, path = path)
 
   #check that dates are is ISO format:
-  check_iso_date_format(upload_data$content_begin_date)
-  if (sum(begin_iso > 0)) {
-    msg <- paste0("Some dates in the begin_content_date column are not ",
-                  "in ISO 8601 format (yyyymmdd). Please correct this error.")
-    cli::cli_abort(c("x" = msg))
-  }
+  check_start_date(filename = filename, path = path)
+  check_end_date(filename = filename, path = path)
 
-  end_iso <- !check_iso_date_format(upload_data$content_end_date)
-  if ( sum(end_iso > 0)) {
-    msg <- paste0("Some dates in the end_content_date column are not ",
-                  "in ISO 8601 format (yyyymmdd). Please correct this error.")
-    cli::cli_abort(msg)
-  }
+  #check dates occur at logical times:
+  check_end_after_start(filename = filename, path = path)
+  check_dates_past(filename = filename, path = path)
 
-  #check that producing units and content units are valid units:
-  units_valid <- check_units(filename = filename, path = path)
-  if (units_valid != TRUE){
-    return(FALSE)
-  }
 
-  #check that user names are valid and have valid orcids:
-  check_authors_email <- check_authors_email(filename = filename, path = path)
-  if (users_valid != TRUE){
-    return(FALSE)
-  }
-  msg <- paste0("Your file for bulk uploads has passed all data ",
-                "validation steps.")
-  cli::cli_inform(msg)
-  return(TRUE)
+  #check that producing units are valid units:
+  check_prod_units(filename = filename, path = path)
 
-  check_author_orcid(filename = filename, path = path)
+  #check that content units are valid:
+  check_content_units(filename = filename, path = path)
+
 
 
 
