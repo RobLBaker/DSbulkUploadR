@@ -1,4 +1,17 @@
 # Helper functions ----
+#' Checks the begin_content_date column of an input file for ISO 8601 formatting
+#'
+#' Reads in a .txt file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
+#'
+#' @param filename String. name of the file to check
+#' @param path String. Path to the file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_start_date <- ("test_file.txt")}
 check_start_date <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   start_dates <- upload_data$content_begin_date
@@ -13,8 +26,23 @@ check_start_date <- function(filename, path = getwd()) {
                   "in the correct format.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
+#' Checks the end_content_date column of an input file for ISO 8601 formatting
+#'
+#' Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
+#'
+#' @param filename String. Name of the file to check.
+#' @param path String. Path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_end_date("test_file.txt")
+#' }
 check_end_date <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   end_dates <- upload_data$content_end_date
@@ -28,8 +56,23 @@ check_end_date <- function(filename, path = getwd()) {
                   "in the correct format.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
+#' Checks that content_end_dates occur after content_begin_dates in a file.
+#'
+#' Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column occur before the date in the same row for the content_begin_date column. Passes if all end dates occur on or after the being date.
+#'
+#' @param filename String. Name of the file to check
+#' @param path String. Path to the file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_end_after_start("test_file.txt")
+#' }
 check_end_after_start <- function(filename, path = getwd){
   upload_data <- read.delim(file=paste0(path, "/", filename))
   end_dates <- lubridate::ymd(upload_data$content_end_date)
@@ -43,9 +86,24 @@ check_end_after_start <- function(filename, path = getwd){
     msg <- paste0("All end dates occur after start dates.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
-check_dates_past <- function(filename, pathe = getwd){
+#' Checks that dates in a file occurred in the past.
+#'
+#' Reads in a .txt file for data validation. Throws an error if dates in either the content_begin_date or content_end_date occur after the current system date. If any dates occur in the future the function results in an error. The test passes if all dates occur in the past (or on the present day).
+#'
+#' @param filename String. Name of the file to check
+#' @param path String. Path to the file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_dates_past("test_file.txt")
+#' }
+check_dates_past <- function(filename, path = getwd){
   upload_data <- read.delim(file=paste0(path, "/", filename))
   end_dates <- lubridate::ymd(upload_data$content_end_date)
   start_dates <- lubridate::ymd(upload_data$content_begin_date)
@@ -62,22 +120,23 @@ check_dates_past <- function(filename, pathe = getwd){
     msg <- paste0("All content start and end dates occur in the past.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
 
-#' Checks for valid content and producing unit codes
+#' Checks for valid producing unit codes in a file
 #'
-#' Loads an input file (.txt) and checks two coluns of data (producing_units and content_units) against the NPS Units Service API to see if they are valid units. Accepts a list of comma-separated (or individual) unit codes. If invalid producing units are encountered, the function will abort with a list of invalid producing units. If all producing units are valid, the function continues on to check content units. If any invalid content units are encountered, the function will abort with an error message listing the invalid content units. If all units are valid, the function returns TRUE.
+#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 #'
-#' @param filename input file name
-#' @param path input file path. Defaults to the current working directory
+#' @param filename String. Name of file to check
+#' @param path String. Path to the file. Defaults to the current working directory
 #'
-#' @returns TRUE or NULL
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' check_units("example_input_file.txt")
+#' check_units("test_file.txt")
 #' }
 check_prod_units <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
@@ -109,8 +168,22 @@ check_prod_units <- function(filename, path = getwd()){
     msg <- paste0("All producing units are valid.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
+#' Checks for valid content unit codes in a file
+#'
+#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+#'
+#' @param filename String. Name of file to check
+#' @param path String. Path to the file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_content_units("test_file.txt")}
 check_content_units <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
@@ -141,8 +214,23 @@ check_content_units <- function(filename, path = getwd()) {
     msg <- paste0("All content units are valid.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
+#' Checks that each file_path in a file contains files
+#'
+#' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
+#'
+#' @param filename String. The input file to check.
+#' @param path String. Path to the input file. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_files_exist("test_file.txt")
+#' }
 check_files_exist <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
   bad_files <- NULL
@@ -160,9 +248,25 @@ check_files_exist <- function(filename, path = getwd()){
     msg <- paste0("All file paths contain file for upload.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisble(NULL))
 }
 
-#error if > file_number_error; warn if > 50% of file_number_error
+
+#' Checks whether the total number of file to upload exceeds a threshold
+#'
+#' Reads in a .txt file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
+#'
+#' @param filename String. Name of the file to check.
+#' @param path String. Path to the file to check. Defaults to the current working directory.
+#' @param file_number_error. Integer. Maximum allowable number of files. Defaults to 500.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_file_number("test_file.txt")
+#' }
 check_file_number <- function(filename,
                               path = getwd(),
                               file_number_error = 500) {
@@ -187,10 +291,26 @@ check_file_number <- function(filename,
     msg <- paste0("The files to upload does not exceed the maximum number.")
     cli::cli_inform(c("v" = msg))
   }
+  return(invisible(NULL))
 }
 
 #WARN AND ERROR GIVIN IN GB
 #error if > file error size; warn if > 50% error size
+#' Checks whether the total file size to upload exceeds some threshold
+#'
+#'  Reads in a .txt file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
+#'
+#' @param filename String. The file to check,
+#' @param path String. Path to the file. Defaults to the current working directory.
+#' @param file_size_error Integer. The maximum allowable total file size in GB. Defaults to 100 GB.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_file_size("test_file.txt")
+#' }
 check_file_size <- function(filename,
                             path = getwd(),
                             file_size_error = 100) {
@@ -221,8 +341,22 @@ check_file_size <- function(filename,
     msg <- paste0("The cumulative file size to upload does ",
                   "not exeed the maximum allowable.")
   cli::cli_inform(c("v" = msg))
+  return(invisible(NULL))
 }
 
+#' Checks the reference types in a file are valid Data Store reference types
+#'
+#' Reads in a .txt file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
+#'
+#' @param filename String. Input file to check.
+#' @param path String. Path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_ref_type("test_file.txt")}
 check_ref_type <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   refs <- upload_data$reference_type
@@ -249,10 +383,28 @@ check_ref_type <- function(filename, path = getwd()) {
     cli::cli_abort(c("x" = msg))
   }
   cli::cli_inform(c("v" = "All reference types are valid."))
+  return(invisible(NULL))
 }
 
+#' Checks an file for valid license types
+#'
+#' Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
+#'
+#' @param filename String. File to check.
+#' @param path String. Path to file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_license_type("test_file.txt")}
 check_license_type <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
+  if (any(is.na(upload_data$license_code))) {
+    msg <- paste0("You must supply a license type for all references.")
+    cli::cli_abort(c("x" = msg))
+  }
   valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
   if (valid_license > 0) {
     msg <- paste0("You have supplied an invalid license code. ",
@@ -261,10 +413,22 @@ check_license_type <- function(filename, path = getwd()) {
   } else {
     cli::cli_inform(c("v" = "All license codes are valid."))
   }
-  return(TRUE)
+  return(invisible(NULL))
 }
 
-#uses API to verify user email addresses
+#' Verifies author emails supplied in file.
+#'
+#' Reads in a .txt file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
+#'
+#' @param filename String. File to check.
+#' @param path String. Path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_author_email("test_file.txt")}
 check_author_email <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
@@ -297,9 +461,23 @@ check_author_email <- function(filename, path = getwd()) {
                   "are invalid: {bad_usr_emails}.")
     cli::cli_abort(c("x" = msg))
   }
+  return(invisible(NULL))
 }
 
 #checks to make sure all users have orcids and that orcids are correctly formatted. Does not check whether orcids are valid/associated with the correct username.
+#' Checks to make sure all author email accounts have ORCiDs
+#'
+#' Reads in a .txt file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
+#'
+#' @param filename String. File to check.
+#' @param path String. Path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_authors_orcid("test_file.txt")}
 check_authors_orcid <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
@@ -334,8 +512,22 @@ check_authors_orcid <- function(filename, path = getwd()) {
                   "prior to proceeding with reference creation: {no_orcid}.")
     cli::cli_abort(c("x" = msg))
   }
+  return(invisible(NULL))
 }
 
+#' Checks the formatting of ORCiDs associated with NPS emails supplied in a file
+#'
+#' Reads in a .txt file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
+#'
+#' @param filename String. File to check.
+#' @param path String. Path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_orcid_format("test_file.txt")}
 check_orcid_format <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
 
@@ -371,10 +563,29 @@ check_orcid_format <- function(filename, path = getwd()){
                   "Dirctory: {rjson2$searchTerm}.")
     cli::cli_abort(c("x" = msg))
   }
+  return(invisible(NULL))
 }
 
 #uses AD to verify users upn. Will not work after transition to entraID.
+#' Checks whether a upn supplied is valid.
+#'
+#' `r lifecycle::badge("deprecated")`
+#'
+#' Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the acccounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
+#'
+#' @param filename String. File to check.
+#' @param path String. Path to file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_users_AD("test_file.txt")}
 check_users_AD <- function(filename, path = getwd()){
+  lifecycle::deprecate_warn("0.0.1",
+                            "check_users_AD()",
+                            "check_author_email()")
 
   upload_data <- read.delim(file=paste0(path, "/", filename))
   #check for bad usernames:
@@ -416,17 +627,36 @@ check_users_AD <- function(filename, path = getwd()){
     }
   }
   if (!is.null(bad_usr)) {
-    cli::abort("The following usernames are invalid. Please provide valid usernames: {bad_usr}.")
-    return(FALSE)
+    msg <- paste0("The following usernames are invalid. Please provide ",
+                  "valid usernames: {bad_usr}.")
+    cli::abort(c("x" = msg))
   }
   if (!is.null(invalid_oricd)) {
-    cli::abort("The following usernames do not have ORCIDs (or have invalid ORCIDs) associated with them. Plase have the users add valid ORCIDs (https://orcid.org) to their Active Directory account at https://myaccount.nps.gov/: {invalid_orcid}.")
-    return(FALSE)
+    msg <- paste0("The following usernames do not have ORCIDs (or have ",
+                  "invalid ORCIDs) associated with them. Please have the ",
+                  "users add valid ORCIDs (https://orcid.org) to their ",
+                  "Active Directory account at https://myaccount.nps.gov/: ",
+                  "{invalid_orcid}.")
+    cli::abort(c("x" = msg))
   }
-  cli::inform("The file upload spreadsheet has been checked for errors.")
-  return(TRUE)
+  msg <- "All users have NPS accounts and valid ORCiDs associated with them."
+  cli::inform(c("v" = msg))
+  return(invisible(NULL))
 }
 
+#' Checks a column within a supplied file to ascertain whether 508 status has been supplied.
+#'
+#' Reads in a .txt file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
+#'
+#' @param filename String. The file to check.
+#' @param path String. The path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_508_format("test_file.txt")}
 check_508_format <- function(filename, path = getwd()){
   upload_data <- read.delim(file=paste0(path, "/", filename))
   is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
@@ -440,4 +670,5 @@ check_508_format <- function(filename, path = getwd()){
     cli::cli_inform(
       c("v" = "All files have a valid 508 compliance designation"))
   }
+  return(invisible(NULL))
 }
