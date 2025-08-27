@@ -79,8 +79,7 @@ The purpose column in the input.txt file should contain a brief description of t
 ## Notes
 The notes column in the input.txt file should contain any notes that may be important for understanding the reference. 
 
-##
-Author email addresses
+## Author email addresses
 The author_email_list column in input.txt should contain a comma-separated list of all the author's email addresses. Use full email addresses rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one author. Do not include extra text (no quotations, angle brackets, etc). 
 
 All authors must by valid NPS employees or partners (e.g. @nps.gov, @partner.nps.gov). All authors must have registered an ORCiD and added the ORCiD to active directory/Entra ID. The ORCiD in Active Directory/Entra ID must have the format xxxx-xxxx-xxxx-xxxx.
@@ -89,8 +88,16 @@ All authors must by valid NPS employees or partners (e.g. @nps.gov, @partner.nps
 
 The `bulk_reference_generation` file will automatically extract first name, last name, and ORCiDs based on the supplied email addresses and use that information to populate the authors of the reference.
 
+## Licenses
+The license_code column in input.txt should contain a numeric code (1,2,3,4 or 5) corresponding to a license for the reference on DataStore. A Creative Commons Zero (CC0) license is the preferred license for all public content on DataStore. Valid codes are as follows: 
 
+> 1: ["Creative Commons Zero v1.0 Universal (CC0)"](https://creativecommons.org/public-domain/cc0/). This is the preferred license for all public content. 
+> 2: ["Creative Commons Attribution 4.0 International"](https://choosealicense.com/licenses/cc-by-4.0/) (CC-by-4.0) 
+> 3: ["Creative commons Attribution Non Commercial 4.0 International"](https://www.creativecommons.org/licenses/by-nc/4.0/deed.en) (CC BY-NC 4.0) (This license may be useful when working with partners external to NPS), 
+> 4: ["Public Domain"](https://en.wikipedia.org/wiki/Public_domain), 
+> 5: "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes.
 
+##
 
 
 
