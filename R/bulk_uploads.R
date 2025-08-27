@@ -1,15 +1,7 @@
-
-
-
-
-
-
-
-#creates a draft reference; returns the new reference code:
-#' Creates a draft reference on DataStore
+#' Creates a blank draft reference on DataStore
 #'
 #' @param draft_title String. The title for the reference.
-#' @param ref_type String. The reference type.
+#' @param ref_type String. The reference type to create.
 #' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.
 #'
 #' @returns String. The DataStore reference number.
@@ -55,10 +47,26 @@ create_draft_reference <- function(draft_title = "Temp Title",
   rjson <- jsonlite::fromJSON(json)
   ds_ref <- rjson$referenceCode
 
-  refturn(ds_ref)
+  return(ds_ref)
 }
 
-#largely borrowed from Sarah's NPSdatastore package:
+#' Uploads files of indeterminant size to a DataStore reference
+#'
+#' This file uploader is largely borrowed from the R package NPSdatastore. It will take a file of any size and upload it to a given reference. This involves chunking the file into smaller pieces in order to upload larger files.
+#'
+#' @param filename String. Name of the file to be uploaded.
+#' @param path String. Location of the file to be uploaded.
+#' @param reference_id String. The reference number for the DataStore reference the file will be uploaded to.
+#' @param is508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
+#' @param chunk_size_mb Integer. Size of file chunks to be uploaded, in MB
+#' @param retry Integer. Number of times to retry uploading file chunks if a given chunk fails.
+#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#'
+#' @returns List. Of information about the uploaded file.
+#' @export
+#'
+#' @examples
+#' \dontrun{upload_files(filename = "example_file.wav", path = getwd(), reference_id = 1234567, is508 = FALSE, dev = TRUE)}
 upload_files <- function(filename,
                          path,
                          reference_id,
@@ -90,10 +98,6 @@ upload_files <- function(filename,
     httr2::req_error(is_error = \(resp) FALSE) |>
     httr2::req_perform()
 
-  .validate_resp(upload_token,
-                 nice_msg_400 = "Could not retrieve upload token. This usually happens if you don't have permissions to edit the reference or if you are not connected to the DOI/NPS network."
-  )
-
   upload_url <- upload_token$headers$Location
 
   # Get file size, set chunk size, determine number of chunks
@@ -102,7 +106,7 @@ upload_files <- function(filename,
   n_chunks <- ceiling(file_size_bytes/chunk_size_bytes)
 
   # Open file connection in binary mode
-  file_con <- file(file_path, "rb")
+  file_con <- file(file_name, "rb")
 
   # Initialize variables and progress bar to track upload progress
   status <- NA
@@ -153,8 +157,8 @@ upload_files <- function(filename,
     } else {
       err_msg <- "File upload was unsuccessful. Please try again. If the problem persists, contact the package maintainer or the DataStore helpdesk."
     }
-    .validate_resp(upload_resp,
-                   nice_msg_400 = err_msg)
+    #.validate_resp(upload_resp,
+    #               nice_msg_400 = err_msg)
 
 
     cli::cli_progress_update()
@@ -180,7 +184,7 @@ upload_files <- function(filename,
 #'
 #' The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference.
 #'
-#' A the original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
+#' The original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
 #'
 #'
 #' @param filename String. The name of the file with information on what will be uploaded.
@@ -201,8 +205,6 @@ bulk_reference_generation <- function(filename,
                                      max_data_upload = 10,
                                      dev = FALSE) {
 
-  upload_data <- read.delim(file=paste0(path, "/", filename))
-
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
                                      path = path,
@@ -217,7 +219,21 @@ bulk_reference_generation <- function(filename,
                   "identified before proceeding with the bulk upload.")
     cli::cli_abort(msg)
     return()
+  } else if (validation[2] > 0) {
+    msg <- cat("The data validation process has identified",
+                  "warnings. Are you sure you want to proceed without",
+                  "addressing these warnings?","\n",
+                  "1: Yes", "\n","2: No","\n")
+    cli::cli_inform(c("!" = msg))
+    var1 <- readline(prompt= "")
+    if (var1 ==2) {
+      cat("Exiting the function.")
+      return()
+    }
   }
+
+  #get info about bulk upload creation:
+  upload_data <- read.delim(file=paste0(path, "/", filename))
 
   #calculate number of files to upload:
   file_num <- 0
@@ -240,7 +256,7 @@ bulk_reference_generation <- function(filename,
   msg <- paste0("Would you like to upload all of your files and create ",
                 "{ref_count} new references on DataStore? This will ",
                 "involve uploading {file_num} files and ",
-                "{file_gb} GB of data.")
+                "{round(file_gb, 3)} GB of data.")
   cli::cli_inform(msg)
   var1 <- readline(prompt = "1: Yes\n2: No\n")
   if (var1 == 2) {
@@ -254,7 +270,7 @@ bulk_reference_generation <- function(filename,
   for (i in 1:nrow(upload_data)) {
     # create draft reference ----
     ref_code <- create_draft_reference(draft_title = upload_data$title[i],
-                                       ref_type,
+                                       ref_type = upload_data$reference_type[i],
                                        dev = dev)
     cli::cli_inform("Creating draft reference {ref_code}.")
     cli::cli_inform("Populating draft reference {ref_code}.")
@@ -264,50 +280,34 @@ bulk_reference_generation <- function(filename,
     end_date <- upload_data$content_end_date[i]
 
     #create author list ====
-    usr_name <- unlist(stringr::str_split(upload_data$author_upn_list[i],
+    usr_email <- unlist(stringr::str_split(upload_data$author_email_list[i],
                                           ", "))
-    # access active directory for each user name ####
+    usr_email <- stringr::str_trim(usr_email)
+    usr_email <- unique(usr_email)
+
+    req_url <- paste0("https://irmadevservices.nps.gov/",
+                        "adverification/v1/rest/lookup/email")
+    bdy <- usr_email
+    req <- httr::POST(req_url,
+                      httr::add_headers('Content-Type' = 'application/json'),
+                      body = rjson::toJSON(bdy))
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      stop("ERROR: DataStore connection failed.")
+    }
+    json <- httr::content(req, "text")
+    rjson <- jsonlite::fromJSON(json)
+
     contacts <- NULL
-    for (i in 1:length(usr_name)) {
-      powershell_command <- paste0('([adsisearcher]\\"(samaccountname=',
-                                   usr_name[i],
-                                   ')\\").FindAll().Properties')
-
-      AD_output <- system2("powershell",
-                           args = c("-Command",
-                                    powershell_command),
-                           stdout = TRUE)
-
-      # get orcid ####
-      orcid <- AD_output[which(AD_output %>%
-                                 stringr::str_detect("extensionattribute2\\b"))]
-      # extract orcid
-      orcid <- stringr::str_extract(orcid, "\\{.*?\\}")
-      # remove curly braces:
-      orcid <- stringr::str_remove_all(orcid, "[{}]")
-
-      #get surname ####
-      surname <- AD_output[which(AD_output %>%
-                                   stringr::str_detect("sn\\b"))]
-      surname <- stringr::str_extract(surname, "\\{.*?\\}")
-      surname <- stringr::str_remove_all(surname, "[{}]")
-
-      #get given name ####
-      given <- AD_output[which(AD_output %>%
-                                   stringr::str_detect("given"))]
-      given <- stringr::str_extract(given, "\\{.*?\\}")
-      given <- stringr::str_remove_all(given, "[{}]")
-
-      #create author list ####
+    for (j in 1:length(usr_email)) {
       author <- list(title = "",
-                      primaryName = surname,
-                      firstName = given,
-                      middleName = "",
-                      suffix = "",
-                      affiliation = "",
-                      isCorporate = FALSE,
-                      ORCID = orcid)
-      #add to contacts
+                     primaryName = rjson$sn[j],
+                     firstName = rjson$givenName[j],
+                     middleName = "",
+                     suffix = "",
+                     affiliation = "",
+                     isCorporate = FALSE,
+                     ORCID = rjson$extensionAttribute2[j])
       contacts <- append(contacts, author)
     }
 
@@ -374,23 +374,25 @@ bulk_reference_generation <- function(filename,
 
     #translate 508compliance:
     complaint <- NULL
-    if (upload_data$file_508_compliant[i] == "yes") {
+    if (upload_data$files_508_compliant[i] == "yes") {
       compliant <- TRUE
     } else {
       compliant <- FALSE
     }
 
-    file_list <- list.files(path = path, full.names = TRUE)
+    file_list <- list.files(path = upload_data$file_path[i],
+                            full.names = TRUE)
 
-    for (j in 1:length(list.files)) {
-
-    upload_files(filename,
-                 path = file_list[j],
-                 reference_id = ref_code,
-                 is508 = compliant,
-                 chunk_size_mb = 1,
-                 retry = 1,
-                 dev = FALSE)
+    for (j in 1:length(file_list)) {
+      msg <- "Uploading file {j} of {length(file_list)} to reference {ref_code}."
+      cli::cli_inform(msg)
+      suppressWarnings(upload_files(filename = list.files(upload_data$file_path[i])[j],
+                   path = upload_data$file_path[i],
+                   reference_id = ref_code,
+                   is508 = compliant,
+                   chunk_size_mb = 1,
+                   retry = 1,
+                   dev = dev))
     }
   #add reference id column to dataframe to make it easier to find them all
   upload_data$reference_id[i] <- ref_code
