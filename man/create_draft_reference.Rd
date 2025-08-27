@@ -2,14 +2,14 @@
 % Please edit documentation in R/bulk_uploads.R
 \name{create_draft_reference}
 \alias{create_draft_reference}
-\title{Creates a draft reference on DataStore}
+\title{Creates a blank draft reference on DataStore}
 \usage{
 create_draft_reference(draft_title = "Temp Title", ref_type, dev = FALSE)
 }
 \arguments{
 \item{draft_title}{String. The title for the reference.}
 
-\item{ref_type}{String. The reference type.}
+\item{ref_type}{String. The reference type to create.}
 
 \item{dev}{Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.}
 }
@@ -17,7 +17,7 @@ create_draft_reference(draft_title = "Temp Title", ref_type, dev = FALSE)
 String. The DataStore reference number.
 }
 \description{
-Creates a draft reference on DataStore
+Creates a blank draft reference on DataStore
 }
 \examples{
 \dontrun{
