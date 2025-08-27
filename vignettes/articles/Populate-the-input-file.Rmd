@@ -80,6 +80,15 @@ The purpose column in the input.txt file should contain a brief description of t
 The notes column in the input.txt file should contain any notes that may be important for understanding the reference. 
 
 ##
+Author email addresses
+The author_email_list column in input.txt should contain a comma-separated list of all the author's email addresses. Use full email addresses rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one author. Do not include extra text (no quotations, angle brackets, etc). 
+
+All authors must by valid NPS employees or partners (e.g. @nps.gov, @partner.nps.gov). All authors must have registered an ORCiD and added the ORCiD to active directory/Entra ID. The ORCiD in Active Directory/Entra ID must have the format xxxx-xxxx-xxxx-xxxx.
+
+[Open Researcher and Contributor ID (ORCiD)](https://info.orcid.org/what-is-orcid/) is a third-party persistent digital identifier associated with individuals rather than institutions or documents. ORCiDs are required for authors by the [NPS Open Access Plan](https://irma.nps.gov/DataStore/DownloadFile/717695) for all authors of all scholarly and scientific work. You can learn more about ORCiDs, how register them, add them to Active Directory/Entra ID, control the automated information flowing to your ORCiD profile and what information orcid.org displays about you on the [NPS Data Publication Best Practices SharePoint site page on Persistent Identifiers](https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/data-publication/SitePages/Reserve-a-DOI.aspx#personal-digital-identifiers-%28orcids%29) including ORCiDs.
+
+The `bulk_reference_generation` file will automatically extract first name, last name, and ORCiDs based on the supplied email addresses and use that information to populate the authors of the reference.
+
 
 
 
