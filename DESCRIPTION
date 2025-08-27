@@ -2,10 +2,12 @@ Package: DSbulkUploadR
 Title: Creates, populates, and uploads files to multiple DataStore references
 Version: 0.0.0.9000
 Authors@R: c( 
-    person(given="Robert",
-           family="Baker",
-           email="robert_baker@nps.gov",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7591-5035"))
+    person(given = "Robert",
+    family = "Baker",
+    email = "robert_baker@nps.gov",
+    role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0001-7591-5035"))
+    )
 Maintainer: Rob Baker <robert_baker@nps.gov>
 Description: Efficiently creates, populates, and uploads files to multiple DataStore references using user-supplied .txt file with predefined fields.
 License: CC0
