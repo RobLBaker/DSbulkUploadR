@@ -46,6 +46,11 @@ Additionally, before the `bulk_reference_generation` function creates anything o
 ## 508 
 You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("yes") or not ("no"). These values apply to ALL of the files in the supplied file path and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
 
+## Reference title
+The column title in the input.txt file should contain your Reference Title. Each reference (line in the input.txt file) requires a unique title. Supply the title without quotes surrounding.
+
+Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
+
 
 
 
