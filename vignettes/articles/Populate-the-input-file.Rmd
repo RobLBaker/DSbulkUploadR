@@ -9,6 +9,24 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-#library(DSbulkUploadR)
-```
+# Overview
+Carefully constructing and inspecting the input file is very important. The `bulk_reference_creation` function will run a series of data validation steps to make sure your input file is properly formatted. Any errors generated during input data validation will need to be fixed before any references are created or files are uploaded. These validation steps are meant to help minimize inadvertent misuse of the functions but they cannot take the place of careful human inspection. Please make sure your input file is properly specified. 
+
+We strongly recommend testing (a subset of?) your input file on the development server by setting the parameter `dev = TRUE` when using the `bulk_reference_creation` function.
+
+# Get an input template
+You can download an input.txt template to edit. We suggest opening the file in excel to help keep track of columns of data. Each row in the input.txt file will represent a single reference to be be created on DataStore. References can have multiple files, authors, content producting units, etc.
+
+## Working with dates
+To prevent excel from automatically changing your dates into a non-ISO 8601 format (yyyy-mm-dd), you need to change some global settings on your computer. For PCs search for "date and time format" from the start menu. Select "Change the date and time format" (which is part of the system settings). In the panel "Short Date" choose the date formatted as YYYY-MM-DD.
+
+# Editing the input template
+The input template is designed to be easy to understand and human-readable. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the input template. Do NOT change any of the column names.
+
+## Reference type
+In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Make sure to use the DataStore back-end reference type names which may differ from the reference type displayed on the DataStore website. Pay careful attention to the spelling, spaces (or lack thereof) and pattern of capitalization. Currently the following reference types are supported:
+
+
+> AudioRecording
+
+For a full list of all available reference types on DataStore as well as the appropriate name to use in this input.txt file, see the swagger documentation for the [DataStore ReferenceTypes API](https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes) and example code.
