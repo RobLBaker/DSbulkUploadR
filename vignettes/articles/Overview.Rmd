@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 # What this Package Does
 
 The `DSbulkUploadR` package only requires that you use one function, `bulk_reference_generation`. This function takes an input .txt file and uses it to:
+
 1) Create draft reference(s) on DataStore
 2) Populate each draft reference with the supplied information
 3) Upload *all* the file(s) in the specified directory to the draft reference(s)
