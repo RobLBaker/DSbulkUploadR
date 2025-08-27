@@ -51,6 +51,13 @@ The column title in the input.txt file should contain your Reference Title. Each
 
 Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
 
+## Content begin date
+The column content_begin_date in the input.txt file should contain the date that the content of the reference/files starts in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content begin date should be before today's date and before the content_end_date.
+
+## Content end date
+The column content_end_date in the input.txt file should contain the date that the content of the reference/files ends in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content end date should be before today's date and after the content_start_date.
+
+
 
 
 
