@@ -1,10 +1,15 @@
 Package: DSbulkUploadR
-Title: What the Package Does (One Line, Title Case)
+Title: Creates, populates, and uploads files to multiple DataStore references
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: c( 
+    person(given="Robert",
+           family="Baker",
+           email="robert_baker@nps.gov",
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0001-7591-5035"))
+Maintainer: Rob Baker <robert_baker@nps.gov>
+Description: Efficiently creates, populates, and uploads files to multiple DataStore references using user-supplied .txt file with predefined fields.
 License: CC0
+BugReports: https://github.com/nationalparkservice/DSbulkUploadR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -17,3 +22,4 @@ Imports:
     lubridate,
     stringr,
     XML
+URL: https://github.com/nationalparkservice/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR
