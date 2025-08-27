@@ -103,6 +103,8 @@ The column producing_unit in the input.txt file should contain a comma-separated
 ## Content Unit(s)
 The column content_units in the input.txt file should contain a comma-separated list of acronyms for the NPS unit(s) where the information in the reference was collected or generated. This should be specific park units that have physical geographies and not organizational units. For instance, YELL (for Yellowstone) and/or GRTE (Grand Teton National Park) but *not* GRYN (Greater Yellowstone Network), IMD (Inventory and Monitoring Division), NRSS (Natural Resources Science and Stewardship Directorate), etc.
 
+## Keywords
+The keywords column in the input.txt file should contain a comma-separated list of keywords to be added to the reference.
 
 
 
