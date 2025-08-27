@@ -15,7 +15,7 @@ Carefully constructing and inspecting the input file is very important. The `bul
 We strongly recommend testing (a subset of?) your input file on the development server by setting the parameter `dev = TRUE` when using the `bulk_reference_creation` function.
 
 # Get an input template
-You can download an input.txt template to edit. We suggest opening the file in excel to help keep track of columns of data. Each row in the input.txt file will represent a single reference to be be created on DataStore. References can have multiple files, authors, content producting units, etc.
+You can download an input.txt template to edit. We suggest opening the file in excel to help keep track of columns of data. Each row in the input.txt file will represent a single reference to be be created on DataStore. References can have multiple files, authors, content producing units, etc.
 
 ## Working with dates
 To prevent excel from automatically changing your dates into a non-ISO 8601 format (yyyy-mm-dd), you need to change some global settings on your computer. For PCs search for "date and time format" from the start menu. Select "Change the date and time format" (which is part of the system settings). In the panel "Short Date" choose the date formatted as YYYY-MM-DD.
@@ -30,3 +30,11 @@ In the "reference_type" column put the reference type for the reference to be cr
 > AudioRecording
 
 For a full list of all available reference types on DataStore as well as the appropriate name to use in this input.txt file, see the swagger documentation for the [DataStore ReferenceTypes API](https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes) and example code.
+
+## Files to upload
+The file_path column in the input.txt file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
+
+This is one of the places you could make a fairly critical mistakes with fairly large consequences. If for instance you set the file path to just "C:\\", the function would attempt to upload ALL of the files on your hard drive. please make sure your the directory you supply is as specific as possible and contains only files that you want uploaded.
+
+Each new reference should have its own file path specified. Which means that you need to organize your files such that you have a directory of files associated with a specific reference you intend to create. You should have all the files associated with that reference and nothing else in that directory.
+
