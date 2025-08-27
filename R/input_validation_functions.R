@@ -14,6 +14,7 @@
 #' \dontrun{
 #' check_ref_type("test_file.txt")}
 check_ref_type <- function(filename, path = getwd()) {
+
   upload_data <- read.delim(file=paste0(path, "/", filename))
   refs <- upload_data$reference_type
 
@@ -73,7 +74,7 @@ check_files_exist <- function(filename, path = getwd()){
     msg <- paste0("All file paths contain file for upload.")
     cli::cli_inform(c("v" = msg))
   }
-  return(invisble(NULL))
+  return(invisible(NULL))
 }
 
 #' Checks whether the total number of file to upload exceeds a threshold
@@ -103,8 +104,9 @@ check_file_number <- function(filename,
   if (file_num > file_number_error) {
     msg <- paste0("You are attempting to upload {file_num} files, ",
                   "which exceeds the maximum allowable number, ",
-                  "({error} files). Please either adjust the maximum number ",
-                  "of files or attempt to upload fewer files.")
+                  "({file_number_error} files). Please either adjust ",
+                  "the maximum number of files or attempt to upload ",
+                  "fewer files.")
     cli::cli_abort(c("x" = msg))
   } else if (file_num > (file_number_error * 0.5)) {
     msg <- paste0("You are attempting to upload {file_num} files, ",
@@ -150,8 +152,8 @@ check_file_size <- function(filename,
   if (file_size > error_bytes) {
     msg <- paste0("You are attempting to upload {file_gb} GB of data, ",
                   "which exceeds the maximum allowable number, ",
-                  "({error} GB) per bulk upload. Please either adjust ",
-                  "the maximum data upload amount, or attempt to ",
+                  "({file_size_error} GB) per bulk upload. Please either ",
+                  "adjust the maximum data upload amount, or attempt to ",
                   "upload less data.")
     cli::cli_abort(c("x" = msg))
   } else if (file_size > warn_bytes) {
