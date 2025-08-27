@@ -57,6 +57,13 @@ The column content_begin_date in the input.txt file should contain the date that
 ## Content end date
 The column content_end_date in the input.txt file should contain the date that the content of the reference/files ends in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content end date should be before today's date and after the content_start_date.
 
+## Length of recording
+The length_of_recording column in the input.txt file should contain a string of characters describing the duration of the content. For instance, the length_of_recording value may be "5 hours six minutes and 32 sec" (without quotes). This value will be directly used and not parsed into any specific format.
+
+If the reference type does not have a recording length, leave this value blank.
+
+
+
 
 
 
