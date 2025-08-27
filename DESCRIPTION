@@ -25,3 +25,4 @@ Imports:
     stringr,
     XML
 URL: https://github.com/nationalparkservice/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR/
+Config/Needs/website: rmarkdown
