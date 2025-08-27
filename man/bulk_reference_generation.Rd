@@ -34,7 +34,7 @@ The function will inform the user of the total number of references to be create
 
 The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference.
 
-A the original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
+The original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
 }
 \examples{
 \dontrun{
