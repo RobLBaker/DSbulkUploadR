@@ -97,7 +97,13 @@ The license_code column in input.txt should contain a numeric code (1,2,3,4 or 5
 > 4: ["Public Domain"](https://en.wikipedia.org/wiki/Public_domain), 
 > 5: "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes.
 
-##
+## Producing Unit(s)
+The column producing_unit in the input.txt file should contain a comma-separated list of acronyms for the NPS units that contributed to producing the reference or its content. For instance, an IMD network or region might be responsible for creating a reference or its content (e.g. IMR or ROMN). These must be valid NPS unit acronyms, e.g. ROMO not RMNP for Rocky Mountain National Park or IMD for the Inventory and Monitoring Division (not IM&D). 
+
+## Content Unit(s)
+The column content_units in the input.txt file should contain a comma-separated list of acronyms for the NPS unit(s) where the information in the reference was collected or generated. This should be specific park units that have physical geographies and not organizational units. For instance, YELL (for Yellowstone) and/or GRTE (Grand Teton National Park) but *not* GRYN (Greater Yellowstone Network), IMD (Inventory and Monitoring Division), NRSS (Natural Resources Science and Stewardship Directorate), etc.
+
+
 
 
 
