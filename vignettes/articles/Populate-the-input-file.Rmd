@@ -10,9 +10,9 @@ knitr::opts_chunk$set(
 ```
 
 # Overview
-Carefully constructing and inspecting the input file is very important. The `bulk_reference_creation` function will run a series of data validation steps to make sure your input file is properly formatted. Any errors generated during input data validation will need to be fixed before any references are created or files are uploaded. These validation steps are meant to help minimize inadvertent misuse of the functions but they cannot take the place of careful human inspection. Please make sure your input file is properly specified. 
+Carefully constructing and inspecting the input file is very important. The `bulk_reference_generation` function will run a series of data validation steps to make sure your input file is properly formatted. Any errors generated during input data validation will need to be fixed before any references are created or files are uploaded. These validation steps are meant to help minimize inadvertent misuse of the functions but they cannot take the place of careful human inspection. Please make sure your input file is properly specified. 
 
-We strongly recommend testing (a subset of?) your input file on the development server by setting the parameter `dev = TRUE` when using the `bulk_reference_creation` function.
+We strongly recommend testing (a subset of?) your input file on the development server by setting the parameter `dev = TRUE` when using the `bulk_reference_generation` function.
 
 # Get an input template
 You can download an input.txt template to edit. We suggest opening the file in excel to help keep track of columns of data. Each row in the input.txt file will represent a single reference to be be created on DataStore. References can have multiple files, authors, content producing units, etc.
@@ -37,4 +37,15 @@ The file_path column in the input.txt file specifies the location of the file(s)
 This is one of the places you could make a fairly critical mistakes with fairly large consequences. If for instance you set the file path to just "C:\\", the function would attempt to upload ALL of the files on your hard drive. please make sure your the directory you supply is as specific as possible and contains only files that you want uploaded.
 
 Each new reference should have its own file path specified. Which means that you need to organize your files such that you have a directory of files associated with a specific reference you intend to create. You should have all the files associated with that reference and nothing else in that directory.
+
+### Checks on files uploads
+The `bulk_reference_generation` function can impose some limits on the total number and size of files to be uploaded. By default, the function will produce a warning if you attempt to upload 250 or more files or 50 or more GB of data at a time (not per reference but for the entire process). The function will produce an error and fail to upload any files if you attempt to upload 500 or more files or 100 GB or more data at a time.  These parameters are easily adjusted to suite your needs. See the documentation on [`bulk_reference_generation`](https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html)
+
+Additionally, before the `bulk_reference_generation` function creates anything on DataStore, you will be informed of the total number of references the function will create, the total number of files it will upload, and the total data volume (in GB) that will be uploaded. You will have an option to proceed or end the function if any of these values do not look correct to you.
+
+## 508 
+You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("yes") or not ("no"). These values apply to ALL of the files in the supplied file path and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
+
+
+
 
