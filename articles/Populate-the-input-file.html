@@ -106,23 +106,30 @@ development server by setting the parameter <code>dev = TRUE</code> when
 using the <code>bulk_reference_generation</code> function.</p>
 </div>
 <div class="section level2">
-<h2 id="get-an-input-template">Get an input template<a class="anchor" aria-label="anchor" href="#get-an-input-template"></a>
+<h2 id="create-an-input-template">Create an input template<a class="anchor" aria-label="anchor" href="#create-an-input-template"></a>
 </h2>
-<p>You can download an input.txt template to edit. We suggest opening
-the file in excel to help keep track of columns of data. Each row in the
-input.txt file will represent a single reference to be be created on
-DataStore. References can have multiple files, authors, content
-producing units, etc.</p>
-<div class="section level3">
-<h3 id="working-with-dates">Working with dates<a class="anchor" aria-label="anchor" href="#working-with-dates"></a>
-</h3>
-<p>To prevent excel from automatically changing your dates into a
-non-ISO 8601 format (yyyy-mm-dd), you need to change some global
-settings on your computer. For PCs search for “date and time format”
-from the start menu. Select “Change the date and time format” (which is
-part of the system settings). In the panel “Short Date” choose the date
-formatted as YYYY-MM-DD.</p>
-</div>
+<p>Each DataStore reference type has a potentially unique backend
+storage system and potentially unique set of possible fields. Therefore
+you will need a separate input template file for each reference type you
+plan to upload to DataStore.</p>
+<p>To create the relevant template input file, use the function
+<code><a href="../reference/make_input_template.html">make_input_template()</a></code> and pass it the the appropriate
+DataStore reference type name. Currently the following reference types
+are supported:</p>
+<blockquote>
+<p>AudioRecording</p>
+</blockquote>
+<p>The following line of code</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_input_template.html">make_input_template</a></span><span class="op">(</span><span class="st">"AudioRecording"</span><span class="op">)</span></span></code></pre></div>
+<p>will write the file AudioRecording_input.txt to your current working
+directory (you can customize the where the file is written to by
+specifying the write_path, which defaults to the current working
+directory).</p>
+<p>For a full list of all available reference types on DataStore as well
+as the appropriate name to use in this input.txt file, see the swagger
+documentation for the <a href="https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
+ReferenceTypes API</a> and example code.</p>
 </div>
 <div class="section level2">
 <h2 id="editing-the-input-template">Editing the input template<a class="anchor" aria-label="anchor" href="#editing-the-input-template"></a>
@@ -132,6 +139,10 @@ human-readable. Yet, it will be used as computer input and so must be
 crafted with some rules that may not seem intuitive. Please take care to
 read these instructions when populating the input template. Do NOT
 change any of the column names.</p>
+<p>One suggestion is to open the .txt file in Excel and edit it in
+excel. This can cause some issues with date formats, please see the
+section below, “<a href="#working-with-dates">Working with
+dates</a>”.</p>
 <div class="section level3">
 <h3 id="reference-type">Reference type<a class="anchor" aria-label="anchor" href="#reference-type"></a>
 </h3>
@@ -140,15 +151,7 @@ reference to be created using the data in that particular row. Make sure
 to use the DataStore back-end reference type names which may differ from
 the reference type displayed on the DataStore website. Pay careful
 attention to the spelling, spaces (or lack thereof) and pattern of
-capitalization. Currently the following reference types are
-supported:</p>
-<blockquote>
-<p>AudioRecording</p>
-</blockquote>
-<p>For a full list of all available reference types on DataStore as well
-as the appropriate name to use in this input.txt file, see the swagger
-documentation for the <a href="https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
-ReferenceTypes API</a> and example code.</p>
+capitalization.</p>
 </div>
 <div class="section level3">
 <h3 id="files-to-upload">Files to upload<a class="anchor" aria-label="anchor" href="#files-to-upload"></a>
@@ -218,20 +221,30 @@ where the data are from (ROMO), and what dates the data span (2020-2023,
 which may differ from the year it was activated/published).</p>
 </div>
 <div class="section level3">
-<h3 id="content-begin-date">Content begin date<a class="anchor" aria-label="anchor" href="#content-begin-date"></a>
+<h3 id="working-with-dates">Working with dates<a class="anchor" aria-label="anchor" href="#working-with-dates"></a>
 </h3>
+<p>To prevent excel from automatically changing your dates into a
+non-ISO 8601 format (yyyy-mm-dd), you need to change some global
+settings on your computer. For PCs search for “date and time format”
+from the start menu. Select “Change the date and time format” (which is
+part of the system settings). In the panel “Short Date” choose the date
+formatted as YYYY-MM-DD.</p>
+<div class="section level4">
+<h4 id="content-begin-date">Content begin date<a class="anchor" aria-label="anchor" href="#content-begin-date"></a>
+</h4>
 <p>The column content_begin_date in the input.txt file should contain
 the date that the content of the reference/files starts in ISO 8601
 format: YYYY-MM-DD. Other formats are not accepted. The content begin
 date should be before today’s date and before the content_end_date.</p>
 </div>
-<div class="section level3">
-<h3 id="content-end-date">Content end date<a class="anchor" aria-label="anchor" href="#content-end-date"></a>
-</h3>
+<div class="section level4">
+<h4 id="content-end-date">Content end date<a class="anchor" aria-label="anchor" href="#content-end-date"></a>
+</h4>
 <p>The column content_end_date in the input.txt file should contain the
 date that the content of the reference/files ends in ISO 8601 format:
 YYYY-MM-DD. Other formats are not accepted. The content end date should
 be before today’s date and after the content_start_date.</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="length-of-recording">Length of recording<a class="anchor" aria-label="anchor" href="#length-of-recording"></a>
