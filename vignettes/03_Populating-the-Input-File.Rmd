@@ -15,9 +15,11 @@ knitr::opts_chunk$set(
 ```
 
 # Editing the input template
-The input template is designed to be easy to understand and human-readable. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the input template. Do NOT change any of the column names.
+The input template is designed to be easy to understand and human-readable. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the input template. Do NOT change any of the column names. 
 
-One suggestion is to open the .txt file in Excel and edit it in excel. This can cause some issues with date formats, please see the section below, "[Working with dates](#working-with-dates)".
+Most of the data you supply will be subjected to a series of data validation checks to make sure it is correctly formatted. If any errors are found, you will be given an opportunity to fix them prior to performing the bulk reference generation. But it is much faster to supply the data correctly the first time (and there are likely ways to do it incorrectly that the checks cannot account for). So please read the instructions carefully.
+
+One suggestion is to open the .txt file in Excel and edit it in excel. However, this can cause some issues with date formats, please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
 
 ## Reference type
 In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Make sure to use the DataStore back-end reference type names which may differ from the reference type displayed on the DataStore website. Pay careful attention to the spelling, spaces (or lack thereof) and pattern of capitalization. 
@@ -35,10 +37,10 @@ The `bulk_reference_generation()` function can impose some limits on the total n
 Additionally, before the `bulk_reference_generation()` function creates anything on DataStore, you will be informed of the total number of references the function will create, the total number of files it will upload, and the total data volume (in GB) that will be uploaded. You will have an option to proceed or end the function if any of these values do not look correct to you.
 
 ## 508 
-You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("yes") or not ("no"). These values apply to ALL of the files in the supplied file path and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
+You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("yes") or not ("no"). These values apply to ALL of the files in the supplied file path/for a given reference and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
 
 ## Reference title
-The column title in the input.txt file should contain your Reference Title. Each reference (line in the input.txt file) requires a unique title. Supply the title without quotes surrounding.
+The column title in the input.txt file should contain your Reference Title. Each reference (line in the input.txt file) requires a unique title. Supply the title without quotes surrounding it.
 
 Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
 

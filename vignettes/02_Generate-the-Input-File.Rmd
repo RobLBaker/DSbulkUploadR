@@ -1,0 +1,43 @@
+---
+title: "Generate-the-Input-File"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generate-the-Input-File}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+Carefully constructing and inspecting the input file is very important. The `bulk_reference_generation()` function will run a series of data validation steps to make sure your input file is properly formatted. Any errors generated during input data validation will need to be fixed before any references are created or files are uploaded. These validation steps are meant to help minimize inadvertent misuse of the functions but they cannot take the place of careful human inspection. Please make sure your input file is properly specified. 
+
+We strongly recommend testing (a subset of?) your input file on the development server by setting the parameter `dev = TRUE` when using the `bulk_reference_generation()` function.
+
+# Create an input template
+Each DataStore reference type has a potentially unique backend storage system and potentially unique set of possible fields. Therefore you will need a separate input template file for each reference type you plan to upload to DataStore.
+
+To create the relevant template input file, use the function `make_input_template()` and pass it the the appropriate DataStore reference type name. Currently the following reference types are supported:
+
+> AudioRecording
+
+For example, the following line of code
+
+```{r eval=FALSE}
+make_input_template("AudioRecording")
+```
+
+will write the file "AudioRecording_input.txt" to your current working directory (you can customize where the file is written to by specifying the write_path, which defaults to the current working directory).
+
+
+For a full list of all available reference types on DataStore as well as the appropriate name to use in this input.txt file, see the swagger documentation for the [DataStore ReferenceTypes API](https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes) and example code.
+
+# Implications of unique reference attributes
+Because each reference type on DataStore is unique with its own unique backend storage structure and API requirements, you will need a separate input.txt file for each reference type you plan on creating. If you want to create 3,600 Audio Recordings references, you can do it all using the single AudioRecording_input.txt file. However, if you want to make 3,549 Audio Recording references and 51 Generic Document references, you will need to run the `make_input_template()` function twice (once to make a template for Audio Recordings and once to make a template for Generic Documents. You will also need to run the `bulk_reference_generation()` function twice: once supplying the AudioRecordings.txt input file and once supplying the GenericDocument_input.txt file.
+
+As an aside, you will also have to wait for this package to support additional DataStore reference types. This development version only supports the Audio Recordings reference type.

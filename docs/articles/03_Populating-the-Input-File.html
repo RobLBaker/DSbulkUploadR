@@ -49,19 +49,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Data-Validation-Checks.html">Data-Validation-Checks</a>
+      <a href="../articles/01_Overview.html">Overview</a>
     </li>
     <li>
-      <a href="../articles/Generate-the-Input-File.html">Generate-the-Input-File</a>
+      <a href="../articles/02_Generate-the-Input-File.html">Generate-the-Input-File</a>
     </li>
     <li>
-      <a href="../articles/Overview.html">Overview</a>
+      <a href="../articles/03_Populating-the-Input-File.html">Populating-the-Input-File</a>
     </li>
     <li>
-      <a href="../articles/Perform-Bulk-Reference-Uploads.html">Perform-Bulk-Reference-Uploads</a>
+      <a href="../articles/04_Perform-Bulk-Reference-Uploads.html">Perform-Bulk-Reference-Uploads</a>
     </li>
     <li>
-      <a href="../articles/Populating-the-Input-File.html">Populating-the-Input-File</a>
+      <a href="../articles/05_Data-Validation-Checks.html">Data-Validation-Checks</a>
     </li>
   </ul>
 </li>
@@ -92,8 +92,8 @@
       <h1 data-toc-skip>Populating-the-Input-File</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/DSbulkUploadR/blob/HEAD/vignettes/Populating-the-Input-File.Rmd" class="external-link"><code>vignettes/Populating-the-Input-File.Rmd</code></a></small>
-      <div class="hidden name"><code>Populating-the-Input-File.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/DSbulkUploadR/blob/HEAD/vignettes/03_Populating-the-Input-File.Rmd" class="external-link"><code>vignettes/03_Populating-the-Input-File.Rmd</code></a></small>
+      <div class="hidden name"><code>03_Populating-the-Input-File.Rmd</code></div>
 
     </div>
 
@@ -107,10 +107,17 @@ human-readable. Yet, it will be used as computer input and so must be
 crafted with some rules that may not seem intuitive. Please take care to
 read these instructions when populating the input template. Do NOT
 change any of the column names.</p>
+<p>Most of the data you supply will be subjected to a series of data
+validation checks to make sure it is correctly formatted. If any errors
+are found, you will be given an opportunity to fix them prior to
+performing the bulk reference generation. But it is much faster to
+supply the data correctly the first time (and there are likely ways to
+do it incorrectly that the checks cannot account for). So please read
+the instructions carefully.</p>
 <p>One suggestion is to open the .txt file in Excel and edit it in
-excel. This can cause some issues with date formats, please see the
-section below, “<a href="#working-with-dates">Working with
-dates</a>”.</p>
+excel. However, this can cause some issues with date formats, please see
+the section below, “<a href="#working-with-dates">Working with
+dates</a>” for how to mitigate the issue.</p>
 <div class="section level3">
 <h3 id="reference-type">Reference type<a class="anchor" aria-label="anchor" href="#reference-type"></a>
 </h3>
@@ -165,18 +172,19 @@ of these values do not look correct to you.</p>
 </h3>
 <p>You will need to supply information on whether the files you are
 uploading to each reference are 508 compliant (“yes”) or not (“no”).
-These values apply to ALL of the files in the supplied file path and
-will be universally applied to all of the files uploaded to each
-reference. References cannot have mixes of files some of which are 508
-compliant and some of which are not. However, different references can
-have different 508 compliance values associated with them.</p>
+These values apply to ALL of the files in the supplied file path/for a
+given reference and will be universally applied to all of the files
+uploaded to each reference. References cannot have mixes of files some
+of which are 508 compliant and some of which are not. However, different
+references can have different 508 compliance values associated with
+them.</p>
 </div>
 <div class="section level3">
 <h3 id="reference-title">Reference title<a class="anchor" aria-label="anchor" href="#reference-title"></a>
 </h3>
 <p>The column title in the input.txt file should contain your Reference
 Title. Each reference (line in the input.txt file) requires a unique
-title. Supply the title without quotes surrounding.</p>
+title. Supply the title without quotes surrounding it.</p>
 <p>Titles should be informative and should not include acronyms (such as
 NPS units, networks, regions, divisions, etc) that may not be broadly
 known outside of NPS. In general a title should seek to convey the

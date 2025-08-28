@@ -1,0 +1,72 @@
+---
+title: "Perform-Bulk-Reference-Uploads"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Perform-Bulk-Reference-Uploads}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+Once you have finished filling out your input.txt file, you are ready to create references on DataStore! It can be quite easy to make hundreds or even thousands of references so if this is the first time you have used this package please consider testing a subset of your input.txt file using the development servier.
+
+# Testing on the development server
+
+To test your input.txt file on the development server, you should consider truncating the input.txt file and limiting it to just a few rows (references) to create. Save this truncated version with a new name and pass it to the `bulk_reference_generation()` function while setting the `dev` parameter to `TRUE`:
+
+```{r dev_testing, eval=FALSE}
+
+dev_refs <- bulk_reference_generation(filename = "truncated_input.txt",
+                                      path = getwd(),
+                                      dev = TRUE))
+```
+Once the function has run, you can look at your draft references on the [DataStore development server](https://irmadev.nps.gov/DataStore/) to make sure everything is copasetic. Make any necessary adjustments to your full input.txt file before using it with the `bulk_reference_generation()` with the `dev` parameter set to `FALSE`.
+
+You may want to check the object `dev_refs` to see a list of the newly created reference numbers, which has been added to the information you suppied in your `truncated_input.txt` file.
+
+# Create references already!
+Creating references is the easy part! Run the following line of code to supply your full (not truncated) input.txt file:
+
+```{r DSuploads, eval = FALSE}
+new_refs <- bulk_reference_generation(filename = "input.txt",
+                          path = getwd(),
+                          dev = FALSE))
+```
+
+## Address errors and warnings
+If the data validation steps in the `bulk_reference_generation()` function produced any errors, you will have to address those before proceeding. See the [Data Validation Checks](05_Data-Validation-Checks.html) vignette for additional information on these tests and how to fix your input.txt file.
+
+## Increase file numbers and sizes
+For safety's sake, the `bulk_reference_generation()` function has a setting for the maximum allowable number of files and volume of data that can be uploaded during a single operation. These defaults are 500 files and 10 GB. You can increase the allowable upload file number and size above the default settings by changing those parameters (see the documentation for `bulk_reference_geneartion()`). For instance, to increase the maximum file number to 5,000 and the maximum volume of data to 500 GB, you would run the following code:
+
+```{r increase_max, eval = FALSE}
+new_refs <- bulk_reference_generation(filename = "input.txt",
+                          path = getwd(),
+                          max_file_upload = 5000,
+                          max_file_size = 500
+                          dev = FALSE))
+```
+
+# Save your output
+In addition to creating new references on DataStore, the `bulk_reference_generation()` function will return a dataframe in R (in these examples saves as the object `dev_refs` or `new_refs`). This dataframe contains all the information you supplied in your input.txt file and one additional column: the DataStore reference ID created for each new reference. 
+
+You may wish to save this file to your current working directory for later use or your personal records:
+
+```{r save_file, eval = FALSE}
+readr::write_csv(new_refs,
+                 "new_reference_ids.csv")
+```
+
+# Review and activate references
+You're not done yet! 
+
+You should carefully inspect each reference you create and make sure each reference gets the appropriate review (peer, technical, or administrative) as required for that reference. Most references should at a minimum recieve a technical review to make sure the reference is sound and an administrative review to make sure that, among other things, sensitive information is not inadvertently being released.
+
+After all the references have been appropriately reviewed, you can manually navigate to each draft reference on DataStore and click the "Activate" button to publish them!
