@@ -1,5 +1,10 @@
 ---
-title: "Generate and Populate the input file"
+title: "Generate-the-Input-File"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Generate-the-Input-File}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
