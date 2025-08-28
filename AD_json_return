@@ -1,4 +1,0 @@
-usr_name <- "dwitwicki"
-powershell_command <- paste0('([adsisearcher]\\"(samaccountname=',
-                                   usr_name,
-                                   ')\\").FindAll().Properties')
