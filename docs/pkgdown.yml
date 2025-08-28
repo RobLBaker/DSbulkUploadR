@@ -2,9 +2,12 @@ pandoc: '3.4'
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
-  Generate-and-Populate-the-input-file: Generate-and-Populate-the-input-file.html
+  Data-Validation-Checks: Data-Validation-Checks.html
+  Generate-the-Input-File: Generate-the-Input-File.html
   Overview: Overview.html
-last_built: 2025-08-28T14:22Z
+  Perform-Bulk-Reference-Uploads: Perform-Bulk-Reference-Uploads.html
+  Populating-the-Input-File: Populating-the-Input-File.html
+last_built: 2025-08-28T14:36Z
 urls:
   reference: https://nationalparkservice.github.io/DSbulkUploadR/reference
   article: https://nationalparkservice.github.io/DSbulkUploadR/articles

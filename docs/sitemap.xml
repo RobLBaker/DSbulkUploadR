@@ -1,8 +1,11 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/404.html</loc></url>
-<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/Generate-and-Populate-the-input-file.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/Data-Validation-Checks.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/Generate-the-Input-File.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/index.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/Overview.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/Perform-Bulk-Reference-Uploads.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/articles/Populating-the-Input-File.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/authors.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/index.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/LICENSE-text.html</loc></url>
