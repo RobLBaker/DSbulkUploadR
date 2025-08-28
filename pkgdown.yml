@@ -2,6 +2,9 @@ pandoc: 3.1.11
 pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
+  articles/Generate-and-Populate-the-input-file: Generate-and-Populate-the-input-file.html
   articles/Overview: Overview.html
-  articles/Populate-the-input-file: Populate-the-input-file.html
-last_built: 2025-08-28T04:49Z
+last_built: 2025-08-28T14:10Z
+urls:
+  reference: https://nationalparkservice.github.io/DSbulkUploadR/reference
+  article: https://nationalparkservice.github.io/DSbulkUploadR/articles
