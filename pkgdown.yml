@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   articles/Generate-and-Populate-the-input-file: Generate-and-Populate-the-input-file.html
   articles/Overview: Overview.html
-last_built: 2025-08-28T14:10Z
+last_built: 2025-08-28T14:15Z
 urls:
   reference: https://nationalparkservice.github.io/DSbulkUploadR/reference
   article: https://nationalparkservice.github.io/DSbulkUploadR/articles
