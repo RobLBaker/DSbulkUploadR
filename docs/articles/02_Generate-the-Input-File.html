@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Overview • DSbulkUploadR</title>
+<title>Generate-the-Input-File • DSbulkUploadR</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Overview">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Generate-the-Input-File">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -49,19 +49,19 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/Data-Validation-Checks.html">Data-Validation-Checks</a>
+      <a href="../articles/01_Overview.html">Overview</a>
     </li>
     <li>
-      <a href="../articles/Generate-the-Input-File.html">Generate-the-Input-File</a>
+      <a href="../articles/02_Generate-the-Input-File.html">Generate-the-Input-File</a>
     </li>
     <li>
-      <a href="../articles/Overview.html">Overview</a>
+      <a href="../articles/03_Populating-the-Input-File.html">Populating-the-Input-File</a>
     </li>
     <li>
-      <a href="../articles/Perform-Bulk-Reference-Uploads.html">Perform-Bulk-Reference-Uploads</a>
+      <a href="../articles/04_Perform-Bulk-Reference-Uploads.html">Perform-Bulk-Reference-Uploads</a>
     </li>
     <li>
-      <a href="../articles/Populating-the-Input-File.html">Populating-the-Input-File</a>
+      <a href="../articles/05_Data-Validation-Checks.html">Data-Validation-Checks</a>
     </li>
   </ul>
 </li>
@@ -89,61 +89,75 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Overview</h1>
+      <h1 data-toc-skip>Generate-the-Input-File</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/DSbulkUploadR/blob/HEAD/vignettes/Overview.Rmd" class="external-link"><code>vignettes/Overview.Rmd</code></a></small>
-      <div class="hidden name"><code>Overview.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/nationalparkservice/DSbulkUploadR/blob/HEAD/vignettes/02_Generate-the-Input-File.Rmd" class="external-link"><code>vignettes/02_Generate-the-Input-File.Rmd</code></a></small>
+      <div class="hidden name"><code>02_Generate-the-Input-File.Rmd</code></div>
 
     </div>
 
     
     
 <div class="section level2">
-<h2 id="what-this-package-does">What this Package Does<a class="anchor" aria-label="anchor" href="#what-this-package-does"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>The <code>DSbulkUploadR</code> package only requires that you use one
-function, <code>bulk_reference_generation</code>. This function takes an
-input .txt file and uses it to:</p>
-<ol style="list-style-type: decimal">
-<li>Create draft reference(s) on DataStore</li>
-<li>Populate each draft reference with the supplied information</li>
-<li>Upload <em>all</em> the file(s) in the specified directory to the
-draft reference(s)</li>
-</ol>
-<p>The <code>bulk_reference generation</code> will return a dataframe
-containing all of the information supplied in the input .txt file with
-one additinal column containing the datastore reference ID for each
-newly created reference. You may wish to write this dataframe to a .csv,
-.txt, or similar for your records.</p>
+<p>Carefully constructing and inspecting the input file is very
+important. The <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function will
+run a series of data validation steps to make sure your input file is
+properly formatted. Any errors generated during input data validation
+will need to be fixed before any references are created or files are
+uploaded. These validation steps are meant to help minimize inadvertent
+misuse of the functions but they cannot take the place of careful human
+inspection. Please make sure your input file is properly specified.</p>
+<p>We strongly recommend testing (a subset of?) your input file on the
+development server by setting the parameter <code>dev = TRUE</code> when
+using the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function.</p>
 </div>
 <div class="section level2">
-<h2 id="what-this-package-doesnt">What this Package Doesn’t<a class="anchor" aria-label="anchor" href="#what-this-package-doesnt"></a>
+<h2 id="create-an-input-template">Create an input template<a class="anchor" aria-label="anchor" href="#create-an-input-template"></a>
 </h2>
-<ol style="list-style-type: decimal">
-<li>Connect to the VPN or to the NPS network for you (you must be
-connected to the network to use these functions)</li>
-<li>Register ORCiDs for authors</li>
-<li>Add an author’s ORCID to their Active Directory/Entra ID
-account</li>
-<li>Provide a peer, technical, administrative, or other review of the
-reference(s) created</li>
-<li>Add taxonomy to the reference(s)</li>
-<li>Activate (“publish”) the reference(s)</li>
-</ol>
+<p>Each DataStore reference type has a potentially unique backend
+storage system and potentially unique set of possible fields. Therefore
+you will need a separate input template file for each reference type you
+plan to upload to DataStore.</p>
+<p>To create the relevant template input file, use the function
+<code><a href="../reference/make_input_template.html">make_input_template()</a></code> and pass it the the appropriate
+DataStore reference type name. Currently the following reference types
+are supported:</p>
+<blockquote>
+<p>AudioRecording</p>
+</blockquote>
+<p>For example, the following line of code</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/make_input_template.html">make_input_template</a></span><span class="op">(</span><span class="st">"AudioRecording"</span><span class="op">)</span></span></code></pre></div>
+<p>will write the file “AudioRecording_input.txt” to your current
+working directory (you can customize where the file is written to by
+specifying the write_path, which defaults to the current working
+directory).</p>
+<p>For a full list of all available reference types on DataStore as well
+as the appropriate name to use in this input.txt file, see the swagger
+documentation for the <a href="https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
+ReferenceTypes API</a> and example code.</p>
 </div>
 <div class="section level2">
-<h2 id="supported-datastore-reference-types">Supported DataStore Reference Types<a class="anchor" aria-label="anchor" href="#supported-datastore-reference-types"></a>
+<h2 id="implications-of-unique-reference-attributes">Implications of unique reference attributes<a class="anchor" aria-label="anchor" href="#implications-of-unique-reference-attributes"></a>
 </h2>
-<p>Audio Recording</p>
-</div>
-<div class="section level2">
-<h2 id="supported-file-types">Supported File Types<a class="anchor" aria-label="anchor" href="#supported-file-types"></a>
-</h2>
-<p>Upload of all file types is supported. There is no distinction made
-among file types and no need to designate specific file types. Changing
-the default settings can result in virtually limitless numbers and sizes
-of files to upload. Use caution when changing the default settings!</p>
+<p>Because each reference type on DataStore is unique with its own
+unique backend storage structure and API requirements, you will need a
+separate input.txt file for each reference type you plan on creating. If
+you want to create 3,600 Audio Recordings references, you can do it all
+using the single AudioRecording_input.txt file. However, if you want to
+make 3,549 Audio Recording references and 51 Generic Document
+references, you will need to run the <code><a href="../reference/make_input_template.html">make_input_template()</a></code>
+function twice (once to make a template for Audio Recordings and once to
+make a template for Generic Documents. You will also need to run the
+<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function twice: once supplying
+the AudioRecordings.txt input file and once supplying the
+GenericDocument_input.txt file.</p>
+<p>As an aside, you will also have to wait for this package to support
+additional DataStore reference types. This development version only
+supports the Audio Recordings reference type.</p>
 </div>
   </div>
 
