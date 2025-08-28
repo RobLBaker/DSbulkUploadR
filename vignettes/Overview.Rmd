@@ -1,5 +1,10 @@
 ---
 title: "Overview"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Overview}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -9,9 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
-#library(DSbulkUploadR)
-```
 # What this Package Does
 
 The `DSbulkUploadR` package only requires that you use one function, `bulk_reference_generation`. This function takes an input .txt file and uses it to:
@@ -35,3 +37,4 @@ Audio Recording
 
 # Supported File Types
 Upload of all file types is supported. There is no distinction made among file types and no need to designate specific file types. Changing the default settings can result in virtually limitless numbers and sizes of files to upload. Use caution when changing the default settings!
+
