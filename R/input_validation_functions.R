@@ -43,6 +43,38 @@ check_ref_type <- function(filename, path = getwd()) {
   return(invisible(NULL))
 }
 
+#' Check that Reference Types are Supported
+#'
+#' Runs a check against a hardcoded list of currently supporte DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
+#'
+#' @param filename
+#' @param path
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+check_ref_type_supported <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  refs <- upload_data$reference_type
+
+  # hardcoded list of supported refs. Will need manual updates
+  supported_refs <- "AudioRecording"
+
+  bad_refs <- refs[(!refs %in% supported_refs)]
+  bad_refs <- unique(bad_refs)
+
+  if (length(bad_refs > 0)) {
+    msg <- paste0("The following reference types are unsupporte: ",
+                  "{bad_refs}. Please supply only currently supported ",
+                  "reference types.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All reference types supplied are supported.")
+    cli::cli_inform(c("v" = msg))
+  }
+}
+
 #' Checks that each file_path in a file contains files
 #'
 #' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
