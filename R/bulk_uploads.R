@@ -70,7 +70,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
 upload_files <- function(filename,
                          path,
                          reference_id,
-                         is508 = FALSE,
+                         is_508 = FALSE,
                          chunk_size_mb = 1,
                          retry = 1,
                          dev = FALSE) {
@@ -190,10 +190,6 @@ add_keywords <- function(reference_id,
                          keywords,
                          dev = FALSE) {
 
-  # little hack to deal with json lists when there is only 1 item
-  if(length(keywords < 2)) {
-    keywords <- append(keywords, "")
-  }
   # make json
   bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = TRUE)
 
@@ -359,7 +355,7 @@ bulk_reference_generation <- function(filename,
 
     # generate json body for rest api call ====
     #AudioRecordings lack publisher element:
-    if (upload_data$reference_type[i] == "audioRecording") {
+    if (upload_data$reference_type[i] == "AudioRecording") {
       mylist <- list(title = upload_data$title[i],
                      issuedDate = list(year = lubridate::year(today),
                                        month = lubridate::month(today),
@@ -385,7 +381,7 @@ bulk_reference_generation <- function(filename,
                      notes = upload_data$notes[i],
                      purpose = upload_data$purpose[i],
                      tableOfContents = "",
-                     publisher = pub_place,
+                     publisher = "Fort Collins, CO",
                      size1 = upload_data$length_of_recording[i],
                      contacts1 = list(contacts),
                      metadataStandardID = "",
@@ -446,7 +442,7 @@ bulk_reference_generation <- function(filename,
     # upload files to reference ----
 
     #translate 508compliance:
-    complaint <- NULL
+    compliant <- NULL
     if (upload_data$files_508_compliant[i] == "yes") {
       compliant <- TRUE
     } else {
@@ -462,7 +458,7 @@ bulk_reference_generation <- function(filename,
       suppressWarnings(upload_files(filename = list.files(upload_data$file_path[i])[j],
                    path = upload_data$file_path[i],
                    reference_id = ref_code,
-                   is508 = compliant,
+                   is_508 = compliant,
                    chunk_size_mb = 1,
                    retry = 1,
                    dev = dev))
@@ -471,19 +467,16 @@ bulk_reference_generation <- function(filename,
   upload_data$reference_id[i] <- ref_code
 
   # ---- add keywords
-  keywords_to_add <- unlist(stringr::str_split(upload_data$keyword_list[i],
+  keywords_to_add <- unlist(stringr::str_split(upload_data$keywords[i],
                                          ", "))
+  keywords_to_add <- stringr::str_trim(keywords_to_add)
+
 
   add_keywords(reference_id = ref_code,
                keywords = keywords_to_add,
                dev = dev)
 
   }
-
-
-
-
-
 
   return(upload_data)
 }
