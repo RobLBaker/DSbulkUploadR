@@ -103,17 +103,17 @@
 <h2 id="what-this-package-does">What this Package Does<a class="anchor" aria-label="anchor" href="#what-this-package-does"></a>
 </h2>
 <p>The <code>DSbulkUploadR</code> package only requires using two R
-functions: <code>make_input_tempalte()</code> creates a DataStore
-reference-specific template input.txt file. After populating the
+functions: <code><a href="../reference/make_input_template.html">make_input_template()</a></code> creates a DataStore
+reference-specific template input.txt file. After youpopulate the
 input.txt file, a second function
-<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> takes the data in the input.xt
-file and uses it to perform the bulk upload. This bulk upload consists
+<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> takes the data in the input.txt
+file and uses it to perform the bulk upload. The bulk upload consists
 of:</p>
 <ol style="list-style-type: decimal">
 <li>Create draft reference(s) on DataStore</li>
 <li>Populate each draft reference with the supplied information</li>
-<li>Upload <em>all</em> the file(s) in the specified directory to the
-draft reference(s)</li>
+<li>Upload <strong>all</strong> the file(s) in the specified directory
+to the draft reference(s)</li>
 </ol>
 <p>The <code>bulk_reference generation()</code> will return a dataframe
 containing all of the information supplied in the input .txt file with

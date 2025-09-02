@@ -100,13 +100,20 @@
     
     
 <div class="section level2">
-<h2 id="editing-the-input-template">Editing the input template<a class="anchor" aria-label="anchor" href="#editing-the-input-template"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>The input template is designed to be easy to understand and
 human-readable. Yet, it will be used as computer input and so must be
 crafted with some rules that may not seem intuitive. Please take care to
-read these instructions when populating the input template. Do NOT
-change any of the column names.</p>
+read these instructions when populating the input template. Do
+<strong>not</strong> change any of the column names.</p>
+<p>Each reference type on DataStore has a specific set of back-end
+attributes. You must use a reference-type specific input.txt file (see
+<a href="02_Generate-the-Input-File.html">Generate the Input File</a>.
+The input files may had different columns. If your reference-type
+specific input.txt file lacks a column, you can safely ingore the
+instructions for that column. Do not edit or change the column
+names.</p>
 <p>Most of the data you supply will be subjected to a series of data
 validation checks to make sure it is correctly formatted. If any errors
 are found, you will be given an opportunity to fix them prior to
