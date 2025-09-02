@@ -43,6 +43,40 @@ check_ref_type <- function(filename, path = getwd()) {
   return(invisible(NULL))
 }
 
+#' Check that Reference Types are Supported
+#'
+#' Runs a check against a hardcoded list of currently supporte DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
+#'
+#' @inheritParams check_ref_type
+#' @param path
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_ref_type_supported(filename = "test_file.txt")}
+check_ref_type_supported <- function(filename, path = getwd()) {
+  upload_data <- read.delim(file=paste0(path, "/", filename))
+  refs <- upload_data$reference_type
+
+  # hardcoded list of supported refs. Will need manual updates
+  supported_refs <- "AudioRecording"
+
+  bad_refs <- refs[(!refs %in% supported_refs)]
+  bad_refs <- unique(bad_refs)
+
+  if (length(bad_refs > 0)) {
+    msg <- paste0("The following reference types are unsupporte: ",
+                  "{bad_refs}. Please supply only currently supported ",
+                  "reference types.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("All reference types supplied are supported.")
+    cli::cli_inform(c("v" = msg))
+  }
+}
+
 #' Checks that each file_path in a file contains files
 #'
 #' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
@@ -193,6 +227,32 @@ check_508_format <- function(filename, path = getwd()){
   } else {
     cli::cli_inform(
       c("v" = "All files have a valid 508 compliance designation"))
+  }
+  return(invisible(NULL))
+}
+
+#' Checks for duplicated reference titles
+#'
+#' Reads in a .txt file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
+#'
+#' @param filename String. The file to check.
+#' @param path String. The path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_unique_title("test_file.txt")}
+check_unique_title <- function(filename, path = getwd()){
+  upload_data <- read.delim(file= paste0(path, "/", filename))
+  duplicates <- duplicated(upload_data$title)
+  if (any(duplicates)) {
+    msg <- paste0("All reference titles must be unique. The following titles ",
+                  "are duplicated: {upload_data$title[duplicates]}.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(c("v" = "All reference titles are unique"))
   }
   return(invisible(NULL))
 }

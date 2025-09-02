@@ -57,7 +57,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
 #' @param filename String. Name of the file to be uploaded.
 #' @param path String. Location of the file to be uploaded.
 #' @param reference_id String. The reference number for the DataStore reference the file will be uploaded to.
-#' @param is508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
+#' @param is_508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
 #' @param chunk_size_mb Integer. Size of file chunks to be uploaded, in MB
 #' @param retry Integer. Number of times to retry uploading file chunks if a given chunk fails.
 #' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
@@ -70,7 +70,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
 upload_files <- function(filename,
                          path,
                          reference_id,
-                         is508 = FALSE,
+                         is_508 = FALSE,
                          chunk_size_mb = 1,
                          retry = 1,
                          dev = FALSE) {
@@ -176,6 +176,52 @@ upload_files <- function(filename,
 
 
 
+#' Replaces Keywords from a DataStore reference with one or more supplied keywords
+#'
+#' @param reference_id Integer. The seven-digit DataStore ID for the reference
+#' @param keywords String or Vector. The keywords to be added to the DataStore reference.
+#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' add_keywords(reference_id = 1234567, keywords = c("test", "testing"))}
+add_keywords <- function(reference_id,
+                         keywords,
+                         dev = FALSE) {
+
+  # make json
+  bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = TRUE)
+
+  # construct request URL
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  } else {
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  }
+  #submit PUT request
+  req <- httr::PUT(post_url,
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'),
+                    body = bdy)
+
+  #check status code; suggest logging in to VPN if errors occur:
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  return(invisible(NULL))
+}
+
+
 #' Launch bulk reference creation and file upload tool
 #'
 #' The function will first run `run_input_validation` on the supplied .txt of information and enforce data validation. All errors must be resolved before the function will proceed.
@@ -185,7 +231,6 @@ upload_files <- function(filename,
 #' The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference.
 #'
 #' The original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
-#'
 #'
 #' @param filename String. The name of the file with information on what will be uploaded.
 #' @param path String. Path to the file.
@@ -311,45 +356,72 @@ bulk_reference_generation <- function(filename,
       contacts <- append(contacts, author)
     }
 
-    # dynamically set publisher because not all ref types have publishers ====
-    pub_place <- NULL
-    if (upload_data$reference_type[i] == "audioRecording") {
-      pub_place <- ""
-    } else {
-      pub_place <- "Fort Collins, CO"
-    }
-
     # generate json body for rest api call ====
-    mylist <- list(title = upload_data$title[i],
-                   issuedDate = list(year = lubridate::year(today),
-                                     month = lubridate::month(today),
-                                     day = lubridate::day(today),
-                                     precision = ""),
-                   contentBeginDate = list(year = lubridate::year(begin_date),
-                                           month = lubridate::month(begin_date),
-                                           day = lubridate::day(begin_date),
+    #AudioRecordings lack publisher element:
+    if (upload_data$reference_type[i] == "AudioRecording") {
+      mylist <- list(title = upload_data$title[i],
+                     issuedDate = list(year = lubridate::year(today),
+                                       month = lubridate::month(today),
+                                       day = lubridate::day(today),
+                                       precision = ""),
+                     contentBeginDate = list(year = lubridate::year(begin_date),
+                                             month = lubridate::month(begin_date),
+                                             day = lubridate::day(begin_date),
+                                             precision = ""),
+                     contentEndDate = list(year = lubridate::year(end_date),
+                                           month = lubridate::month(end_date),
+                                           day = lubridate::day(end_date),
                                            precision = ""),
-                   contentEndDate = list(year = lubridate::year(end_date),
-                                         month = lubridate::month(end_date),
-                                         day = lubridate::day(end_date),
-                                         precision = ""),
-                   location = "",
-                   miscellaneousCode = "",
-                   volume = "",
-                   issue = "",
-                   pageRange = "",
-                   edition = "",
-                   dateRange = "",
-                   meetingPlace = "",
-                   abstract = upload_data$description[i],
-                   notes = upload_data$notes[i],
-                   purpose = upload_data$purpose[i],
-                   tableOfContents = "",
-                   publisher = pub_place,
-                   size1 = upload_data$length_of_recording[i],
-                   contacts1 = list(contacts),
-                   metadataStandardID = "",
-                   licenseTypeID = upload_data$license[i])
+                     location = "",
+                     miscellaneousCode = "",
+                     volume = "",
+                     issue = "",
+                     pageRange = "",
+                     edition = "",
+                     dateRange = "",
+                     meetingPlace = "",
+                     abstract = upload_data$description[i],
+                     notes = upload_data$notes[i],
+                     purpose = upload_data$purpose[i],
+                     tableOfContents = "",
+                     publisher = "Fort Collins, CO",
+                     size1 = upload_data$length_of_recording[i],
+                     contacts1 = list(contacts),
+                     metadataStandardID = "",
+                     licenseTypeID = upload_data$license[i])
+    } else if (upload_data$reference_type[i] == "GenericDocument") {
+      mylist <- list(title = upload_data$title[i],
+                     issuedDate = list(year = lubridate::year(today),
+                                       month = lubridate::month(today),
+                                       day = lubridate::day(today),
+                                       precision = ""),
+                     contentBeginDate = list(year = lubridate::year(begin_date),
+                                             month = lubridate::month(begin_date),
+                                             day = lubridate::day(begin_date),
+                                             precision = ""),
+                     contentEndDate = list(year = lubridate::year(end_date),
+                                           month = lubridate::month(end_date),
+                                           day = lubridate::day(end_date),
+                                           precision = ""),
+                     location = "",
+                     miscellaneousCode = "",
+                     volume = "",
+                     issue = "",
+                     pageRange = "",
+                     edition = "",
+                     dateRange = "",
+                     meetingPlace = "",
+                     abstract = upload_data$description[i],
+                     notes = upload_data$notes[i],
+                     purpose = upload_data$purpose[i],
+                     tableOfContents = "",
+                     publisher = "National Park Service",
+                     publisher = "Fort Collins, CO",
+                     size1 = upload_data$length_of_recording[i],
+                     contacts1 = list(contacts),
+                     metadataStandardID = "",
+                     licenseTypeID = upload_data$license[i])
+    }
 
     #for testing purposes and to look at the json sent:
     #x <- rjson::toJSON(mylist)
@@ -373,7 +445,7 @@ bulk_reference_generation <- function(filename,
     # upload files to reference ----
 
     #translate 508compliance:
-    complaint <- NULL
+    compliant <- NULL
     if (upload_data$files_508_compliant[i] == "yes") {
       compliant <- TRUE
     } else {
@@ -389,13 +461,25 @@ bulk_reference_generation <- function(filename,
       suppressWarnings(upload_files(filename = list.files(upload_data$file_path[i])[j],
                    path = upload_data$file_path[i],
                    reference_id = ref_code,
-                   is508 = compliant,
+                   is_508 = compliant,
                    chunk_size_mb = 1,
                    retry = 1,
                    dev = dev))
     }
   #add reference id column to dataframe to make it easier to find them all
   upload_data$reference_id[i] <- ref_code
+
+  # ---- add keywords
+  keywords_to_add <- unlist(stringr::str_split(upload_data$keywords[i],
+                                         ", "))
+  keywords_to_add <- stringr::str_trim(keywords_to_add)
+
+
+  add_keywords(reference_id = ref_code,
+               keywords = keywords_to_add,
+               dev = dev)
+
   }
+
   return(upload_data)
 }

@@ -35,6 +35,17 @@ run_input_validation <- function(filename,
            }
   )
 
+  tryCatch(  check_ref_type_supported(filename = filename, path = path),
+           error = function(e) {
+             err_count <<- err_count + 1
+             cli::cli_bullets(c(e$message, e$body))
+           },
+           warning = function(w) {
+             warn_count <<- warn_count + 1
+             cli::cli_bullets(c(w$message, w$body))
+           }
+  )
+
   tryCatch(check_files_exist(filename = filename, path = path),
             error = function(e) {
               err_count <<- err_count + 1
@@ -82,6 +93,18 @@ run_input_validation <- function(filename,
              cli::cli_bullets(c(w$message, w$body))
            }
   )
+
+  tryCatch(check_unique_title(filename = filename, path = path),
+           error = function(e) {
+             err_count <<- err_count + 1
+             cli::cli_bullets(c(e$message, e$body))
+           },
+           warning = function(w) {
+             warn_count <<- warn_count + 1
+             cli::cli_bullets(c(w$message, w$body))
+           }
+  )
+
 
   tryCatch(check_start_date(filename = filename, path = path),
            error = function(e) {

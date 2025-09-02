@@ -11,6 +11,7 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/LICENSE-text.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/LICENSE.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/news/index.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_keywords.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_508_format.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_authors_orcid.html</loc></url>
@@ -26,7 +27,9 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_orcid_format.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_prod_units.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_ref_type.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_ref_type_supported.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_start_date.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_unique_title.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_users_AD.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/create_draft_reference.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/index.html</loc></url>

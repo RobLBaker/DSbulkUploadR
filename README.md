@@ -6,5 +6,8 @@ Because DSbulkUploadR automates DataStore reference creation and file uploads, t
 
 So please consult with the NPS Inventory and Monitoring Central Support Office Data Science Team (currently [Judd Patterson](mailto:judd_patterson@nps.gov), [Rob Baker](mailto:robert_baker@nps.gov), [Wendy Thorsdatter](mailto:Wendy_Thorsdatter@nps.gov) and on a good day, [Sarah Wright](mailto:sarah_wright@nps.gov)) before using this tool. We promise we can help make your life easier! (And you just might make our lives easier too).
 
+# Detailed Instructions
+A set of step-by-step detailed instructions on how to use the bulk uploader, what file types and reference types are supported, etc. is available via the [articles](articles/index.html) included on the package website.
+
 # Currently supported DataStore reference types
 Audio Recording

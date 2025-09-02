@@ -14,25 +14,31 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Editing the input template
-The input template is designed to be easy to understand and human-readable. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the input template. Do NOT change any of the column names. 
+# Overview
+The input template is designed to be easy to understand and human-readable. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the input template. Do **not** change any of the column names. 
+
+Each reference type on DataStore has a specific set of back-end attributes. You must use a reference-type specific input.txt file (see [Generate the Input File](02_Generate-the-Input-File.html). The input files may had different columns. If your reference-type specific input.txt file lacks a column, you can safely ingore the instructions for that column. Do not edit or change the column names.
 
 Most of the data you supply will be subjected to a series of data validation checks to make sure it is correctly formatted. If any errors are found, you will be given an opportunity to fix them prior to performing the bulk reference generation. But it is much faster to supply the data correctly the first time (and there are likely ways to do it incorrectly that the checks cannot account for). So please read the instructions carefully.
 
-One suggestion is to open the .txt file in Excel and edit it in excel. However, this can cause some issues with date formats, please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
+One suggestion is to open the .txt file in Excel and edit it in Excel. However, this can cause some issues with date formats. Please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
 
 ## Reference type
-In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Make sure to use the DataStore back-end reference type names which may differ from the reference type displayed on the DataStore website. Pay careful attention to the spelling, spaces (or lack thereof) and pattern of capitalization. 
+In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Make sure to use the DataStore back-end reference type names which may differ from the reference type displayed on the DataStore website. Pay careful attention to the spelling, spaces (or lack thereof) and pattern of capitalization. Currently the DSbulkUploadR package supports the following reference types:
+
+AudioRecording
+
+For a full list of reference types, see the [DataStore swagger documentation for the appropriate API](https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes)
 
 ## Files to upload
 The file_path column in the input.txt file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
 
-This is one of the places you could make a fairly critical mistakes with fairly large consequences. If for instance you set the file path to just "C:\\", the function would attempt to upload ALL of the files on your hard drive. please make sure your the directory you supply is as specific as possible and contains only files that you want uploaded.
+This is one of the places you could make a critical mistakes with fairly large consequences. If for instance you set the file path to just "C:\\", the function would attempt to upload ALL of the files on your hard drive. please make sure your the directory you supply is as specific as possible and contains only files that you want uploaded.
 
-Each new reference should have its own file path specified. Which means that you need to organize your files such that you have a directory of files associated with a specific reference you intend to create. You should have all the files associated with that reference and nothing else in that directory.
+Each new reference should have its own file path specified. This means that you need to organize your files such that you have a directory of files associated with a specific reference you intend to create. You should have all the files associated with that reference and nothing else in that directory.
 
 ### Checks on files uploads
-The `bulk_reference_generation()` function can impose some limits on the total number and size of files to be uploaded. By default, the function will produce a warning if you attempt to upload 250 or more files or 50 or more GB of data at a time (not per reference but for the entire process). The function will produce an error and fail to upload any files if you attempt to upload 500 or more files or 100 GB or more data at a time.  These parameters are easily adjusted to suite your needs. See the documentation on [`bulk_reference_generation`](https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html)
+The `bulk_reference_generation()` function can impose some limits on the total number and size of files to be uploaded. By default, the function will produce a warning if you attempt to upload 250 or more files or 1 or more GB of data at a time (not per reference but for the entire process). The function will produce an error and fail to upload any files if you attempt to upload 500 or more files or 10 GB or more data at a time.  These parameters are easily adjusted to suite your needs. See the documentation on [`bulk_reference_generation`](https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html)
 
 Additionally, before the `bulk_reference_generation()` function creates anything on DataStore, you will be informed of the total number of references the function will create, the total number of files it will upload, and the total data volume (in GB) that will be uploaded. You will have an option to proceed or end the function if any of these values do not look correct to you.
 
@@ -45,7 +51,7 @@ The column title in the input.txt file should contain your Reference Title. Each
 Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
 
 ## Working with dates
-To prevent excel from automatically changing your dates into a non-ISO 8601 format (yyyy-mm-dd), you need to change some global settings on your computer. For PCs search for "date and time format" from the start menu. Select "Change the date and time format" (which is part of the system settings). In the panel "Short Date" choose the date formatted as YYYY-MM-DD.
+To prevent excel from automatically changing your dates into a non-ISO 8601 format (anything other than YYYY-MM-DD), you need to change some global settings on your computer. For PCs search for "date and time format" from the start menu. Select "Change the date and time format" (which is part of the system settings). In the panel "Short Date" choose the date formatted as YYYY-MM-DD.
 
 ### Content begin date
 The column content_begin_date in the input.txt file should contain the date that the content of the reference/files starts in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content begin date should be before today's date and before the content_end_date.
@@ -87,11 +93,15 @@ The `bulk_reference_generation()` function will automatically extract first name
 ## Licenses
 The license_code column in input.txt should contain a numeric code (1,2,3,4 or 5) corresponding to a license for the reference on DataStore. A Creative Commons Zero (CC0) license is the preferred license for all public content on DataStore. Valid codes are as follows: 
 
-> 1: ["Creative Commons Zero v1.0 Universal (CC0)"](https://creativecommons.org/public-domain/cc0/). This is the preferred license for all public content. 
-> 2: ["Creative Commons Attribution 4.0 International"](https://choosealicense.com/licenses/cc-by-4.0/) (CC-by-4.0) 
-> 3: ["Creative commons Attribution Non Commercial 4.0 International"](https://www.creativecommons.org/licenses/by-nc/4.0/deed.en) (CC BY-NC 4.0) (This license may be useful when working with partners external to NPS), 
-> 4: ["Public Domain"](https://en.wikipedia.org/wiki/Public_domain), 
-> 5: "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes.
+| Valid Code  |   License     | Suggested use case  |
+| :-: |:-------- | :-----|
+| 1           | ["Creative Commons Zero v1.0 Universal (CC0)"](https://creativecommons.org/public-domain/cc0/) | This is the preferred license for all public content  |
+| 2           | ["Creative Commons Attribution 4.0 International"](https://choosealicense.com/licenses/cc-by-4.0/) (CC-by-4.0)   | External international partners |
+| 3          |    ["Creative commons Attribution Non Commercial 4.0 International"](https://www.creativecommons.org/licenses/by-nc/4.0/deed.en) (CC BY-NC 4.0) | External non-commercial partners |
+| 4           |  ["Public Domain"](https://en.wikipedia.org/wiki/Public_domain) | CC0 is preferred   |
+| 5           | "Unlicensed (not for public dissemination)"            | Should only be used for restricted content that contains confidential unclassified information - CUI)   |
+
+If all license codes supplied (as integers ranging from 1-5) are valid, the function passes.
 
 ## Producing Unit(s)
 The column producing_unit in the input.txt file should contain a comma-separated list of acronyms for the NPS units that contributed to producing the reference or its content. For instance, an IMD network or region might be responsible for creating a reference or its content (e.g. IMR or ROMN). These must be valid NPS unit acronyms, e.g. ROMO not RMNP for Rocky Mountain National Park or IMD for the Inventory and Monitoring Division (not IM&D). 
