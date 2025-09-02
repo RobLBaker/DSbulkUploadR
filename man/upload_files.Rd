@@ -8,7 +8,7 @@ upload_files(
   filename,
   path,
   reference_id,
-  is508 = FALSE,
+  is_508 = FALSE,
   chunk_size_mb = 1,
   retry = 1,
   dev = FALSE
@@ -21,13 +21,13 @@ upload_files(
 
 \item{reference_id}{String. The reference number for the DataStore reference the file will be uploaded to.}
 
-\item{is508}{Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.}
-
 \item{chunk_size_mb}{Integer. Size of file chunks to be uploaded, in MB}
 
 \item{retry}{Integer. Number of times to retry uploading file chunks if a given chunk fails.}
 
 \item{dev}{Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.}
+
+\item{is508}{Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.}
 }
 \value{
 List. Of information about the uploaded file.
