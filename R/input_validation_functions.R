@@ -47,13 +47,15 @@ check_ref_type <- function(filename, path = getwd()) {
 #'
 #' Runs a check against a hardcoded list of currently supporte DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
 #'
-#' @param filename
+#' @inheritParams check_ref_type
 #' @param path
 #'
-#' @returns
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' check_ref_type_supported(filename = "test_file.txt")}
 check_ref_type_supported <- function(filename, path = getwd()) {
   upload_data <- read.delim(file=paste0(path, "/", filename))
   refs <- upload_data$reference_type
