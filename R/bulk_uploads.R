@@ -176,6 +176,39 @@ upload_files <- function(filename,
 
 
 
+add_keywords <- function(reference_id,
+                         keywords,
+                         dev = FALSE) {
+
+  #make json for keywords list:
+
+  bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = TRUE)
+
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  } else {
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  }
+
+  req <- httr::PUT(post_url,
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'),
+                    body = bdy)
+  #check status code; suggest logging in to VPN if errors occur:
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+
+}
+
+
 #' Launch bulk reference creation and file upload tool
 #'
 #' The function will first run `run_input_validation` on the supplied .txt of information and enforce data validation. All errors must be resolved before the function will proceed.
