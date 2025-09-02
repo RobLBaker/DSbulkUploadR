@@ -176,14 +176,28 @@ upload_files <- function(filename,
 
 
 
+#' Replaces Keywords from a DataStore reference with one or more supplied keywords
+#'
+#' @param reference_id Integer. The seven-digit DataStore ID for the reference
+#' @param keywords String or Vector. The keywords to be added to the DataStore reference.
+#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 add_keywords <- function(reference_id,
                          keywords,
                          dev = FALSE) {
 
-  #make json for keywords list:
-
+  # little hack to deal with json lists when there is only 1 item
+  if(length(keywords < 2)) {
+    keywords <- append(keywords, "")
+  }
+  # make json
   bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = TRUE)
 
+  # construct request URL
   if(dev == TRUE){
     post_url <- paste0(.ds_dev_api(),
                        "Reference/",
@@ -195,17 +209,17 @@ add_keywords <- function(reference_id,
                        reference_id,
                        "/Keywords")
   }
-
+  #submit PUT request
   req <- httr::PUT(post_url,
                     httr::authenticate(":", "", "ntlm"),
                     httr::add_headers('Content-Type'='application/json'),
                     body = bdy)
+
   #check status code; suggest logging in to VPN if errors occur:
   status_code <- httr::stop_for_status(req)$status_code
   if(!status_code == 200){
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
-
 }
 
 
@@ -218,7 +232,6 @@ add_keywords <- function(reference_id,
 #' The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference.
 #'
 #' The original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
-#'
 #'
 #' @param filename String. The name of the file with information on what will be uploaded.
 #' @param path String. Path to the file.
@@ -344,45 +357,82 @@ bulk_reference_generation <- function(filename,
       contacts <- append(contacts, author)
     }
 
-    # dynamically set publisher because not all ref types have publishers ====
-    pub_place <- NULL
-    if (upload_data$reference_type[i] == "audioRecording") {
-      pub_place <- ""
-    } else {
-      pub_place <- "Fort Collins, CO"
-    }
-
     # generate json body for rest api call ====
-    mylist <- list(title = upload_data$title[i],
-                   issuedDate = list(year = lubridate::year(today),
-                                     month = lubridate::month(today),
-                                     day = lubridate::day(today),
-                                     precision = ""),
-                   contentBeginDate = list(year = lubridate::year(begin_date),
-                                           month = lubridate::month(begin_date),
-                                           day = lubridate::day(begin_date),
+    #AudioRecordings lack publisher element:
+    if (upload_data$reference_type[i] == "audioRecording") {
+      mylist <- list(title = upload_data$title[i],
+                     issuedDate = list(year = lubridate::year(today),
+                                       month = lubridate::month(today),
+                                       day = lubridate::day(today),
+                                       precision = ""),
+                     contentBeginDate = list(year = lubridate::year(begin_date),
+                                             month = lubridate::month(begin_date),
+                                             day = lubridate::day(begin_date),
+                                             precision = ""),
+                     contentEndDate = list(year = lubridate::year(end_date),
+                                           month = lubridate::month(end_date),
+                                           day = lubridate::day(end_date),
                                            precision = ""),
-                   contentEndDate = list(year = lubridate::year(end_date),
-                                         month = lubridate::month(end_date),
-                                         day = lubridate::day(end_date),
-                                         precision = ""),
-                   location = "",
-                   miscellaneousCode = "",
-                   volume = "",
-                   issue = "",
-                   pageRange = "",
-                   edition = "",
-                   dateRange = "",
-                   meetingPlace = "",
-                   abstract = upload_data$description[i],
-                   notes = upload_data$notes[i],
-                   purpose = upload_data$purpose[i],
-                   tableOfContents = "",
-                   publisher = pub_place,
-                   size1 = upload_data$length_of_recording[i],
-                   contacts1 = list(contacts),
-                   metadataStandardID = "",
-                   licenseTypeID = upload_data$license[i])
+                     location = "",
+                     miscellaneousCode = "",
+                     volume = "",
+                     issue = "",
+                     pageRange = "",
+                     edition = "",
+                     dateRange = "",
+                     meetingPlace = "",
+                     abstract = upload_data$description[i],
+                     notes = upload_data$notes[i],
+                     purpose = upload_data$purpose[i],
+                     tableOfContents = "",
+                     publisher = pub_place,
+                     size1 = upload_data$length_of_recording[i],
+                     contacts1 = list(contacts),
+                     metadataStandardID = "",
+                     licenseTypeID = upload_data$license[i])
+    } else if (upload_data$reference_type[i] == "GenericDocument") {
+      mylist <- list(title = upload_data$title[i],
+                     issuedDate = list(year = lubridate::year(today),
+                                       month = lubridate::month(today),
+                                       day = lubridate::day(today),
+                                       precision = ""),
+                     contentBeginDate = list(year = lubridate::year(begin_date),
+                                             month = lubridate::month(begin_date),
+                                             day = lubridate::day(begin_date),
+                                             precision = ""),
+                     contentEndDate = list(year = lubridate::year(end_date),
+                                           month = lubridate::month(end_date),
+                                           day = lubridate::day(end_date),
+                                           precision = ""),
+                     location = "",
+                     miscellaneousCode = "",
+                     volume = "",
+                     issue = "",
+                     pageRange = "",
+                     edition = "",
+                     dateRange = "",
+                     meetingPlace = "",
+                     abstract = upload_data$description[i],
+                     notes = upload_data$notes[i],
+                     purpose = upload_data$purpose[i],
+                     tableOfContents = "",
+                     publisher = "National Park Service",
+                     publisher = "Fort Collins, CO",
+                     size1 = upload_data$length_of_recording[i],
+                     contacts1 = list(contacts),
+                     metadataStandardID = "",
+                     licenseTypeID = upload_data$license[i])
+    } else {
+      msg1 <- paste0("The reference type you are attempting to create ",
+                    "{title = upload_data$reference_type[i]} does ",
+                    "not exist or is not supported.")
+      msg2 <- paste0("For a list of currently supported reference types ",
+                     "see: {.url https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template} or contact ",
+                    "{.email robert_baker@nps.gov} to request support.")
+
+      cli::cli_abort(c("x" = msg1))
+      cli::cli_alert_info(msg2)
+    }
 
     #for testing purposes and to look at the json sent:
     #x <- rjson::toJSON(mylist)
@@ -429,6 +479,21 @@ bulk_reference_generation <- function(filename,
     }
   #add reference id column to dataframe to make it easier to find them all
   upload_data$reference_id[i] <- ref_code
+
+  # ---- add keywords
+  keywords_to_add <- unlist(stringr::str_split(upload_data$keyword_list[i],
+                                         ", "))
+
+  add_keywords(reference_id = ref_code,
+               keywords = keywords_to_add,
+               dev = dev)
+
   }
+
+
+
+
+
+
   return(upload_data)
 }
