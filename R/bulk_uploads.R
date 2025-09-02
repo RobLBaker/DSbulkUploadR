@@ -422,16 +422,6 @@ bulk_reference_generation <- function(filename,
                      contacts1 = list(contacts),
                      metadataStandardID = "",
                      licenseTypeID = upload_data$license[i])
-    } else {
-      msg1 <- paste0("The reference type you are attempting to create ",
-                    "{title = upload_data$reference_type[i]} does ",
-                    "not exist or is not supported.")
-      msg2 <- paste0("For a list of currently supported reference types ",
-                     "see: {.url https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template} or contact ",
-                    "{.email robert_baker@nps.gov} to request support.")
-
-      cli::cli_abort(c("x" = msg1))
-      cli::cli_alert_info(msg2)
     }
 
     #for testing purposes and to look at the json sent:
