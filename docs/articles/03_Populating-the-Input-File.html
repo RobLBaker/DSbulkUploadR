@@ -115,7 +115,7 @@ supply the data correctly the first time (and there are likely ways to
 do it incorrectly that the checks cannot account for). So please read
 the instructions carefully.</p>
 <p>One suggestion is to open the .txt file in Excel and edit it in
-excel. However, this can cause some issues with date formats, please see
+Excel. However, this can cause some issues with date formats. Please see
 the section below, “<a href="#working-with-dates">Working with
 dates</a>” for how to mitigate the issue.</p>
 <div class="section level3">
@@ -126,7 +126,11 @@ reference to be created using the data in that particular row. Make sure
 to use the DataStore back-end reference type names which may differ from
 the reference type displayed on the DataStore website. Pay careful
 attention to the spelling, spaces (or lack thereof) and pattern of
-capitalization.</p>
+capitalization. Currently the DSbulkUploadR package supports the
+following reference types:</p>
+<p>AudioRecording</p>
+<p>For a full list of reference types, see the <a href="https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
+swagger documentation for the appropriate API</a></p>
 </div>
 <div class="section level3">
 <h3 id="files-to-upload">Files to upload<a class="anchor" aria-label="anchor" href="#files-to-upload"></a>
@@ -138,12 +142,12 @@ path from the current directory. You do not need to specify the file
 name(s), just the path to the files. All of the files within the
 specified directory will be uploaded to the reference created regardless
 of file type.</p>
-<p>This is one of the places you could make a fairly critical mistakes
-with fairly large consequences. If for instance you set the file path to
-just “C:\”, the function would attempt to upload ALL of the files on
-your hard drive. please make sure your the directory you supply is as
+<p>This is one of the places you could make a critical mistakes with
+fairly large consequences. If for instance you set the file path to just
+“C:\”, the function would attempt to upload ALL of the files on your
+hard drive. please make sure your the directory you supply is as
 specific as possible and contains only files that you want uploaded.</p>
-<p>Each new reference should have its own file path specified. Which
+<p>Each new reference should have its own file path specified. This
 means that you need to organize your files such that you have a
 directory of files associated with a specific reference you intend to
 create. You should have all the files associated with that reference and
@@ -154,9 +158,9 @@ nothing else in that directory.</p>
 <p>The <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function can impose some
 limits on the total number and size of files to be uploaded. By default,
 the function will produce a warning if you attempt to upload 250 or more
-files or 50 or more GB of data at a time (not per reference but for the
+files or 1 or more GB of data at a time (not per reference but for the
 entire process). The function will produce an error and fail to upload
-any files if you attempt to upload 500 or more files or 100 GB or more
+any files if you attempt to upload 500 or more files or 10 GB or more
 data at a time. These parameters are easily adjusted to suite your
 needs. See the documentation on <a href="https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html"><code>bulk_reference_generation</code></a></p>
 <p>Additionally, before the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code>
@@ -200,11 +204,11 @@ which may differ from the year it was activated/published).</p>
 <h3 id="working-with-dates">Working with dates<a class="anchor" aria-label="anchor" href="#working-with-dates"></a>
 </h3>
 <p>To prevent excel from automatically changing your dates into a
-non-ISO 8601 format (yyyy-mm-dd), you need to change some global
-settings on your computer. For PCs search for “date and time format”
-from the start menu. Select “Change the date and time format” (which is
-part of the system settings). In the panel “Short Date” choose the date
-formatted as YYYY-MM-DD.</p>
+non-ISO 8601 format (anything other than YYYY-MM-DD), you need to change
+some global settings on your computer. For PCs search for “date and time
+format” from the start menu. Select “Change the date and time format”
+(which is part of the system settings). In the panel “Short Date” choose
+the date formatted as YYYY-MM-DD.</p>
 <div class="section level4">
 <h4 id="content-begin-date">Content begin date<a class="anchor" aria-label="anchor" href="#content-begin-date"></a>
 </h4>
@@ -302,19 +306,56 @@ authors of the reference.</p>
 DataStore. A Creative Commons Zero (CC0) license is the preferred
 license for all public content on DataStore. Valid codes are as
 follows:</p>
-<blockquote>
-<p>1: <a href="https://creativecommons.org/public-domain/cc0/" class="external-link">“Creative
-Commons Zero v1.0 Universal (CC0)”</a>. This is the preferred license
-for all public content. 2: <a href="https://choosealicense.com/licenses/cc-by-4.0/" class="external-link">“Creative Commons
-Attribution 4.0 International”</a> (CC-by-4.0) 3: <a href="https://www.creativecommons.org/licenses/by-nc/4.0/deed.en" class="external-link">“Creative
-commons Attribution Non Commercial 4.0 International”</a> (CC BY-NC 4.0)
-(This license may be useful when working with partners external to NPS),
-4: <a href="https://en.wikipedia.org/wiki/Public_domain" class="external-link">“Public
-Domain”</a>, 5: “Unlicensed (not for public dissemination)” (should only
-be used for restricted content that contains confidential unclassified
-information - CUI). If all license codes supplied (as integers ranging
-from 1-5) are valid, the function passes.</p>
-</blockquote>
+<table class="table">
+<colgroup>
+<col width="16%">
+<col width="50%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th align="center">Valid Code</th>
+<th align="left">License</th>
+<th align="left">Suggested use case</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="left"><a href="https://creativecommons.org/public-domain/cc0/" class="external-link">“Creative Commons
+Zero v1.0 Universal (CC0)”</a></td>
+<td align="left">This is the preferred license for all public
+content</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="left">
+<a href="https://choosealicense.com/licenses/cc-by-4.0/" class="external-link">“Creative Commons
+Attribution 4.0 International”</a> (CC-by-4.0)</td>
+<td align="left">External international partners</td>
+</tr>
+<tr class="odd">
+<td align="center">3</td>
+<td align="left">
+<a href="https://www.creativecommons.org/licenses/by-nc/4.0/deed.en" class="external-link">“Creative
+commons Attribution Non Commercial 4.0 International”</a> (CC BY-NC
+4.0)</td>
+<td align="left">External non-commercial partners</td>
+</tr>
+<tr class="even">
+<td align="center">4</td>
+<td align="left"><a href="https://en.wikipedia.org/wiki/Public_domain" class="external-link">“Public
+Domain”</a></td>
+<td align="left">CC0 is preferred</td>
+</tr>
+<tr class="odd">
+<td align="center">5</td>
+<td align="left">“Unlicensed (not for public dissemination)”</td>
+<td align="left">Should only be used for restricted content that
+contains confidential unclassified information - CUI)</td>
+</tr>
+</tbody>
+</table>
+<p>If all license codes supplied (as integers ranging from 1-5) are
+valid, the function passes.</p>
 </div>
 <div class="section level3">
 <h3 id="producing-units">Producing Unit(s)<a class="anchor" aria-label="anchor" href="#producing-units"></a>

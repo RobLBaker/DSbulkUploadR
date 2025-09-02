@@ -125,16 +125,15 @@ plan to upload to DataStore.</p>
 <code><a href="../reference/make_input_template.html">make_input_template()</a></code> and pass it the the appropriate
 DataStore reference type name. Currently the following reference types
 are supported:</p>
-<blockquote>
-<p>AudioRecording</p>
-</blockquote>
+<ol style="list-style-type: decimal">
+<li>AudioRecording</li>
+</ol>
 <p>For example, the following line of code</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/make_input_template.html">make_input_template</a></span><span class="op">(</span><span class="st">"AudioRecording"</span><span class="op">)</span></span></code></pre></div>
 <p>will write the file “AudioRecording_input.txt” to your current
 working directory (you can customize where the file is written to by
-specifying the write_path, which defaults to the current working
-directory).</p>
+specifying the write_path).</p>
 <p>For a full list of all available reference types on DataStore as well
 as the appropriate name to use in this input.txt file, see the swagger
 documentation for the <a href="https://irmaservices.nps.gov/datastore-secure/v7/documentation/datastore-secure-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
