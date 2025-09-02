@@ -57,7 +57,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
 #' @param filename String. Name of the file to be uploaded.
 #' @param path String. Location of the file to be uploaded.
 #' @param reference_id String. The reference number for the DataStore reference the file will be uploaded to.
-#' @param is508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
+#' @param is_508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
 #' @param chunk_size_mb Integer. Size of file chunks to be uploaded, in MB
 #' @param retry Integer. Number of times to retry uploading file chunks if a given chunk fails.
 #' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
