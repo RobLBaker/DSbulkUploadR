@@ -23,9 +23,13 @@ make_input_template <- function(reference_type = "AudioRecording",
   write_file <- paste0(write_path, "/", template_file)
   cli::cli_inform("Writing: {.file {write_file}}.")
 
-  readr::write_delim(x = dat,
-                     file = write_file)
-
+  utils::write.table(
+    dat,
+    write_file,
+    sep = "\t",
+    row.names = F,
+    quote = F,
+    fileEncoding = "UTF-8"
+  )
   return(invisible(dat))
-
 }
