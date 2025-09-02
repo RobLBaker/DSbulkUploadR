@@ -182,10 +182,12 @@ upload_files <- function(filename,
 #' @param keywords String or Vector. The keywords to be added to the DataStore reference.
 #' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
 #'
-#' @returns
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' add_keywords(reference_id = 1234567, keywords = c("test", "testing"))}
 add_keywords <- function(reference_id,
                          keywords,
                          dev = FALSE) {
@@ -216,6 +218,7 @@ add_keywords <- function(reference_id,
   if(!status_code == 200){
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
+  return(invisible(NULL))
 }
 
 
