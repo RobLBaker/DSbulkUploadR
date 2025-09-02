@@ -197,6 +197,32 @@ check_508_format <- function(filename, path = getwd()){
   return(invisible(NULL))
 }
 
+#' Checks for duplicated reference titles
+#'
+#' Reads in a .txt file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
+#'
+#' @param filename String. The file to check.
+#' @param path String. The path to the file. Defaults to the current working directory.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_unique_title("test_file.txt")}
+check_unique_title <- function(filename, path = getwd()){
+  upload_data <- read.delim(file= paste0(path, "/", filename))
+  duplicates <- duplicated(upload_data$title)
+  if (any(duplicates)) {
+    msg <- paste0("All reference titles must be unique. The following titles ",
+                  "are duplicated: {upload_data$title[duplicates]}.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(c("v" = "All reference titles are unique"))
+  }
+  return(invisible(NULL))
+}
+
 #' Checks the begin_content_date column of an input file for ISO 8601 formatting
 #'
 #' Reads in a .txt file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
