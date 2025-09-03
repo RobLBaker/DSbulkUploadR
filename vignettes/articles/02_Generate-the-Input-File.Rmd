@@ -1,5 +1,5 @@
 ---
-title: "02_Generate the Input File"
+title: "Generate the Input File"
 ---
 
 ```{r, include = FALSE}

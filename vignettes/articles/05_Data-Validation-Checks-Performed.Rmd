@@ -1,5 +1,5 @@
 ---
-title: "05_Data Validation Checks Performed"
+title: "Data Validation Checks Performed"
 ---
 
 ```{r, include = FALSE}
