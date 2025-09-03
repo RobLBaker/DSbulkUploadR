@@ -32,19 +32,19 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
-      <a href="../articles/01_Overview.html">Overview</a>
+      <a href="../articles/01_Overview.html">01_Overview</a>
     </li>
     <li>
-      <a href="../articles/02_Generate-the-Input-File.html">Generate-the-Input-File</a>
+      <a href="../articles/02_Generate-the-Input-File.html">02_Generate the Input File</a>
     </li>
     <li>
-      <a href="../articles/03_Populating-the-Input-File.html">Populating-the-Input-File</a>
+      <a href="../articles/03_Populating-the-Input-File.html">03_Populating the Input File</a>
     </li>
     <li>
-      <a href="../articles/04_Perform-Bulk-Reference-Uploads.html">Perform-Bulk-Reference-Uploads</a>
+      <a href="../articles/04_Perform-Bulk-Reference-Uploads.html">04_Perform-Bulk-Reference-Uploads</a>
     </li>
     <li>
-      <a href="../articles/05_Data-Validation-Checks.html">Data-Validation-Checks</a>
+      <a href="../articles/05_Data-Validation-Checks-Performed.html">05_Data Validation Checks Performed</a>
     </li>
   </ul></li>
 <li>
@@ -102,6 +102,10 @@
 <dd><p>String. The reference number for the DataStore reference the file will be uploaded to.</p></dd>
 
 
+<dt id="arg-is-">is_508<a class="anchor" aria-label="anchor" href="#arg-is-"></a></dt>
+<dd><p>Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.</p></dd>
+
+
 <dt id="arg-chunk-size-mb">chunk_size_mb<a class="anchor" aria-label="anchor" href="#arg-chunk-size-mb"></a></dt>
 <dd><p>Integer. Size of file chunks to be uploaded, in MB</p></dd>
 
@@ -112,10 +116,6 @@
 
 <dt id="arg-dev">dev<a class="anchor" aria-label="anchor" href="#arg-dev"></a></dt>
 <dd><p>Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.</p></dd>
-
-
-<dt id="arg-is-">is508<a class="anchor" aria-label="anchor" href="#arg-is-"></a></dt>
-<dd><p>Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.</p></dd>
 
 </dl></div>
     <div id="value">
