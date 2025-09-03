@@ -60,13 +60,13 @@ check_ref_type_supported <- function(filename, path = getwd()) {
   refs <- upload_data$reference_type
 
   # hardcoded list of supported refs. Will need manual updates
-  supported_refs <- "AudioRecording"
+  supported_refs <- c("AudioRecording", "GenericDocument")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
 
   if (length(bad_refs > 0)) {
-    msg <- paste0("The following reference types are unsupporte: ",
+    msg <- paste0("The following reference types are unsupported: ",
                   "{bad_refs}. Please supply only currently supported ",
                   "reference types.")
     cli::cli_abort(c("x" = msg))
