@@ -20,6 +20,7 @@ Each DataStore reference type has a potentially unique backend storage system an
 To create the relevant template input file, use the function `make_input_template()` and pass it the the appropriate DataStore reference type name. Currently the following reference types are supported:
 
   1. AudioRecording
+  2. GenericDocument
 
 For example, the following line of code
 
@@ -35,4 +36,4 @@ For a full list of all available reference types on DataStore as well as the app
 # Implications of unique reference attributes
 Because each reference type on DataStore is unique with its own unique backend storage structure and API requirements, you will need a separate input.txt file for each reference type you plan on creating. If you want to create 3,600 Audio Recordings references, you can do it all using the single AudioRecording_input.txt file. However, if you want to make 3,549 Audio Recording references and 51 Generic Document references, you will need to run the `make_input_template()` function twice (once to make a template for Audio Recordings and once to make a template for Generic Documents. You will also need to run the `bulk_reference_generation()` function twice: once supplying the AudioRecordings_input.txt input file and once supplying the GenericDocument_input.txt file.
 
-As an aside, you will also have to wait for this package to support additional DataStore reference types. This development version only supports the Audio Recordings reference type.
+As an aside, you will also have to wait for this package to support additional DataStore reference types. This development version only supports the Audio Recording and Generic Document reference types.

@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 # What this Package Does
 
 The `DSbulkUploadR` package only requires using two R functions: 
-`make_input_template()` creates a DataStore reference-specific template input.txt file. After youpopulate the input.txt file, a second function `bulk_reference_generation()` takes the data in the input.txt file and uses it to perform the bulk upload. The bulk upload consists of:
+`make_input_template()` creates a DataStore reference-specific template input.txt file. After you populate the input.txt file, a second function `bulk_reference_generation()` takes the data in the input.txt file and uses it to perform the bulk upload. The bulk upload consists of:
 
 1) Create draft reference(s) on DataStore
 2) Populate each draft reference with the supplied information
@@ -29,7 +29,8 @@ The `bulk_reference generation()` will return a dataframe containing all of the 
 6) Activate ("publish") the reference(s)
 
 # Supported DataStore Reference Types
-Audio Recording
+1) Audio Recording
+2) Generic Document
 
 # Supported File Types
 Upload of all file types is supported. There is no distinction made among file types and no need to designate specific file types. Changing the default settings can result in virtually limitless numbers and sizes of files to upload. Use caution when changing the default settings!

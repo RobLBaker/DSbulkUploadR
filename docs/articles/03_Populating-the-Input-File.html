@@ -105,13 +105,13 @@
 <p>The input template is designed to be easy to understand and
 human-readable. Yet, it will be used as computer input and so must be
 crafted with some rules that may not seem intuitive. Please take care to
-read these instructions when populating the input template. Do
+read these instructions when populating the input.txt template. Do
 <strong>not</strong> change any of the column names.</p>
 <p>Each reference type on DataStore has a specific set of back-end
 attributes. You must use a reference-type specific input.txt file (see
 <a href="02_Generate-the-Input-File.html">Generate the Input File</a>.
 The input files may had different columns. If your reference-type
-specific input.txt file lacks a column, you can safely ingore the
+specific input.txt file lacks a column, you can safely ignore the
 instructions for that column. Do not edit or change the column
 names.</p>
 <p>Most of the data you supply will be subjected to a series of data
@@ -121,7 +121,7 @@ performing the bulk reference generation. But it is much faster to
 supply the data correctly the first time (and there are likely ways to
 do it incorrectly that the checks cannot account for). So please read
 the instructions carefully.</p>
-<p>One suggestion is to open the .txt file in Excel and edit it in
+<p>One suggestion is to open the input.txt file in Excel and edit it in
 Excel. However, this can cause some issues with date formats. Please see
 the section below, “<a href="#working-with-dates">Working with
 dates</a>” for how to mitigate the issue.</p>
@@ -135,7 +135,10 @@ the reference type displayed on the DataStore website. Pay careful
 attention to the spelling, spaces (or lack thereof) and pattern of
 capitalization. Currently the DSbulkUploadR package supports the
 following reference types:</p>
-<p>AudioRecording</p>
+<ol style="list-style-type: decimal">
+<li>AudioRecording</li>
+<li>GenericDocument</li>
+</ol>
 <p>For a full list of reference types, see the <a href="https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
 swagger documentation for the appropriate API</a></p>
 </div>
@@ -241,18 +244,6 @@ string of characters describing the duration of the content. For
 instance, the length_of_recording value may be “5 hours six minutes and
 32 sec” (without quotes). This value will be directly used and not
 parsed into any specific format.</p>
-<p>If the reference type does not have a recording length, leave this
-value blank.</p>
-<p>The following reference types require a length_of_recording
-value:</p>
-<blockquote>
-<p>AudioRecording</p>
-</blockquote>
-<p>The following reference types should have length_of_recording left
-blank:</p>
-<blockquote>
-<p>Everything else?</p>
-</blockquote>
 </div>
 <div class="section level3">
 <h3 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
@@ -391,7 +382,10 @@ Resources Science and Stewardship Directorate), etc.</p>
 <h3 id="keywords">Keywords<a class="anchor" aria-label="anchor" href="#keywords"></a>
 </h3>
 <p>The keywords column in the input.txt file should contain a
-comma-separated list of keywords to be added to the reference.</p>
+comma-separated list of keywords to be added to the reference. Each
+keyword can consist of a single word or multiple words but should not
+contain special characters (e.g. no quotes, apostrophes, etc). Keywords
+will automatically be sorted into alphabetical order on DataStore.</p>
 </div>
 </div>
   </div>
