@@ -11,3 +11,4 @@ A set of step-by-step detailed instructions on how to use the bulk uploader, wha
 
 # Currently supported DataStore reference types
 Audio Recording
+Generic Document
