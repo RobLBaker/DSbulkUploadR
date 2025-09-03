@@ -192,8 +192,11 @@ add_keywords <- function(reference_id,
                          keywords,
                          dev = FALSE) {
 
-  # make json
-  bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = TRUE)
+  if (length(keywords < 2)) {
+    bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = FALSE)
+  } else {
+    bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = TRUE)
+  }
 
   # construct request URL
   if(dev == TRUE){
