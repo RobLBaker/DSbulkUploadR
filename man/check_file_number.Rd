@@ -11,7 +11,7 @@ check_file_number(filename, path = getwd(), file_number_error = 500)
 
 \item{path}{String. Path to the file to check. Defaults to the current working directory.}
 
-\item{file_number_error.}{Integer. Maximum allowable number of files. Defaults to 500.}
+\item{file_number_error}{Integer. Maximum allowable number of files. Defaults to 500.}
 }
 \value{
 NULL (invisibly)

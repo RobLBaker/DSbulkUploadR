@@ -48,7 +48,6 @@ check_ref_type <- function(filename, path = getwd()) {
 #' Runs a check against a hardcoded list of currently supporte DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
 #'
 #' @inheritParams check_ref_type
-#' @param path
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -117,7 +116,7 @@ check_files_exist <- function(filename, path = getwd()){
 #'
 #' @param filename String. Name of the file to check.
 #' @param path String. Path to the file to check. Defaults to the current working directory.
-#' @param file_number_error. Integer. Maximum allowable number of files. Defaults to 500.
+#' @param file_number_error Integer. Maximum allowable number of files. Defaults to 500.
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -719,7 +718,7 @@ check_users_AD <- function(filename, path = getwd()){
                   "valid usernames: {bad_usr}.")
     cli::cli_abort(c("x" = msg))
   }
-  if (!is.null(invalid_oricd)) {
+  if (!is.null(invalid_orcid)) {
     msg <- paste0("The following usernames do not have ORCIDs (or have ",
                   "invalid ORCIDs) associated with them. Please have the ",
                   "users add valid ORCIDs (https://orcid.org) to their ",

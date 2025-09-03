@@ -9,7 +9,7 @@ check_ref_type_supported(filename, path = getwd())
 \arguments{
 \item{filename}{String. Input file to check.}
 
-\item{path}{}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
 }
 \value{
 NULL (invisibly)

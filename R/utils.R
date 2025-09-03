@@ -28,3 +28,6 @@ assign("ds_dev_api",
 .ds_dev_api <- function(x){
   get("ds_dev_api", envir = .pkgglobalenv)
 }
+
+#this gets rid of the "no visible binding for global variable 'x'" error in build checks:
+globalVariables(c("found"))
