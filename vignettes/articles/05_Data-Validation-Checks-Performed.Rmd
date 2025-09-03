@@ -1,0 +1,13 @@
+---
+title: "05_Data Validation Checks Performed"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# A list of all the input data validation checks performed
+coming soon....

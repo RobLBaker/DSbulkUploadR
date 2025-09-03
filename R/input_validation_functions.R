@@ -717,7 +717,7 @@ check_users_AD <- function(filename, path = getwd()){
   if (!is.null(bad_usr)) {
     msg <- paste0("The following usernames are invalid. Please provide ",
                   "valid usernames: {bad_usr}.")
-    cli::abort(c("x" = msg))
+    cli::cli_abort(c("x" = msg))
   }
   if (!is.null(invalid_oricd)) {
     msg <- paste0("The following usernames do not have ORCIDs (or have ",
@@ -725,9 +725,9 @@ check_users_AD <- function(filename, path = getwd()){
                   "users add valid ORCIDs (https://orcid.org) to their ",
                   "Active Directory account at https://myaccount.nps.gov/: ",
                   "{invalid_orcid}.")
-    cli::abort(c("x" = msg))
+    cli::cli_abort(c("x" = msg))
   }
   msg <- "All users have NPS accounts and valid ORCiDs associated with them."
-  cli::inform(c("v" = msg))
+  cli::cli_inform(c("v" = msg))
   return(invisible(NULL))
 }

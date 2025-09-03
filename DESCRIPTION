@@ -17,12 +17,16 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports: 
     cli,
+    curl,
     dplyr,
+    glue,
     httr,
     httr2,
     jsonlite,
+    lifecycle,
     lubridate,
     magrittr,
+    rjson,
     stringr,
     XML
 URL: https://github.com/nationalparkservice/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR/
