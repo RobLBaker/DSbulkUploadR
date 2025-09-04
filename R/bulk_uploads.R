@@ -2,7 +2,7 @@
 #'
 #' @param draft_title String. The title for the reference.
 #' @param ref_type String. The reference type to create.
-#' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.
+#' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to TRUE
 #'
 #' @returns String. The DataStore reference number.
 #' @export
@@ -13,7 +13,7 @@
 #'                         ref_type = "AudioRecording")}
 create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
-                                   dev = FALSE) {
+                                   dev = TRUE) {
 
   #generate draft title:
   dynamic_title <- draft_title
@@ -60,7 +60,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
 #' @param is_508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
 #' @param chunk_size_mb Integer. Size of file chunks to be uploaded, in MB
 #' @param retry Integer. Number of times to retry uploading file chunks if a given chunk fails.
-#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#' @param dev Logical. Defaults to TRUE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
 #'
 #' @returns List. Of information about the uploaded file.
 #' @export
@@ -73,7 +73,7 @@ upload_files <- function(filename,
                          is_508 = FALSE,
                          chunk_size_mb = 1,
                          retry = 1,
-                         dev = FALSE) {
+                         dev = TRUE) {
 
   file_name <- paste0(path, "/", filename)
 
@@ -180,7 +180,7 @@ upload_files <- function(filename,
 #'
 #' @param reference_id Integer. The seven-digit DataStore ID for the reference
 #' @param keywords String or Vector. The keywords to be added to the DataStore reference.
-#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#' @param dev Logical. Defaults to TRUE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -190,7 +190,7 @@ upload_files <- function(filename,
 #' add_keywords(reference_id = 1234567, keywords = c("test", "testing"))}
 add_keywords <- function(reference_id,
                          keywords,
-                         dev = FALSE) {
+                         dev = TRUE) {
 
   if (length(keywords < 2)) {
     bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = FALSE)
@@ -239,7 +239,7 @@ add_keywords <- function(reference_id,
 #' @param path String. Path to the file.
 #' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
 #' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
-#' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to FALSE
+#' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.
 #'
 #' @returns Dataframe
 #' @export
@@ -251,7 +251,7 @@ bulk_reference_generation <- function(filename,
                                      path = getwd(),
                                      max_file_upload = 500,
                                      max_data_upload = 10,
-                                     dev = FALSE) {
+                                     dev = TRUE) {
 
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
