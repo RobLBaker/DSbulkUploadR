@@ -4,14 +4,14 @@
 \alias{create_draft_reference}
 \title{Creates a blank draft reference on DataStore}
 \usage{
-create_draft_reference(draft_title = "Temp Title", ref_type, dev = FALSE)
+create_draft_reference(draft_title = "Temp Title", ref_type, dev = TRUE)
 }
 \arguments{
 \item{draft_title}{String. The title for the reference.}
 
 \item{ref_type}{String. The reference type to create.}
 
-\item{dev}{Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.}
+\item{dev}{Logical. Should the reference be created on the development server or the production server? Defaults to TRUE}
 }
 \value{
 String. The DataStore reference number.

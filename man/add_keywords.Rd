@@ -4,14 +4,14 @@
 \alias{add_keywords}
 \title{Replaces Keywords from a DataStore reference with one or more supplied keywords}
 \usage{
-add_keywords(reference_id, keywords, dev = FALSE)
+add_keywords(reference_id, keywords, dev = TRUE)
 }
 \arguments{
 \item{reference_id}{Integer. The seven-digit DataStore ID for the reference}
 
 \item{keywords}{String or Vector. The keywords to be added to the DataStore reference.}
 
-\item{dev}{Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.}
+\item{dev}{Logical. Defaults to TRUE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.}
 }
 \value{
 NULL (invisibly)

@@ -9,7 +9,7 @@ bulk_reference_generation(
   path = getwd(),
   max_file_upload = 500,
   max_data_upload = 10,
-  dev = FALSE
+  dev = TRUE
 )
 }
 \arguments{
@@ -21,7 +21,7 @@ bulk_reference_generation(
 
 \item{max_data_upload}{Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.}
 
-\item{dev}{Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to FALSE}
+\item{dev}{Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.}
 }
 \value{
 Dataframe
