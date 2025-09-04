@@ -10,7 +10,7 @@ knitr::opts_chunk$set(
 ```
 
 # Overview
-Once you have finished filling out your input.txt file, you are ready to create references on DataStore! It can be quite easy to make hundreds or even thousands of references so if this is the first time you have used this package please consider testing a subset of your input.txt file using the development servier.
+Once you have finished filling out your input.txt file, you are ready to create references on DataStore! It can be quite easy to make hundreds or even thousands of references so if this is the first time you have used this package please consider testing a subset of your input.txt file using the development server.
 
 # Testing on the development server
 
@@ -24,7 +24,7 @@ dev_refs <- bulk_reference_generation(filename = "truncated_input.txt",
 ```
 Once the function has run, you can look at your draft references on the [DataStore development server](https://irmadev.nps.gov/DataStore/) to make sure everything is copasetic. Make any necessary adjustments to your full input.txt file before using it with the `bulk_reference_generation()` with the `dev` parameter set to `FALSE`.
 
-You may want to check the object `dev_refs` to see a list of the newly created reference numbers, which has been added to the information you suppied in your `truncated_input.txt` file.
+You may want to check the object `dev_refs` to see a list of the newly created reference numbers, which has been added to the information you supplied in your `truncated_input.txt` file.
 
 # Create references already!
 Creating references is the easy part! Run the following line of code to supply your full (not truncated) input.txt file:
