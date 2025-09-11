@@ -11,7 +11,7 @@ upload_files(
   is_508 = FALSE,
   chunk_size_mb = 1,
   retry = 1,
-  dev = FALSE
+  dev = TRUE
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ upload_files(
 
 \item{retry}{Integer. Number of times to retry uploading file chunks if a given chunk fails.}
 
-\item{dev}{Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.}
+\item{dev}{Logical. Defaults to TRUE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.}
 }
 \value{
 List. Of information about the uploaded file.

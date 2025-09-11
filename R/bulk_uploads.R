@@ -2,7 +2,7 @@
 #'
 #' @param draft_title String. The title for the reference.
 #' @param ref_type String. The reference type to create.
-#' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to FALSE.
+#' @param dev Logical. Should the reference be created on the development server or the production server? Defaults to TRUE
 #'
 #' @returns String. The DataStore reference number.
 #' @export
@@ -13,7 +13,7 @@
 #'                         ref_type = "AudioRecording")}
 create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
-                                   dev = FALSE) {
+                                   dev = TRUE) {
 
   #generate draft title:
   dynamic_title <- draft_title
@@ -60,7 +60,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
 #' @param is_508 Logical. Is the file in question 508 compliant? TRUE = Yes, FALSE = No. Defaults to FALSE.
 #' @param chunk_size_mb Integer. Size of file chunks to be uploaded, in MB
 #' @param retry Integer. Number of times to retry uploading file chunks if a given chunk fails.
-#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#' @param dev Logical. Defaults to TRUE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
 #'
 #' @returns List. Of information about the uploaded file.
 #' @export
@@ -73,7 +73,7 @@ upload_files <- function(filename,
                          is_508 = FALSE,
                          chunk_size_mb = 1,
                          retry = 1,
-                         dev = FALSE) {
+                         dev = TRUE) {
 
   file_name <- paste0(path, "/", filename)
 
@@ -174,13 +174,146 @@ upload_files <- function(filename,
   return(file_info)
 }
 
+write_core_bibliography <- function(reference_id,
+                        file_name,
+                        row_num,
+                        path = getwd(),
+                        dev = TRUE) {
 
+  upload_data <- read.delim(file=paste0(path, "/", file_name))
+
+  #get system date
+  today <- Sys.Date()
+
+  # populate draft reference bibliography ----
+  begin_date <- upload_data$content_begin_date[row_num]
+  end_date <- upload_data$content_end_date[row_num]
+
+  #create author list ====
+  usr_email <- unlist(stringr::str_split(
+    upload_data$author_email_list[row_num],
+    ", "))
+  usr_email <- stringr::str_trim(usr_email)
+  usr_email <- unique(usr_email)
+
+  req_url <- paste0("https://irmadevservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  bdy <- usr_email
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    stop("ERROR: DataStore connection failed.")
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  contacts <- list(NULL)
+  for (j in 1:length(usr_email)) {
+    author <- list(title = "",
+                   primaryName = rjson$sn[j],
+                   firstName = rjson$givenName[j],
+                   middleName = "",
+                   suffix = "",
+                   affiliation = "",
+                   isCorporate = FALSE,
+                   ORCID = rjson$extensionAttribute2[j])
+    contacts <- append(contacts, list(author))
+  }
+
+  # generate json body for rest api call ====
+  #AudioRecordings lack publisher element:
+  if (upload_data$reference_type[row_num] == "AudioRecording") {
+    mylist <- list(title = upload_data$title[row_num],
+                   issuedDate = list(year = lubridate::year(today),
+                                     month = lubridate::month(today),
+                                     day = lubridate::day(today),
+                                     precision = ""),
+                   contentBeginDate = list(year = lubridate::year(begin_date),
+                                           month = lubridate::month(begin_date),
+                                           day = lubridate::day(begin_date),
+                                           precision = ""),
+                   contentEndDate = list(year = lubridate::year(end_date),
+                                         month = lubridate::month(end_date),
+                                         day = lubridate::day(end_date),
+                                         precision = ""),
+                   location = "",
+                   miscellaneousCode = "",
+                   volume = "",
+                   issue = "",
+                   pageRange = "",
+                   edition = "",
+                   dateRange = "",
+                   meetingPlace = "",
+                   abstract = upload_data$description[row_num],
+                   notes = upload_data$notes[row_num],
+                   purpose = upload_data$purpose[row_num],
+                   tableOfContents = "",
+                   publisher = "Fort Collins, CO",
+                   size1 = upload_data$length_of_recording[row_num],
+                   contacts1 = list(contacts),
+                   metadataStandardID = "",
+                   licenseTypeID = upload_data$license[row_num])
+  } else if (upload_data$reference_type[row_num] == "GenericDocument") {
+    mylist <- list(title = upload_data$title[row_num],
+                   issuedDate = list(year = lubridate::year(today),
+                                     month = lubridate::month(today),
+                                     day = lubridate::day(today),
+                                     precision = ""),
+                   contentBeginDate = list(year = lubridate::year(begin_date),
+                                           month = lubridate::month(begin_date),
+                                           day = lubridate::day(begin_date),
+                                           precision = ""),
+                   contentEndDate = list(year = lubridate::year(end_date),
+                                         month = lubridate::month(end_date),
+                                         day = lubridate::day(end_date),
+                                         precision = ""),
+                   location = "",
+                   miscellaneousCode = "",
+                   volume = "",
+                   issue = "",
+                   pageRange = "",
+                   edition = "",
+                   dateRange = "",
+                   meetingPlace = "",
+                   abstract = upload_data$description[row_num],
+                   notes = upload_data$notes[row_num],
+                   purpose = upload_data$purpose[row_num],
+                   tableOfContents = "",
+                   publisher = "National Park Service",
+                   publisher = "Fort Collins, CO",
+                   contacts1 = list(contacts),
+                   metadataStandardID = "",
+                   licenseTypeID = upload_data$license[row_num])
+  }
+
+  #for testing purposes and to look at the json sent:
+  #x <- rjson::toJSON(mylist)
+  #jsonlite::prettify(x)
+
+  # make request to populate reference ====
+  if (dev == TRUE) {
+    api_url <- paste0(.ds_dev_api(),
+                      "Reference/",  reference_id, "/Bibliography")
+  } else {
+    api_url <- paste0(.ds_secure_api(),
+                      "Reference/",  reference_id , "/Bibliography")
+  }
+
+  req <- httr::PUT(
+    url = api_url,
+    httr::add_headers('Content-Type' = 'application/json'),
+    httr::authenticate(":", "", "ntlm"),
+    body = jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE))
+
+}
 
 #' Replaces Keywords from a DataStore reference with one or more supplied keywords
 #'
 #' @param reference_id Integer. The seven-digit DataStore ID for the reference
 #' @param keywords String or Vector. The keywords to be added to the DataStore reference.
-#' @param dev Logical. Defaults to FALSE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
+#' @param dev Logical. Defaults to TRUE. FALSE means files will be uploaded to the production server. TRUE means files will be uploaded to the development server. Use Dev = TRUE when testing the function.
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -190,7 +323,7 @@ upload_files <- function(filename,
 #' add_keywords(reference_id = 1234567, keywords = c("test", "testing"))}
 add_keywords <- function(reference_id,
                          keywords,
-                         dev = FALSE) {
+                         dev = TRUE) {
 
   if (length(keywords < 2)) {
     bdy <- jsonlite::toJSON(keywords, pretty = TRUE, auto_unbox = FALSE)
@@ -239,7 +372,7 @@ add_keywords <- function(reference_id,
 #' @param path String. Path to the file.
 #' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
 #' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
-#' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to FALSE
+#' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.
 #'
 #' @returns Dataframe
 #' @export
@@ -251,7 +384,7 @@ bulk_reference_generation <- function(filename,
                                      path = getwd(),
                                      max_file_upload = 500,
                                      max_data_upload = 10,
-                                     dev = FALSE) {
+                                     dev = TRUE) {
 
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
@@ -358,6 +491,9 @@ bulk_reference_generation <- function(filename,
                      ORCID = rjson$extensionAttribute2[j])
       contacts <- append(contacts, author)
     }
+
+
+
 
     # generate json body for rest api call ====
     #AudioRecordings lack publisher element:
