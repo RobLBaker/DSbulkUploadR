@@ -174,14 +174,16 @@ upload_files <- function(filename,
   return(file_info)
 }
 
-write_core_bibliography <- function(refernce_id,
-                        reference_type,
+write_core_bibliography <- function(reference_id,
                         file_name,
                         row_num,
                         path = getwd(),
                         dev = TRUE) {
 
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+  upload_data <- read.delim(file=paste0(path, "/", file_name))
+
+  #get system date
+  today <- Sys.Date()
 
   # populate draft reference bibliography ----
   begin_date <- upload_data$content_begin_date[row_num]
@@ -207,7 +209,7 @@ write_core_bibliography <- function(refernce_id,
   json <- httr::content(req, "text")
   rjson <- jsonlite::fromJSON(json)
 
-  contacts <- NULL
+  contacts <- list(NULL)
   for (j in 1:length(usr_email)) {
     author <- list(title = "",
                    primaryName = rjson$sn[j],
@@ -217,7 +219,7 @@ write_core_bibliography <- function(refernce_id,
                    affiliation = "",
                    isCorporate = FALSE,
                    ORCID = rjson$extensionAttribute2[j])
-    contacts <- append(contacts, author)
+    contacts <- append(contacts, list(author))
   }
 
   # generate json body for rest api call ====
@@ -293,17 +295,17 @@ write_core_bibliography <- function(refernce_id,
   # make request to populate reference ====
   if (dev == TRUE) {
     api_url <- paste0(.ds_dev_api(),
-                      "Reference/",  ref_code, "/Bibliography")
+                      "Reference/",  reference_id, "/Bibliography")
   } else {
     api_url <- paste0(.ds_secure_api(),
-                      "Reference/",  ref_code , "/Bibliography")
+                      "Reference/",  reference_id , "/Bibliography")
   }
 
   req <- httr::PUT(
     url = api_url,
     httr::add_headers('Content-Type' = 'application/json'),
     httr::authenticate(":", "", "ntlm"),
-    body = rjson::toJSON(mylist))
+    body = jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE))
 
 }
 
