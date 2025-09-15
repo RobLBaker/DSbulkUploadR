@@ -461,126 +461,132 @@ bulk_reference_generation <- function(filename,
     begin_date <- upload_data$content_begin_date[i]
     end_date <- upload_data$content_end_date[i]
 
+    write_core_bibliography(reference_id = ref_code,
+                            file_name = filename,
+                            row_num = i,
+                            path = path,
+                            dev = dev)
+
     #create author list ====
-    usr_email <- unlist(stringr::str_split(upload_data$author_email_list[i],
-                                          ", "))
-    usr_email <- stringr::str_trim(usr_email)
-    usr_email <- unique(usr_email)
-
-    req_url <- paste0("https://irmadevservices.nps.gov/",
-                        "adverification/v1/rest/lookup/email")
-    bdy <- usr_email
-    req <- httr::POST(req_url,
-                      httr::add_headers('Content-Type' = 'application/json'),
-                      body = rjson::toJSON(bdy))
-    status_code <- httr::stop_for_status(req)$status_code
-    if (!status_code == 200) {
-      stop("ERROR: DataStore connection failed.")
-    }
-    json <- httr::content(req, "text")
-    rjson <- jsonlite::fromJSON(json)
-
-    contacts <- NULL
-    for (j in 1:length(usr_email)) {
-      author <- list(title = "",
-                     primaryName = rjson$sn[j],
-                     firstName = rjson$givenName[j],
-                     middleName = "",
-                     suffix = "",
-                     affiliation = "",
-                     isCorporate = FALSE,
-                     ORCID = rjson$extensionAttribute2[j])
-      contacts <- append(contacts, author)
-    }
+    # usr_email <- unlist(stringr::str_split(upload_data$author_email_list[i],
+    #                                       ", "))
+    # usr_email <- stringr::str_trim(usr_email)
+    # usr_email <- unique(usr_email)
+    #
+    # req_url <- paste0("https://irmadevservices.nps.gov/",
+    #                     "adverification/v1/rest/lookup/email")
+    # bdy <- usr_email
+    # req <- httr::POST(req_url,
+    #                   httr::add_headers('Content-Type' = 'application/json'),
+    #                   body = rjson::toJSON(bdy))
+    # status_code <- httr::stop_for_status(req)$status_code
+    # if (!status_code == 200) {
+    #   stop("ERROR: DataStore connection failed.")
+    # }
+    # json <- httr::content(req, "text")
+    # rjson <- jsonlite::fromJSON(json)
+    #
+    # contacts <- NULL
+    # for (j in 1:length(usr_email)) {
+    #   author <- list(title = "",
+    #                  primaryName = rjson$sn[j],
+    #                  firstName = rjson$givenName[j],
+    #                  middleName = "",
+    #                  suffix = "",
+    #                  affiliation = "",
+    #                  isCorporate = FALSE,
+    #                  ORCID = rjson$extensionAttribute2[j])
+    #   contacts <- append(contacts, author)
+    # }
 
 
 
 
     # generate json body for rest api call ====
     #AudioRecordings lack publisher element:
-    if (upload_data$reference_type[i] == "AudioRecording") {
-      mylist <- list(title = upload_data$title[i],
-                     issuedDate = list(year = lubridate::year(today),
-                                       month = lubridate::month(today),
-                                       day = lubridate::day(today),
-                                       precision = ""),
-                     contentBeginDate = list(year = lubridate::year(begin_date),
-                                             month = lubridate::month(begin_date),
-                                             day = lubridate::day(begin_date),
-                                             precision = ""),
-                     contentEndDate = list(year = lubridate::year(end_date),
-                                           month = lubridate::month(end_date),
-                                           day = lubridate::day(end_date),
-                                           precision = ""),
-                     location = "",
-                     miscellaneousCode = "",
-                     volume = "",
-                     issue = "",
-                     pageRange = "",
-                     edition = "",
-                     dateRange = "",
-                     meetingPlace = "",
-                     abstract = upload_data$description[i],
-                     notes = upload_data$notes[i],
-                     purpose = upload_data$purpose[i],
-                     tableOfContents = "",
-                     publisher = "Fort Collins, CO",
-                     size1 = upload_data$length_of_recording[i],
-                     contacts1 = list(contacts),
-                     metadataStandardID = "",
-                     licenseTypeID = upload_data$license[i])
-    } else if (upload_data$reference_type[i] == "GenericDocument") {
-      mylist <- list(title = upload_data$title[i],
-                     issuedDate = list(year = lubridate::year(today),
-                                       month = lubridate::month(today),
-                                       day = lubridate::day(today),
-                                       precision = ""),
-                     contentBeginDate = list(year = lubridate::year(begin_date),
-                                             month = lubridate::month(begin_date),
-                                             day = lubridate::day(begin_date),
-                                             precision = ""),
-                     contentEndDate = list(year = lubridate::year(end_date),
-                                           month = lubridate::month(end_date),
-                                           day = lubridate::day(end_date),
-                                           precision = ""),
-                     location = "",
-                     miscellaneousCode = "",
-                     volume = "",
-                     issue = "",
-                     pageRange = "",
-                     edition = "",
-                     dateRange = "",
-                     meetingPlace = "",
-                     abstract = upload_data$description[i],
-                     notes = upload_data$notes[i],
-                     purpose = upload_data$purpose[i],
-                     tableOfContents = "",
-                     publisher = "National Park Service",
-                     publisher = "Fort Collins, CO",
-                     size1 = upload_data$length_of_recording[i],
-                     contacts1 = list(contacts),
-                     metadataStandardID = "",
-                     licenseTypeID = upload_data$license[i])
-    }
-
-    #for testing purposes and to look at the json sent:
-    #x <- rjson::toJSON(mylist)
-    #jsonlite::prettify(x)
-
-    # make request to populate reference ====
-    if (dev == TRUE) {
-      api_url <- paste0(.ds_dev_api(),
-                        "Reference/",  ref_code, "/Bibliography")
-    } else {
-      api_url <- paste0(.ds_secure_api(),
-                        "Reference/",  ref_code , "/Bibliography")
-    }
-
-    req <- httr::PUT(
-      url = api_url,
-      httr::add_headers('Content-Type' = 'application/json'),
-      httr::authenticate(":", "", "ntlm"),
-      body = rjson::toJSON(mylist))
+    # if (upload_data$reference_type[i] == "AudioRecording") {
+    #   mylist <- list(title = upload_data$title[i],
+    #                  issuedDate = list(year = lubridate::year(today),
+    #                                    month = lubridate::month(today),
+    #                                    day = lubridate::day(today),
+    #                                    precision = ""),
+    #                  contentBeginDate = list(year = lubridate::year(begin_date),
+    #                                          month = lubridate::month(begin_date),
+    #                                          day = lubridate::day(begin_date),
+    #                                          precision = ""),
+    #                  contentEndDate = list(year = lubridate::year(end_date),
+    #                                        month = lubridate::month(end_date),
+    #                                        day = lubridate::day(end_date),
+    #                                        precision = ""),
+    #                  location = "",
+    #                  miscellaneousCode = "",
+    #                  volume = "",
+    #                  issue = "",
+    #                  pageRange = "",
+    #                  edition = "",
+    #                  dateRange = "",
+    #                  meetingPlace = "",
+    #                  abstract = upload_data$description[i],
+    #                  notes = upload_data$notes[i],
+    #                  purpose = upload_data$purpose[i],
+    #                  tableOfContents = "",
+    #                  publisher = "Fort Collins, CO",
+    #                  size1 = upload_data$length_of_recording[i],
+    #                  contacts1 = list(contacts),
+    #                  metadataStandardID = "",
+    #                  licenseTypeID = upload_data$license[i])
+    # } else if (upload_data$reference_type[i] == "GenericDocument") {
+    #   mylist <- list(title = upload_data$title[i],
+    #                  issuedDate = list(year = lubridate::year(today),
+    #                                    month = lubridate::month(today),
+    #                                    day = lubridate::day(today),
+    #                                    precision = ""),
+    #                  contentBeginDate = list(year = lubridate::year(begin_date),
+    #                                          month = lubridate::month(begin_date),
+    #                                          day = lubridate::day(begin_date),
+    #                                          precision = ""),
+    #                  contentEndDate = list(year = lubridate::year(end_date),
+    #                                        month = lubridate::month(end_date),
+    #                                        day = lubridate::day(end_date),
+    #                                        precision = ""),
+    #                  location = "",
+    #                  miscellaneousCode = "",
+    #                  volume = "",
+    #                  issue = "",
+    #                  pageRange = "",
+    #                  edition = "",
+    #                  dateRange = "",
+    #                  meetingPlace = "",
+    #                  abstract = upload_data$description[i],
+    #                  notes = upload_data$notes[i],
+    #                  purpose = upload_data$purpose[i],
+    #                  tableOfContents = "",
+    #                  publisher = "National Park Service",
+    #                  publisher = "Fort Collins, CO",
+    #                  size1 = upload_data$length_of_recording[i],
+    #                  contacts1 = list(contacts),
+    #                  metadataStandardID = "",
+    #                  licenseTypeID = upload_data$license[i])
+    # }
+    #
+    # #for testing purposes and to look at the json sent:
+    # #x <- rjson::toJSON(mylist)
+    # #jsonlite::prettify(x)
+    #
+    # # make request to populate reference ====
+    # if (dev == TRUE) {
+    #   api_url <- paste0(.ds_dev_api(),
+    #                     "Reference/",  ref_code, "/Bibliography")
+    # } else {
+    #   api_url <- paste0(.ds_secure_api(),
+    #                     "Reference/",  ref_code , "/Bibliography")
+    # }
+    #
+    # req <- httr::PUT(
+    #   url = api_url,
+    #   httr::add_headers('Content-Type' = 'application/json'),
+    #   httr::authenticate(":", "", "ntlm"),
+    #   body = rjson::toJSON(mylist))
 
     # upload files to reference ----
 
