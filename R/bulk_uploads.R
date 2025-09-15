@@ -209,7 +209,7 @@ write_core_bibliography <- function(reference_id,
   json <- httr::content(req, "text")
   rjson <- jsonlite::fromJSON(json)
 
-  contacts <- list(NULL)
+  contacts <- NULL
   for (j in 1:length(usr_email)) {
     author <- list(title = "",
                    primaryName = rjson$sn[j],
@@ -252,9 +252,10 @@ write_core_bibliography <- function(reference_id,
                    tableOfContents = "",
                    publisher = "Fort Collins, CO",
                    size1 = upload_data$length_of_recording[row_num],
-                   contacts1 = list(contacts),
+                   contacts1 = contacts,
                    metadataStandardID = "",
                    licenseTypeID = upload_data$license[row_num])
+
   } else if (upload_data$reference_type[row_num] == "GenericDocument") {
     mylist <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
@@ -283,14 +284,14 @@ write_core_bibliography <- function(reference_id,
                    tableOfContents = "",
                    publisher = "National Park Service",
                    publisher = "Fort Collins, CO",
-                   contacts1 = list(contacts),
-                   metadataStandardID = "",
+                   contacts1 = contacts,
+                   #metadataStandardID = "",
                    licenseTypeID = upload_data$license[row_num])
   }
 
   #for testing purposes and to look at the json sent:
-  #x <- rjson::toJSON(mylist)
-  #jsonlite::prettify(x)
+  x <- rjson::toJSON(mylist)
+  jsonlite::prettify(x)
 
   # make request to populate reference ====
   if (dev == TRUE) {
@@ -618,6 +619,12 @@ bulk_reference_generation <- function(filename,
                keywords = keywords_to_add,
                dev = dev)
 
+
+    # set license type
+    NPSdatastore::set_license(reference_id = ref_code,
+                              dev = dev,
+                              license_type_id = upload_data$license_code[i],
+                              interactive = FAlSE)
   }
 
   return(upload_data)
