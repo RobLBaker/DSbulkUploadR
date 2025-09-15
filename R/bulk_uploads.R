@@ -50,7 +50,7 @@ create_draft_reference <- function(draft_title = "Temp Title",
   return(ds_ref)
 }
 
-#' Uploads files of indeterminant size to a DataStore reference
+#' Uploads files of indeterminate size to a DataStore reference
 #'
 #' This file uploader is largely borrowed from the R package NPSdatastore. It will take a file of any size and upload it to a given reference. This involves chunking the file into smaller pieces in order to upload larger files.
 #'
