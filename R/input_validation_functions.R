@@ -581,7 +581,7 @@ check_prod_units <- function(filename, path = getwd()){
   f <- file.path(tempdir(), "irmadownload.xml")
   if (!file.exists(f)) {
     # access all park codes from NPS xml file
-    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+    curl::curl_download("https://irmaservices.nps.gov/Unit/v2/api/", f)
   }
   result <- XML::xmlParse(file = f)
   dat <- XML::xmlToDataFrame(result)
@@ -627,7 +627,7 @@ check_content_units <- function(filename, path = getwd()) {
   f <- file.path(tempdir(), "irmadownload.xml")
   if (!file.exists(f)) {
     # access all park codes from NPS xml file
-    curl::curl_download("https://irmaservices.nps.gov/v2/rest/unit/", f)
+    curl::curl_download("https://irmaservices.nps.gov/Unit/v2/api/", f)
   }
   result <- XML::xmlParse(file = f)
   dat <- XML::xmlToDataFrame(result)
