@@ -630,7 +630,7 @@ bulk_reference_generation <- function(filename,
     NPSdatastore::set_license(reference_id = ref_code,
                               dev = dev,
                               license_type_id = upload_data$license_code[i],
-                              interactive = FAlSE)
+                              interactive = FALSE)
   }
 
   return(upload_data)
