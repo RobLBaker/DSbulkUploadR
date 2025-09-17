@@ -8,7 +8,7 @@
 #' @param path String. Path to input.txt file in `filename`. Defaults to `getwd()`.
 #' @param dev Logical. Whether data should be written to the development server or not. Defaults to TRUE.
 #'
-#' @returns
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
@@ -154,4 +154,5 @@ write_core_bibliography <- function(reference_id,
     httr::authenticate(":", "", "ntlm"),
     body = jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE))
 
+  return(invisible(NULL))
 }
