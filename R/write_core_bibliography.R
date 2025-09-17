@@ -78,7 +78,8 @@ write_core_bibliography <- function(reference_id,
                    size1 = upload_data$length_of_recording[row_num],
                    contacts1 = contacts,
                    metadataStandardID = "",
-                   licenseTypeID = upload_data$license[row_num])
+                   #licenseTypeID = upload_data$license[row_num]
+                   )
 
   } else if (upload_data$reference_type[row_num] == "GenericDocument") {
     mylist <- list(title = upload_data$title[row_num],
@@ -110,7 +111,8 @@ write_core_bibliography <- function(reference_id,
                    publisher = "Fort Collins, CO",
                    contacts1 = contacts,
                    #metadataStandardID = "",
-                   licenseTypeID = upload_data$license[row_num])
+                   #licenseTypeID = upload_data$license[row_num]
+                   )
   }
 
   #for testing purposes and to look at the json sent:
@@ -132,4 +134,5 @@ write_core_bibliography <- function(reference_id,
     httr::authenticate(":", "", "ntlm"),
     body = jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE))
 
+  }
 }
