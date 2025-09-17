@@ -326,7 +326,7 @@ bulk_reference_generation <- function(filename,
     #end_date <- upload_data$content_end_date[i]
 
     write_core_bibliography(reference_id = ref_code,
-                            file_name = filename,
+                            filename = filename,
                             row_num = i,
                             path = path,
                             dev = dev)
