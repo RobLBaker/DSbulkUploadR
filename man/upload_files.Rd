@@ -2,7 +2,7 @@
 % Please edit documentation in R/bulk_uploads.R
 \name{upload_files}
 \alias{upload_files}
-\title{Uploads files of indeterminant size to a DataStore reference}
+\title{Uploads files of indeterminate size to a DataStore reference}
 \usage{
 upload_files(
   filename,
