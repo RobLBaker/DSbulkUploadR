@@ -1,13 +1,30 @@
+#' Write the core bibliography information to DataStore reference landing page
+#'
+#' This function takes in a file with the required pre-validated input data (see `run_input_validation`) and uses it to populate the core bibliography tab for DataStore references. It currently supports AudioRecording and GenericDocument reference types.
+#'
+#' @param reference_id Integer. The 7-digit DataStore reference ID where data will be written
+#' @param filename String. The name of the input.txt file containing data to be added to the reference page
+#' @param row_num Integer. The row in the file of the input.txt file to be used
+#' @param path String. Path to input.txt file in `filename`. Defaults to `getwd()`.
+#' @param dev Logical. Whether data should be written to the development server or not. Defaults to TRUE.
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' write_core_bibliography(reference_id = 1234567,
+#'                         filename = "input.txt",
+#'                         row_num = 1,
+#'                         path = getwd(),
+#'                         dev = TRUE)}
 write_core_bibliography <- function(reference_id,
-                                    file_name,
+                                    filename,
                                     row_num,
                                     path = getwd(),
                                     dev = TRUE) {
 
-  upload_data <- read.delim(file=paste0(path, "/", file_name))
-
-  #get system date
-  today <- Sys.Date()
+  upload_data <- read.delim(file=paste0(path, "/", filename))
 
   # populate draft reference bibliography ----
   begin_date <- upload_data$content_begin_date[row_num]
@@ -25,7 +42,7 @@ write_core_bibliography <- function(reference_id,
   bdy <- usr_email
   req <- httr::POST(req_url,
                     httr::add_headers('Content-Type' = 'application/json'),
-                    body = rjson::toJSON(bdy))
+                    body = jsonlite::toJSON(bdy))
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
     stop("ERROR: DataStore connection failed.")
@@ -34,17 +51,32 @@ write_core_bibliography <- function(reference_id,
   rjson <- jsonlite::fromJSON(json)
 
   contacts <- NULL
-  for (j in 1:length(usr_email)) {
+  if (length(usr_email > 1)) {
+    for (j in 1:length(usr_email)) {
+      author <- list(title = "",
+                     primaryName = rjson$sn[j],
+                     firstName = rjson$givenName[j],
+                     middleName = "",
+                     suffix = "",
+                     affiliation = "",
+                     isCorporate = FALSE,
+                     ORCID = rjson$extensionAttribute2[j])
+      contacts <- append(contacts, list(author))
+    }
+  } else {
     author <- list(title = "",
-                   primaryName = rjson$sn[j],
-                   firstName = rjson$givenName[j],
+                   primaryName = rjson$sn,
+                   firstName = rjson$givenName,
                    middleName = "",
                    suffix = "",
                    affiliation = "",
                    isCorporate = FALSE,
-                   ORCID = rjson$extensionAttribute2[j])
-    contacts <- append(contacts, list(author))
+                   ORCID = rjson$extensionAttribute2)
+    contacts <- author
   }
+
+  #get system date
+  today <- Sys.Date()
 
   # generate json body for rest api call ====
   #AudioRecordings lack publisher element:
@@ -77,7 +109,7 @@ write_core_bibliography <- function(reference_id,
                    publisher = "Fort Collins, CO",
                    size1 = upload_data$length_of_recording[row_num],
                    contacts1 = contacts,
-                   metadataStandardID = "",
+                   metadataStandardID = ""
                    #licenseTypeID = upload_data$license[row_num]
                    )
 
@@ -109,7 +141,7 @@ write_core_bibliography <- function(reference_id,
                    tableOfContents = "",
                    publisher = "National Park Service",
                    publisher = "Fort Collins, CO",
-                   contacts1 = contacts,
+                   contacts1 = contacts
                    #metadataStandardID = "",
                    #licenseTypeID = upload_data$license[row_num]
                    )
@@ -134,5 +166,4 @@ write_core_bibliography <- function(reference_id,
     httr::authenticate(":", "", "ntlm"),
     body = jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE))
 
-  }
 }
