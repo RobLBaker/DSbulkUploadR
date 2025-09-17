@@ -51,8 +51,7 @@ write_core_bibliography <- function(reference_id,
   rjson <- jsonlite::fromJSON(json)
 
   contacts <- NULL
-  if (length(usr_email > 1)) {
-    for (j in 1:length(usr_email)) {
+      for (j in 1:length(usr_email)) {
       author <- list(title = "",
                      primaryName = rjson$sn[j],
                      firstName = rjson$givenName[j],
@@ -63,17 +62,6 @@ write_core_bibliography <- function(reference_id,
                      ORCID = rjson$extensionAttribute2[j])
       contacts <- append(contacts, list(author))
     }
-  } else {
-    author <- list(title = "",
-                   primaryName = rjson$sn,
-                   firstName = rjson$givenName,
-                   middleName = "",
-                   suffix = "",
-                   affiliation = "",
-                   isCorporate = FALSE,
-                   ORCID = rjson$extensionAttribute2)
-    contacts <- author
-  }
 
   #get system date
   today <- Sys.Date()
@@ -106,10 +94,10 @@ write_core_bibliography <- function(reference_id,
                    notes = upload_data$notes[row_num],
                    purpose = upload_data$purpose[row_num],
                    tableOfContents = "",
-                   publisher = "Fort Collins, CO",
+                   #publisher = "Fort Collins, CO",
                    size1 = upload_data$length_of_recording[row_num],
-                   contacts1 = contacts,
-                   metadataStandardID = ""
+                   contacts1 = contacts
+                   #metadataStandardID = ""
                    #licenseTypeID = upload_data$license[row_num]
                    )
 
