@@ -36,5 +36,9 @@ List. Of information about the uploaded file.
 This file uploader is largely borrowed from the R package NPSdatastore. It will take a file of any size and upload it to a given reference. This involves chunking the file into smaller pieces in order to upload larger files.
 }
 \examples{
-\dontrun{upload_files(filename = "example_file.wav", path = getwd(), reference_id = 1234567, is508 = FALSE, dev = TRUE)}
+\dontrun{upload_files(filename = "example_file.wav",
+                                 path = getwd(),
+                                 reference_id = 1234567,
+                                 is508 = FALSE,
+                                 dev = TRUE)}
 }
