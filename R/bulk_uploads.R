@@ -311,7 +311,7 @@ bulk_reference_generation <- function(filename,
   }
 
   #get system date
-  today <- Sys.Date()
+  #today <- Sys.Date()
 
   for (i in 1:nrow(upload_data)) {
     # create draft reference ----
@@ -322,8 +322,8 @@ bulk_reference_generation <- function(filename,
     cli::cli_inform("Populating draft reference {ref_code}.")
 
     # populate draft reference bibliography ----
-    begin_date <- upload_data$content_begin_date[i]
-    end_date <- upload_data$content_end_date[i]
+    #begin_date <- upload_data$content_begin_date[i]
+    #end_date <- upload_data$content_end_date[i]
 
     write_core_bibliography(reference_id = ref_code,
                             file_name = filename,
@@ -362,9 +362,6 @@ bulk_reference_generation <- function(filename,
     #                  ORCID = rjson$extensionAttribute2[j])
     #   contacts <- append(contacts, author)
     # }
-
-
-
 
     # generate json body for rest api call ====
     #AudioRecordings lack publisher element:
@@ -489,8 +486,7 @@ bulk_reference_generation <- function(filename,
                keywords = keywords_to_add,
                dev = dev)
 
-
-    # set license type
+  # set license type
     NPSdatastore::set_license(reference_id = ref_code,
                               dev = dev,
                               license_type_id = upload_data$license_code[i],
