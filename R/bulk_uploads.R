@@ -66,7 +66,11 @@ create_draft_reference <- function(draft_title = "Temp Title",
 #' @export
 #'
 #' @examples
-#' \dontrun{upload_files(filename = "example_file.wav", path = getwd(), reference_id = 1234567, is508 = FALSE, dev = TRUE)}
+#' \dontrun{upload_files(filename = "example_file.wav",
+#'                                  path = getwd(),
+#'                                  reference_id = 1234567,
+#'                                  is508 = FALSE,
+#'                                  dev = TRUE)}
 upload_files <- function(filename,
                          path,
                          reference_id,
