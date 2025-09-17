@@ -13,9 +13,15 @@
 #' @examples
 #' \dontrun{
 #' check_ref_type("test_file.txt")}
-check_ref_type <- function(filename, path = getwd()) {
+check_ref_type <- function(filename = "DSbulkUploadR_input.xlsx",
+                           path = getwd(),
+                           sheet_name) {
 
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+  #upload_data <- read.delim(file=paste0(path, "/", filename))
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   refs <- upload_data$reference_type
 
   url <- paste0(.ds_secure_api(), "FixedList/ReferenceTypes")
