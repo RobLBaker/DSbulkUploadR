@@ -1,23 +1,25 @@
 
 #' Runs all validation checks and generates a summary statement
 #'
-#' @param filename String. Name of the file for data validation.
 #' @param path String. Path to the file. Defaults to the current working directory.
+#' @param filename String. Name of the file for data validation. Defaults to "DSbulkUploadR_input.xlsx"
+#' @param sheet String. Name of the sheet to validate from the .xlsx
 #' @param max_file_upload Integer. Maximum number of files that can be uploaded. Defaults to 500.
 #' @param max_data_upload Integer. Maximum amount of data that can be uploaded, in GB. Defaults to 100.
-#' @param dev Logical. Should functions target the development server? Defaults to FALSE.
+#' @param dev Logical. Should functions target the development server? Defaults to TRUE.
 #'
 #' @returns Vector. A list of named numbers (number of errors, number of warnings)
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' run_input_validation(filename = "test_file.txt")}
-run_input_validation <- function(filename,
-                                 path = getwd(),
+#' run_input_validation(sheet = "AudioRecording")}
+run_input_validation <- function(path = getwd(),
+                                 filename = "DSbulkdUploadR_input.xlsx",
+                                 sheet,
                                  max_file_upload = 500,
                                  max_data_upload = 100,
-                                 dev = FALSE){
+                                 dev = TRUE){
   err_count <- 0
   warn_count <- 0
 

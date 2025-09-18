@@ -4,12 +4,18 @@
 \alias{check_508_format}
 \title{Checks a column within a supplied file to ascertain whether 508 status has been supplied.}
 \usage{
-check_508_format(filename, path = getwd())
+check_508_format(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. The file to check.}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
 
-\item{path}{String. The path to the file. Defaults to the current working directory.}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

@@ -4,12 +4,18 @@
 \alias{check_author_email}
 \title{Verifies author emails supplied in file.}
 \usage{
-check_author_email(filename, path = getwd())
+check_author_email(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. File to check.}
-
 \item{path}{String. Path to the file. Defaults to the current working directory.}
+
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

@@ -3,9 +3,10 @@
 #' This function takes in a file with the required pre-validated input data (see `run_input_validation`) and uses it to populate the core bibliography tab for DataStore references. It currently supports AudioRecording and GenericDocument reference types.
 #'
 #' @param reference_id Integer. The 7-digit DataStore reference ID where data will be written
-#' @param filename String. The name of the input.txt file containing data to be added to the reference page
-#' @param row_num Integer. The row in the file of the input.txt file to be used
-#' @param path String. Path to input.txt file in `filename`. Defaults to `getwd()`.
+#' @param filename String. The name of the input.xlsx file containing data to be added to the reference page. Defaults to "DSbulkUploadR_input.xlsx".
+#' @param sheet String. The name of the sheet within the xlsx to get data from.
+#' @param row_num Integer. The row in the file of the xlsx sheet to be used
+#' @param path String. Path to xlsx file in `filename`. Defaults to `getwd()`.
 #' @param dev Logical. Whether data should be written to the development server or not. Defaults to TRUE.
 #'
 #' @returns NULL (invisibly)
@@ -14,17 +15,21 @@
 #' @examples
 #' \dontrun{
 #' write_core_bibliography(reference_id = 1234567,
-#'                         filename = "input.txt",
+#'                         filename = "DSbulkUploadR_input.xlsx",
 #'                         row_num = 1,
+#'                         sheet = "AudioRecording",
 #'                         path = getwd(),
 #'                         dev = TRUE)}
-write_core_bibliography <- function(reference_id,
-                                    filename,
+write_core_bibliography <- function(path = getwd(),
+                                    filename = "DSbulkUploadR_input.xlsx",
+                                    sheet_name,
                                     row_num,
-                                    path = getwd(),
                                     dev = TRUE) {
 
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
 
   # populate draft reference bibliography ----
   begin_date <- upload_data$content_begin_date[row_num]

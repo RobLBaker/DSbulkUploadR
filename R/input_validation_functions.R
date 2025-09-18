@@ -4,8 +4,9 @@
 #'
 #' Reads in a .txt file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
 #'
-#' @param filename String. Input file to check.
+#' @param filename String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"
 #' @param path String. Path to the file. Defaults to the current working directory.
+#' @param sheet_name String. Name of the excel sheet to check.
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -13,8 +14,8 @@
 #' @examples
 #' \dontrun{
 #' check_ref_type("test_file.txt")}
-check_ref_type <- function(filename = "DSbulkUploadR_input.xlsx",
-                           path = getwd(),
+check_ref_type <- function(path = getwd(),
+                           filename = "DSbulkUploadR_input.xlsx",
                            sheet_name) {
 
   #upload_data <- read.delim(file=paste0(path, "/", filename))
@@ -61,8 +62,15 @@ check_ref_type <- function(filename = "DSbulkUploadR_input.xlsx",
 #' @examples
 #' \dontrun{
 #' check_ref_type_supported(filename = "test_file.txt")}
-check_ref_type_supported <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_ref_type_supported <- function(path = getwd(),
+                                     filename = "DSbulkUploadR_input.xlsx",
+                                     sheet_name) {
+
+  #upload_data <- read.delim(file=paste0(path, "/", filename))
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   refs <- upload_data$reference_type
 
   # hardcoded list of supported refs. Will need manual updates
@@ -86,8 +94,7 @@ check_ref_type_supported <- function(filename, path = getwd()) {
 #'
 #' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
 #'
-#' @param filename String. The input file to check.
-#' @param path String. Path to the input file. Defaults to the current working directory
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -96,8 +103,14 @@ check_ref_type_supported <- function(filename, path = getwd()) {
 #' \dontrun{
 #' check_files_exist("test_file.txt")
 #' }
-check_files_exist <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_files_exist <- function(path = getwd(),
+                              filename = "DSbulkUploadR_input.xlsx",
+                              sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   bad_files <- NULL
   for (i in 1:nrow(upload_data)) {
     if (!file.exists(path = upload_data$file_path[i])) {
@@ -120,8 +133,7 @@ check_files_exist <- function(filename, path = getwd()){
 #'
 #' Reads in a .txt file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
 #'
-#' @param filename String. Name of the file to check.
-#' @param path String. Path to the file to check. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #' @param file_number_error Integer. Maximum allowable number of files. Defaults to 500.
 #'
 #' @returns NULL (invisibly)
@@ -131,10 +143,16 @@ check_files_exist <- function(filename, path = getwd()){
 #' \dontrun{
 #' check_file_number("test_file.txt")
 #' }
-check_file_number <- function(filename,
+check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
                               path = getwd(),
+                              sheet_name,
                               file_number_error = 500) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+
   file_num <- 0
   for (i in 1:nrow(upload_data)) {
     files_per_ref <- length(list.files(upload_data$file_path[i]))
@@ -163,8 +181,7 @@ check_file_number <- function(filename,
 #'
 #'  Reads in a .txt file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
 #'
-#' @param filename String. The file to check,
-#' @param path String. Path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #' @param file_size_error Integer. The maximum allowable total file size in GB. Defaults to 100 GB.
 #'
 #' @returns NULL (invisibly)
@@ -174,13 +191,18 @@ check_file_number <- function(filename,
 #' \dontrun{
 #' check_file_size("test_file.txt")
 #' }
-check_file_size <- function(filename,
+check_file_size <- function(filename = "DSbulkUploadR_input.xlsx",
                             path = getwd(),
+                            sheet_name,
                             file_size_error = 100) {
   #convert gb to bytes:
   error_bytes <- file_size_error * 1073741824
   warn_bytes <- error_bytes * 0.5
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+  #get input data to validate:
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   file_size <- 0
   for (i in 1:nrow(upload_data)) {
     file_size <- file_size +
@@ -211,8 +233,7 @@ check_file_size <- function(filename,
 #'
 #' Reads in a .txt file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
 #'
-#' @param filename String. The file to check.
-#' @param path String. The path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -220,8 +241,15 @@ check_file_size <- function(filename,
 #' @examples
 #' \dontrun{
 #' check_508_format("test_file.txt")}
-check_508_format <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_508_format <- function(path = getwd(),
+                             filename = "DSbulkUploadR_input.xlsx",
+                             sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+
   is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
     tolower(upload_data$files_508_compliant) != "no"
   if (sum(is_508) > 0) {
@@ -240,8 +268,7 @@ check_508_format <- function(filename, path = getwd()){
 #'
 #' Reads in a .txt file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
 #'
-#' @param filename String. The file to check.
-#' @param path String. The path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -249,9 +276,14 @@ check_508_format <- function(filename, path = getwd()){
 #' @examples
 #' \dontrun{
 #' check_unique_title("test_file.txt")}
-check_unique_title <- function(filename, path = getwd()){
-  upload_data <- read.delim(file= paste0(path, "/", filename))
-  duplicates <- duplicated(upload_data$title)
+check_unique_title <- function(path = getwd(),
+                              filename = "DSbulkUploadR_input.xlsx",
+                              sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   if (any(duplicates)) {
     msg <- paste0("All reference titles must be unique. The following titles ",
                   "are duplicated: {upload_data$title[duplicates]}.")
@@ -266,8 +298,7 @@ check_unique_title <- function(filename, path = getwd()){
 #'
 #' Reads in a .txt file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
 #'
-#' @param filename String. name of the file to check
-#' @param path String. Path to the file. Defaults to the current working directory
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -275,8 +306,14 @@ check_unique_title <- function(filename, path = getwd()){
 #' @examples
 #' \dontrun{
 #' check_start_date <- ("test_file.txt")}
-check_start_date <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_start_date <- function(path = getwd(),
+                            filename = "DSbulkUploadR_input.xlsx",
+                            sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   start_dates <- upload_data$content_begin_date
   #valid dates are "TRUE"
   valid_dates <- !is.na(suppressWarnings(lubridate::ymd(start_dates)))
@@ -296,8 +333,7 @@ check_start_date <- function(filename, path = getwd()) {
 #'
 #' Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
 #'
-#' @param filename String. Name of the file to check.
-#' @param path String. Path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -306,8 +342,14 @@ check_start_date <- function(filename, path = getwd()) {
 #' \dontrun{
 #' check_end_date("test_file.txt")
 #' }
-check_end_date <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_end_date <- function(path = getwd(),
+                          filename = "DSbulkUploadR_input.xlsx",
+                          sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   end_dates <- upload_data$content_end_date
   valid_dates <- !is.na(suppressWarnings(lubridate::ymd(end_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
@@ -326,8 +368,7 @@ check_end_date <- function(filename, path = getwd()) {
 #'
 #' Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column occur before the date in the same row for the content_begin_date column. Passes if all end dates occur on or after the being date.
 #'
-#' @param filename String. Name of the file to check
-#' @param path String. Path to the file. Defaults to the current working directory
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -336,8 +377,14 @@ check_end_date <- function(filename, path = getwd()) {
 #' \dontrun{
 #' check_end_after_start("test_file.txt")
 #' }
-check_end_after_start <- function(filename, path = getwd){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_end_after_start <- function(path = getwd(),
+                                  filename = "DSbulkUploadR_input.xlsx",
+                                  sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   end_dates <- lubridate::ymd(upload_data$content_end_date)
   start_dates <- lubridate::ymd(upload_data$content_begin_date)
   time_dif <- lubridate::interval(start_dates, end_dates)
@@ -356,8 +403,7 @@ check_end_after_start <- function(filename, path = getwd){
 #'
 #' Reads in a .txt file for data validation. Throws an error if dates in either the content_begin_date or content_end_date occur after the current system date. If any dates occur in the future the function results in an error. The test passes if all dates occur in the past (or on the present day).
 #'
-#' @param filename String. Name of the file to check
-#' @param path String. Path to the file. Defaults to the current working directory
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -366,8 +412,14 @@ check_end_after_start <- function(filename, path = getwd){
 #' \dontrun{
 #' check_dates_past("test_file.txt")
 #' }
-check_dates_past <- function(filename, path = getwd){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_dates_past <- function(path = getwd(),
+                            filename = "DSbulkUploadR_input.xlsx",
+                            sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   end_dates <- lubridate::ymd(upload_data$content_end_date)
   start_dates <- lubridate::ymd(upload_data$content_begin_date)
   today <- Sys.Date()
@@ -390,8 +442,7 @@ check_dates_past <- function(filename, path = getwd){
 #'
 #' Reads in a .txt file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
 #'
-#' @param filename String. File to check.
-#' @param path String. Path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -399,8 +450,14 @@ check_dates_past <- function(filename, path = getwd){
 #' @examples
 #' \dontrun{
 #' check_author_email("test_file.txt")}
-check_author_email <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_author_email <- function(path = getwd(),
+                              filename = "DSbulkUploadR_input.xlsx",
+                              sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
 
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
@@ -439,8 +496,7 @@ check_author_email <- function(filename, path = getwd()) {
 #'
 #' Reads in a .txt file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
 #'
-#' @param filename String. File to check.
-#' @param path String. Path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -448,8 +504,14 @@ check_author_email <- function(filename, path = getwd()) {
 #' @examples
 #' \dontrun{
 #' check_authors_orcid("test_file.txt")}
-check_authors_orcid <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_authors_orcid <- function(path = getwd(),
+                               filename = "DSbulkUploadR_input.xlsx",
+                               sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
 
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
@@ -489,8 +551,7 @@ check_authors_orcid <- function(filename, path = getwd()) {
 #'
 #' Reads in a .txt file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
 #'
-#' @param filename String. File to check.
-#' @param path String. Path to the file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -498,8 +559,14 @@ check_authors_orcid <- function(filename, path = getwd()) {
 #' @examples
 #' \dontrun{
 #' check_orcid_format("test_file.txt")}
-check_orcid_format <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_orcid_format <- function(path = getwd(),
+                              filename = "DSbulkUploadR_input.xlsx",
+                              sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
 
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
@@ -540,8 +607,7 @@ check_orcid_format <- function(filename, path = getwd()){
 #'
 #' Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
 #'
-#' @param filename String. File to check.
-#' @param path String. Path to file. Defaults to the current working directory.
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -549,8 +615,14 @@ check_orcid_format <- function(filename, path = getwd()){
 #' @examples
 #' \dontrun{
 #' check_license_type("test_file.txt")}
-check_license_type <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_license_type <- function(path = getwd(),
+                               filename = "DSbulkUploadR_input.xlsx",
+                               sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   if (any(is.na(upload_data$license_code))) {
     msg <- paste0("You must supply a license type for all references.")
     cli::cli_abort(c("x" = msg))
@@ -570,8 +642,7 @@ check_license_type <- function(filename, path = getwd()) {
 #'
 #' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 #'
-#' @param filename String. Name of file to check
-#' @param path String. Path to the file. Defaults to the current working directory
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -580,9 +651,14 @@ check_license_type <- function(filename, path = getwd()) {
 #' \dontrun{
 #' check_units("test_file.txt")
 #' }
-check_prod_units <- function(filename, path = getwd()){
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_prod_units <- function(path = getwd(),
+                            filename = "DSbulkUploadR_input.xlsx",
+                            sheet_name) {
 
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
   #get list of all units:
   f <- file.path(tempdir(), "irmadownload.xml")
   if (!file.exists(f)) {
@@ -617,8 +693,7 @@ check_prod_units <- function(filename, path = getwd()){
 #'
 #' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 #'
-#' @param filename String. Name of file to check
-#' @param path String. Path to the file. Defaults to the current working directory
+#' @inheritParams check_ref_type
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -626,8 +701,14 @@ check_prod_units <- function(filename, path = getwd()){
 #' @examples
 #' \dontrun{
 #' check_content_units("test_file.txt")}
-check_content_units <- function(filename, path = getwd()) {
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+check_content_units <- function(path = getwd(),
+                               filename = "DSbulkUploadR_input.xlsx",
+                               sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
 
   #get list of all units:
   f <- file.path(tempdir(), "irmadownload.xml")

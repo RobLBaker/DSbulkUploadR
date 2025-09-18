@@ -5,23 +5,26 @@
 \title{Runs all validation checks and generates a summary statement}
 \usage{
 run_input_validation(
-  filename,
   path = getwd(),
+  filename = "DSbulkdUploadR_input.xlsx",
+  sheet,
   max_file_upload = 500,
   max_data_upload = 100,
-  dev = FALSE
+  dev = TRUE
 )
 }
 \arguments{
-\item{filename}{String. Name of the file for data validation.}
-
 \item{path}{String. Path to the file. Defaults to the current working directory.}
+
+\item{filename}{String. Name of the file for data validation. Defaults to "DSbulkUploadR_input.xlsx"}
+
+\item{sheet}{String. Name of the sheet to validate from the .xlsx}
 
 \item{max_file_upload}{Integer. Maximum number of files that can be uploaded. Defaults to 500.}
 
 \item{max_data_upload}{Integer. Maximum amount of data that can be uploaded, in GB. Defaults to 100.}
 
-\item{dev}{Logical. Should functions target the development server? Defaults to FALSE.}
+\item{dev}{Logical. Should functions target the development server? Defaults to TRUE.}
 }
 \value{
 Vector. A list of named numbers (number of errors, number of warnings)
@@ -31,5 +34,5 @@ Runs all validation checks and generates a summary statement
 }
 \examples{
 \dontrun{
-run_input_validation(filename = "test_file.txt")}
+run_input_validation(sheet = "AudioRecording")}
 }

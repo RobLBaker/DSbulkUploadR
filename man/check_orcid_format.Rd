@@ -4,12 +4,18 @@
 \alias{check_orcid_format}
 \title{Checks the formatting of ORCiDs associated with NPS emails supplied in a file}
 \usage{
-check_orcid_format(filename, path = getwd())
+check_orcid_format(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. File to check.}
-
 \item{path}{String. Path to the file. Defaults to the current working directory.}
+
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

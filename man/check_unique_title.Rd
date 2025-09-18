@@ -4,12 +4,18 @@
 \alias{check_unique_title}
 \title{Checks for duplicated reference titles}
 \usage{
-check_unique_title(filename, path = getwd())
+check_unique_title(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. The file to check.}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
 
-\item{path}{String. The path to the file. Defaults to the current working directory.}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)
