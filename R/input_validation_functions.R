@@ -181,7 +181,7 @@ check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
 #'
 #'  Reads in a .txt file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
 #'
-#' @inheritParams check_ref_type.
+#' @inheritParams check_ref_type
 #' @param file_size_error Integer. The maximum allowable total file size in GB. Defaults to 100 GB.
 #'
 #' @returns NULL (invisibly)
