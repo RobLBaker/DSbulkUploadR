@@ -29,6 +29,7 @@ Imports:
     lubridate,
     magrittr,
     NPSdatastore,
+    readxl,
     rjson,
     stringr,
     utils,
