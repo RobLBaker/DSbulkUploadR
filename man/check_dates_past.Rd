@@ -4,12 +4,18 @@
 \alias{check_dates_past}
 \title{Checks that dates in a file occurred in the past.}
 \usage{
-check_dates_past(filename, path = getwd)
+check_dates_past(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. Name of the file to check}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
 
-\item{path}{String. Path to the file. Defaults to the current working directory}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

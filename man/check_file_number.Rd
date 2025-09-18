@@ -4,12 +4,19 @@
 \alias{check_file_number}
 \title{Checks whether the total number of file to upload exceeds a threshold}
 \usage{
-check_file_number(filename, path = getwd(), file_number_error = 500)
+check_file_number(
+  filename = "DSbulkUploadR_input.xlsx",
+  path = getwd(),
+  sheet_name,
+  file_number_error = 500
+)
 }
 \arguments{
-\item{filename}{String. Name of the file to check.}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
 
-\item{path}{String. Path to the file to check. Defaults to the current working directory.}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 
 \item{file_number_error}{Integer. Maximum allowable number of files. Defaults to 500.}
 }

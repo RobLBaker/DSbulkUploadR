@@ -4,12 +4,18 @@
 \alias{check_files_exist}
 \title{Checks that each file_path in a file contains files}
 \usage{
-check_files_exist(filename, path = getwd())
+check_files_exist(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. The input file to check.}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
 
-\item{path}{String. Path to the input file. Defaults to the current working directory}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

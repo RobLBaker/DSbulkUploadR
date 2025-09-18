@@ -4,12 +4,18 @@
 \alias{check_ref_type}
 \title{Checks the reference types in a file are valid Data Store reference types}
 \usage{
-check_ref_type(filename, path = getwd())
+check_ref_type(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. Input file to check.}
-
 \item{path}{String. Path to the file. Defaults to the current working directory.}
+
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

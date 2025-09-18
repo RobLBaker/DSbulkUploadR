@@ -4,12 +4,18 @@
 \alias{check_content_units}
 \title{Checks for valid content unit codes in a file}
 \usage{
-check_content_units(filename, path = getwd())
+check_content_units(
+  path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name
+)
 }
 \arguments{
-\item{filename}{String. Name of file to check}
+\item{path}{String. Path to the file. Defaults to the current working directory.}
 
-\item{path}{String. Path to the file. Defaults to the current working directory}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 }
 \value{
 NULL (invisibly)

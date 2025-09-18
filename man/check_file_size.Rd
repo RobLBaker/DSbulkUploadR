@@ -4,12 +4,19 @@
 \alias{check_file_size}
 \title{Checks whether the total file size to upload exceeds some threshold}
 \usage{
-check_file_size(filename, path = getwd(), file_size_error = 100)
+check_file_size(
+  filename = "DSbulkUploadR_input.xlsx",
+  path = getwd(),
+  sheet_name,
+  file_size_error = 100
+)
 }
 \arguments{
-\item{filename}{String. The file to check,}
+\item{filename}{String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"}
 
 \item{path}{String. Path to the file. Defaults to the current working directory.}
+
+\item{sheet_name}{String. Name of the excel sheet to check.}
 
 \item{file_size_error}{Integer. The maximum allowable total file size in GB. Defaults to 100 GB.}
 }
