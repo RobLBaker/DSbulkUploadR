@@ -306,7 +306,7 @@ check_unique_title <- function(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_start_date <- ("test_file.txt")}
-check_start_date <- unction(path = getwd(),
+check_start_date <- function(path = getwd(),
                             filename = "DSbulkUploadR_input.xlsx",
                             sheet_name) {
 
@@ -342,7 +342,7 @@ check_start_date <- unction(path = getwd(),
 #' \dontrun{
 #' check_end_date("test_file.txt")
 #' }
-check_end_date <- unction(path = getwd(),
+check_end_date <- function(path = getwd(),
                           filename = "DSbulkUploadR_input.xlsx",
                           sheet_name) {
 
@@ -412,7 +412,7 @@ check_end_after_start <- function(path = getwd(),
 #' \dontrun{
 #' check_dates_past("test_file.txt")
 #' }
-check_dates_past <- unction(path = getwd(),
+check_dates_past <- function(path = getwd(),
                             filename = "DSbulkUploadR_input.xlsx",
                             sheet_name) {
 
@@ -450,7 +450,7 @@ check_dates_past <- unction(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_author_email("test_file.txt")}
-check_author_email <- unction(path = getwd(),
+check_author_email <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
 
@@ -504,7 +504,7 @@ check_author_email <- unction(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_authors_orcid("test_file.txt")}
-check_authors_orcid <- unction(path = getwd(),
+check_authors_orcid <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
 
@@ -559,7 +559,7 @@ check_authors_orcid <- unction(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_orcid_format("test_file.txt")}
-check_orcid_format <- unction(path = getwd(),
+check_orcid_format <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
 
@@ -651,7 +651,7 @@ check_license_type <- function(path = getwd(),
 #' \dontrun{
 #' check_units("test_file.txt")
 #' }
-check_prod_units <- unction(path = getwd(),
+check_prod_units <- function(path = getwd(),
                             filename = "DSbulkUploadR_input.xlsx",
                             sheet_name) {
 
@@ -701,7 +701,7 @@ check_prod_units <- unction(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_content_units("test_file.txt")}
-check_content_units <- unction(path = getwd(),
+check_content_units <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
 
