@@ -276,7 +276,7 @@ check_508_format <- function(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_unique_title("test_file.txt")}
-check_unique_title <- unction(path = getwd(),
+check_unique_title <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
 
