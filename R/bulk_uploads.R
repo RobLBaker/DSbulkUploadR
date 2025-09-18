@@ -237,8 +237,9 @@ add_keywords <- function(reference_id,
 #'
 #' The original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
 #'
-#' @param filename String. The name of the file with information on what will be uploaded.
 #' @param path String. Path to the file.
+#' @param filename String. The name of the file with information on what will be uploaded. Defaults to "DSbulkUploadR_input.xlsx". Must be an xlsx.
+#' @param sheet String. Name of the sheet within the .xlsx to read data from.
 #' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
 #' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
 #' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.
@@ -248,12 +249,13 @@ add_keywords <- function(reference_id,
 #'
 #' @examples
 #' \dontrun{
-#' bulk_reference_generation(filename = "test_file.txt")}
-bulk_reference_generation <- function(filename,
-                                     path = getwd(),
-                                     max_file_upload = 500,
-                                     max_data_upload = 10,
-                                     dev = TRUE) {
+#' bulk_reference_generation(sheet = "AudioRecording")}
+bulk_reference_generation <- function(path = getwd(),
+                                      filename = "DSbulkUploadR_input.xlsx",
+                                      sheet,
+                                      max_file_upload = 500,
+                                      max_data_upload = 10,
+                                      dev = TRUE) {
 
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
@@ -283,7 +285,11 @@ bulk_reference_generation <- function(filename,
   }
 
   #get info about bulk upload creation:
-  upload_data <- read.delim(file=paste0(path, "/", filename))
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+
 
   #calculate number of files to upload:
   file_num <- 0
