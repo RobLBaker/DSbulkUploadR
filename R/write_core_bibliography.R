@@ -26,7 +26,6 @@ write_core_bibliography <- function(path = getwd(),
                                     row_num,
                                     dev = TRUE) {
 
-  #upload_data <- read.delim(file=paste0(path, "/", filename))
   upload_data <- readxl::read_excel(path = paste0(path,
                                                   "/",
                                                   filename),
