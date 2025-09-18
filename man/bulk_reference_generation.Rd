@@ -5,17 +5,20 @@
 \title{Launch bulk reference creation and file upload tool}
 \usage{
 bulk_reference_generation(
-  filename,
   path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet,
   max_file_upload = 500,
   max_data_upload = 10,
   dev = TRUE
 )
 }
 \arguments{
-\item{filename}{String. The name of the file with information on what will be uploaded.}
-
 \item{path}{String. Path to the file.}
+
+\item{filename}{String. The name of the file with information on what will be uploaded. Defaults to "DSbulkUploadR_input.xlsx". Must be an xlsx.}
+
+\item{sheet}{String. Name of the sheet within the .xlsx to read data from.}
 
 \item{max_file_upload}{Integer. The maximum allowable number of files to upload. Defaults to 500.}
 
@@ -38,5 +41,5 @@ The original dataframe generated from the .txt is returned to the user with a si
 }
 \examples{
 \dontrun{
-bulk_reference_generation(filename = "test_file.txt")}
+bulk_reference_generation(sheet = "AudioRecording")}
 }
