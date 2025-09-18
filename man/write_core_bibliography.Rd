@@ -5,23 +5,25 @@
 \title{Write the core bibliography information to DataStore reference landing page}
 \usage{
 write_core_bibliography(
-  reference_id,
-  filename,
-  row_num,
   path = getwd(),
+  filename = "DSbulkUploadR_input.xlsx",
+  sheet_name,
+  row_num,
   dev = TRUE
 )
 }
 \arguments{
-\item{reference_id}{Integer. The 7-digit DataStore reference ID where data will be written}
+\item{path}{String. Path to xlsx file in \code{filename}. Defaults to \code{getwd()}.}
 
-\item{filename}{String. The name of the input.txt file containing data to be added to the reference page}
+\item{filename}{String. The name of the input.xlsx file containing data to be added to the reference page. Defaults to "DSbulkUploadR_input.xlsx".}
 
-\item{row_num}{Integer. The row in the file of the input.txt file to be used}
-
-\item{path}{String. Path to input.txt file in \code{filename}. Defaults to \code{getwd()}.}
+\item{row_num}{Integer. The row in the file of the xlsx sheet to be used}
 
 \item{dev}{Logical. Whether data should be written to the development server or not. Defaults to TRUE.}
+
+\item{reference_id}{Integer. The 7-digit DataStore reference ID where data will be written}
+
+\item{sheet}{String. The name of the sheet within the xlsx to get data from.}
 }
 \value{
 NULL (invisibly)
@@ -32,8 +34,9 @@ This function takes in a file with the required pre-validated input data (see \c
 \examples{
 \dontrun{
 write_core_bibliography(reference_id = 1234567,
-                        filename = "input.txt",
+                        filename = "DSbulkUploadR_input.xlsx",
                         row_num = 1,
+                        sheet = "AudioRecording",
                         path = getwd(),
                         dev = TRUE)}
 }
