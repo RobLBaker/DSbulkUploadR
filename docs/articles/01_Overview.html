@@ -103,21 +103,22 @@
 <h2 id="what-this-package-does">What this Package Does<a class="anchor" aria-label="anchor" href="#what-this-package-does"></a>
 </h2>
 <p>The <code>DSbulkUploadR</code> package only requires using two R
-functions: <code><a href="../reference/make_input_template.html">make_input_template()</a></code> creates a DataStore
-reference-specific template input.txt file. After you populate the
-input.txt file, a second function
-<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> takes the data in the input.txt
-file and uses it to perform the bulk upload. The bulk upload consists
-of:</p>
+functions: <code><a href="../reference/make_input_template.html">make_input_template()</a></code> creates an excel
+spreadsheet (DSbulkUploadR_input.xlsx) with a separate sheet for each
+supported reference type. After the .xlsx file is populated, a second
+function <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> takes the data in the
+input.xlsx file and uses it to perform the bulk upload. The bulk upload
+consists of:</p>
 <ol style="list-style-type: decimal">
+<li>Data validation</li>
 <li>Create draft reference(s) on DataStore</li>
 <li>Populate each draft reference with the supplied information</li>
 <li>Upload <strong>all</strong> the file(s) in the specified directory
 to the draft reference(s)</li>
 </ol>
 <p>The <code>bulk_reference generation()</code> will return a dataframe
-containing all of the information supplied in the input .txt file with
-one additinal column containing the datastore reference ID for each
+containing all of the information supplied in the input .xlsx file with
+one additional column containing the datastore reference ID for each
 newly created reference. You may wish to write this dataframe to a .csv,
 .txt, or similar for your records.</p>
 </div>
