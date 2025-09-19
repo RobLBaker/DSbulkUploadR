@@ -102,43 +102,46 @@
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>Once you have finished filling out your input.txt file, you are ready
-to create references on DataStore! It can be quite easy to make hundreds
-or even thousands of references so if this is the first time you have
-used this package please consider testing a subset of your input.txt
-file using the development server.</p>
+<p>Once you have finished filling out your input.xlsx file, you are
+ready to create references on DataStore! It can be quite easy to make
+hundreds or even thousands of references so if this is the first time
+you have used this package please consider testing a subset of your
+input.xlsx file using the development server.</p>
 </div>
 <div class="section level2">
 <h2 id="testing-on-the-development-server">Testing on the development server<a class="anchor" aria-label="anchor" href="#testing-on-the-development-server"></a>
 </h2>
-<p>To test your input.txt file on the development server, you should
-consider truncating the input.txt file and limiting it to just a few
+<p>To test your input.xlsx file on the development server, you should
+consider truncating the input.xlsx file and limiting it to just a few
 rows (references) to create. Save this truncated version with a new name
 and pass it to the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function
-while setting the <code>dev</code> parameter to <code>TRUE</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>dev_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"truncated_input.txt"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                                      <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
+while setting the <code>dev</code> parameter to <code>TRUE</code>. You
+will also need to specify which sheet within the xlxs you want to use to
+generate references on DataStore:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dev_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"truncated_input.xlsx"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                                      <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                                      <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                                      <span class="at">dev =</span> <span class="cn">TRUE</span>)<span class="er">)</span></span></code></pre></div>
 <p>Once the function has run, you can look at your draft references on
 the <a href="https://irmadev.nps.gov/DataStore/" class="external-link">DataStore development
 server</a> to make sure everything is copasetic. Make any necessary
-adjustments to your full input.txt file before using it with the
+adjustments to your full input.xlsx file before using it with the
 <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> with the <code>dev</code>
 parameter set to <code>FALSE</code>.</p>
 <p>You may want to check the object <code>dev_refs</code> to see a list
 of the newly created reference numbers, which has been added to the
-information you supplied in your <code>truncated_input.txt</code>
+information you supplied in your <code>truncated_input.xlsx</code>
 file.</p>
 </div>
 <div class="section level2">
 <h2 id="create-references-already">Create references already!<a class="anchor" aria-label="anchor" href="#create-references-already"></a>
 </h2>
 <p>Creating references is the easy part! Run the following line of code
-to supply your full (not truncated) input.txt file:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"input.txt"</span>,</span>
+to supply your full (not truncated) input.xlsx file:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"DSbulkUplaodR_input.xlsx"</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                          <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                          <span class="at">dev =</span> <span class="cn">FALSE</span>)<span class="er">)</span></span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                          <span class="at">dev =</span> <span class="cn">FALSE</span>)<span class="er">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="address-errors-and-warnings">Address errors and warnings<a class="anchor" aria-label="anchor" href="#address-errors-and-warnings"></a>
 </h3>
@@ -146,7 +149,7 @@ to supply your full (not truncated) input.txt file:</p>
 <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function produced any errors,
 you will have to address those before proceeding. See the <a href="05_Data-Validation-Checks.html">Data Validation Checks</a>
 vignette for additional information on these tests and how to fix your
-input.txt file.</p>
+input.xlsx file.</p>
 </div>
 <div class="section level3">
 <h3 id="increase-file-numbers-and-sizes">Increase file numbers and sizes<a class="anchor" aria-label="anchor" href="#increase-file-numbers-and-sizes"></a>
@@ -160,11 +163,12 @@ parameters (see the documentation for
 <code>bulk_reference_geneartion()</code>). For instance, to increase the
 maximum file number to 5,000 and the maximum volume of data to 500 GB,
 you would run the following code:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"input.txt"</span>,</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"DSbulkUploadR_input.xlsx"</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                          <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                          <span class="at">max_file_upload =</span> <span class="dv">5000</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                          <span class="at">max_file_size =</span> <span class="dv">500</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                          <span class="at">dev =</span> <span class="cn">FALSE</span>)<span class="er">)</span></span></code></pre></div>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                          <span class="at">max_file_upload =</span> <span class="dv">5000</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>                          <span class="at">max_file_size =</span> <span class="dv">500</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>                          <span class="at">dev =</span> <span class="cn">FALSE</span>)<span class="er">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -190,9 +194,13 @@ later use or your personal records:</p>
 <p>You should carefully inspect each reference you create and make sure
 each reference gets the appropriate review (peer, technical, or
 administrative) as required for that reference. Most references should
-at a minimum recieve a technical review to make sure the reference is
+at a minimum receive a technical review to make sure the reference is
 sound and an administrative review to make sure that, among other
 things, sensitive information is not inadvertently being released.</p>
+<p>In draft format, only owners will be able to access the draft
+references. Reviewers will need to be added to the owner list of each
+reference prior to review. You may wish to remove reviewers from the
+owners list after the review is complete.</p>
 <p>After all the references have been appropriately reviewed, you can
 manually navigate to each draft reference on DataStore and click the
 “Activate” button to publish them!</p>
