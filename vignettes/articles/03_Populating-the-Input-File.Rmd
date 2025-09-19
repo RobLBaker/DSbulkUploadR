@@ -10,26 +10,25 @@ knitr::opts_chunk$set(
 ```
 
 # Overview
-The input template is designed to be easy to understand and human-readable. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the input.txt template. Do **not** change any of the column names. 
+The input template is designed to be easy to understand and human-readable with some data validation incorporated into the .xlsx file. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the DSbulkUploadR_input.xlsx template. Do **not** change any of the column names or sheet names. 
 
-Each reference type on DataStore has a specific set of back-end attributes. You must use a reference-type specific input.txt file (see [Generate the Input File](02_Generate-the-Input-File.html). The input files may had different columns. If your reference-type specific input.txt file lacks a column, you can safely ignore the instructions for that column. Do not edit or change the column names.
+Each reference type on DataStore has a specific set of back-end attributes. You must use a reference-type specific sheet within the DSbulkdUploadR_input.xlsx file (see [Generate the Input File](02_Generate-the-Input-File.html). The sheets within the input.xlsx may had different columns. If your reference-type specific input.xlsx sheet lacks a column, you can safely ignore the instructions for that column. Do not edit or change the column names or sheet names.
 
 Most of the data you supply will be subjected to a series of data validation checks to make sure it is correctly formatted. If any errors are found, you will be given an opportunity to fix them prior to performing the bulk reference generation. But it is much faster to supply the data correctly the first time (and there are likely ways to do it incorrectly that the checks cannot account for). So please read the instructions carefully.
 
-One suggestion is to open the input.txt file in Excel and edit it in Excel. However, this can cause some issues with date formats. Please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
+The DSbulkUploadR_input.xlsx template file also has some basic validation built in for some of the simpler columns. However, even this basica validation will not work if you copy and paste data into the sheet so copy and paste with care (why you does the validation ignore copy-paste data you ask? This is a GREAT question and I encourage you to address it directly to Microsoft....good luck).
+
+One common problem is with date formats and Excel. Excel LOVES to reformat dates and hates ISO 8601 date format (again why? GREAT question for the Microsoft development team). Please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
 
 ## Reference type
-In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Make sure to use the DataStore back-end reference type names which may differ from the reference type displayed on the DataStore website. Pay careful attention to the spelling, spaces (or lack thereof) and pattern of capitalization. Currently the DSbulkUploadR package supports the following reference types:
-
-  1. AudioRecording
-  2. GenericDocument
+In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Within each sheet, the reference_type should be the same and should be the same type as indicated by the sheet name (e.g. in the sheet AudioRecording, the reference_type column should consist of exclusively the value "AudioRecording"). This column is subject to data validation in excel. There should be a drop-down selection tool on each cell in the column with a single valid value you can select.
 
 For a full list of reference types, see the [DataStore swagger documentation for the appropriate API](https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes)
 
 ## Files to upload
-The file_path column in the input.txt file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
+The file_path column in the input.xlsx file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
 
-This is one of the places you could make a critical mistakes with fairly large consequences. If for instance you set the file path to just "C:\\", the function would attempt to upload ALL of the files on your hard drive. please make sure your the directory you supply is as specific as possible and contains only files that you want uploaded.
+This is one of the places you could make a critical mistakes with fairly large consequences. If for instance you set the file path to just "C:\\", the function would attempt to upload ALL of the files on your hard drive. please make sure your the directory you supply is as specific as possible and contains all the files that you want uploaded to that specific reference and no other files.
 
 Each new reference should have its own file path specified. This means that you need to organize your files such that you have a directory of files associated with a specific reference you intend to create. You should have all the files associated with that reference and nothing else in that directory.
 
@@ -41,43 +40,47 @@ Additionally, before the `bulk_reference_generation()` function creates anything
 ## 508 
 You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("yes") or not ("no"). These values apply to ALL of the files in the supplied file path/for a given reference and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
 
+This column is subject to data validation within excel; when you click on a cell in this column a drop-down menus should appear from which you can select one of the only two valid responses: yes or no.
+
 ## Reference title
-The column title in the input.txt file should contain your Reference Title. Each reference (line in the input.txt file) requires a unique title. Supply the title without quotes surrounding it.
+The column title in the input.xlsx file should contain your Reference Title. Each reference (line in the input.xlsx file) requires a unique title. Supply the title without quotes surrounding it.
 
 Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
+
+Titles are limited in length to ____ characters.
 
 ## Working with dates
 To prevent excel from automatically changing your dates into a non-ISO 8601 format (anything other than YYYY-MM-DD), you need to change some global settings on your computer. For PCs search for "date and time format" from the start menu. Select "Change the date and time format" (which is part of the system settings). In the panel "Short Date" choose the date formatted as YYYY-MM-DD.
 
 ### Content begin date
-The column content_begin_date in the input.txt file should contain the date that the content of the reference/files starts in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content begin date should be before today's date and before the content_end_date.
+The column content_begin_date in the input.xlsx file should contain the date that the content of the reference/files starts in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content begin date should be before today's date and before the content_end_date.
 
 ### Content end date
-The column content_end_date in the input.txt file should contain the date that the content of the reference/files ends in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content end date should be before today's date and after the content_start_date.
+The column content_end_date in the input.xlsx file should contain the date that the content of the reference/files ends in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content end date should be before today's date and after the content_start_date.
 
 ## Length of recording
-The length_of_recording column in the input.txt file should contain a string of characters describing the duration of the content. For instance, the length_of_recording value may be "5 hours six minutes and 32 sec" (without quotes). This value will be directly used and not parsed into any specific format.
+The length_of_recording column in the input.xlsx file should contain a string of characters describing the duration of the content. For instance, the length_of_recording value may be "5 hours six minutes and 32 sec" (without quotes). This value will be directly used and not parsed into any specific format.
 
 ## Description
-The description column in the input.txt file should contain a brief description or abstract for the reference. Generally these abstracts should be less than 250 words and briefly explain the why, what, when, where, and how of the information contained in the reference. Please do not include quotations or special characters.
+The description column in the input.xlsx file should contain a brief description or abstract for the reference. Generally these abstracts should be less than 250 words and briefly explain the why, what, when, where, and how of the information contained in the reference. Please do not include quotations or special characters.
 
 ## Purpose
-The purpose column in the input.txt file should contain a brief description of the purpose of the reference. The purpose may be identical to the description or may be different.
+The purpose column in the input.xlsx file should contain a brief description of the purpose of the reference. The purpose may be identical to the description or may be different. 
 
 ## Notes
-The notes column in the input.txt file should contain any notes that may be important for understanding the reference. 
+The notes column in the input.xlsx file should contain any notes that may be important for understanding the reference. 
 
 ## Author email addresses
-The author_email_list column in input.txt should contain a comma-separated list of all the author's email addresses. Use full email addresses rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one author. Do not include extra text (no quotations, angle brackets, etc). 
+The author_email_list column in input.xlsx should contain a comma-separated list of all the authors' email addresses. Use full email addresses rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one author. Do not include extra text (no quotations, angle brackets, etc). 
 
-All authors must by valid NPS employees or partners (e.g. @nps.gov, @partner.nps.gov). All authors must have registered an ORCiD and added the ORCiD to active directory/Entra ID. The ORCiD in Active Directory/Entra ID must have the format xxxx-xxxx-xxxx-xxxx.
+All authors must be valid NPS employees or partners (e.g. @nps.gov, @partner.nps.gov). All authors must have registered an ORCiD and added the ORCiD to active directory/Entra ID. The ORCiD in Active Directory/Entra ID must have the format xxxx-xxxx-xxxx-xxxx.
 
 [Open Researcher and Contributor ID (ORCiD)](https://info.orcid.org/what-is-orcid/) is a third-party persistent digital identifier associated with individuals rather than institutions or documents. ORCiDs are required for authors by the [NPS Open Access Plan](https://irma.nps.gov/DataStore/DownloadFile/717695) for all authors of all scholarly and scientific work. You can learn more about ORCiDs, how register them, add them to Active Directory/Entra ID, control the automated information flowing to your ORCiD profile and what information orcid.org displays about you on the [NPS Data Publication Best Practices SharePoint site page on Persistent Identifiers](https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/data-publication/SitePages/Reserve-a-DOI.aspx#personal-digital-identifiers-%28orcids%29) including ORCiDs.
 
 The `bulk_reference_generation()` function will automatically extract first name, last name, and ORCiDs based on the supplied email addresses and use that information to populate the authors of the reference.
 
 ## Licenses
-The license_code column in input.txt should contain a numeric code (1,2,3,4 or 5) corresponding to a license for the reference on DataStore. A Creative Commons Zero (CC0) license is the preferred license for all public content on DataStore. Valid codes are as follows: 
+The license_code column in input.xlsx should contain a numeric code (1,2,3,4 or 5) corresponding to a license for the reference on DataStore. A Creative Commons Zero (CC0) license is the preferred license for all public content on DataStore. Valid codes are as follows: 
 
 | Valid Code  |   License     | Suggested use case  |
 | :-: |:-------- | :-----|
@@ -90,18 +93,10 @@ The license_code column in input.txt should contain a numeric code (1,2,3,4 or 5
 If all license codes supplied (as integers ranging from 1-5) are valid, the function passes.
 
 ## Producing Unit(s)
-The column producing_unit in the input.txt file should contain a comma-separated list of acronyms for the NPS units that contributed to producing the reference or its content. For instance, an IMD network or region might be responsible for creating a reference or its content (e.g. IMR or ROMN). These must be valid NPS unit acronyms, e.g. ROMO not RMNP for Rocky Mountain National Park or IMD for the Inventory and Monitoring Division (not IM&D). 
+The column producing_unit in the input.xlsx file should contain a comma-separated list of acronyms for the NPS units that contributed to producing the reference or its content. For instance, an IMD network or region might be responsible for creating a reference or its content (e.g. IMR or ROMN). These must be valid NPS unit acronyms, e.g. ROMO not RMNP for Rocky Mountain National Park or IMD for the Inventory and Monitoring Division (not IM&D). 
 
 ## Content Unit(s)
-The column content_units in the input.txt file should contain a comma-separated list of acronyms for the NPS unit(s) where the information in the reference was collected or generated. This should be specific park units that have physical geographies and not organizational units. For instance, YELL (for Yellowstone) and/or GRTE (Grand Teton National Park) but *not* GRYN (Greater Yellowstone Network), IMD (Inventory and Monitoring Division), NRSS (Natural Resources Science and Stewardship Directorate), etc.
+The column content_units in the input.xlsx file should contain a comma-separated list of acronyms for the NPS unit(s) where the information in the reference was collected or generated. These should be specific park units that have physical geographies and not organizational units. For instance, YELL (for Yellowstone) and/or GRTE (Grand Teton National Park) but *not* GRYN (Greater Yellowstone Network), IMD (Inventory and Monitoring Division), and not NRSS (Natural Resources Science and Stewardship Directorate), etc.
 
 ## Keywords
-The keywords column in the input.txt file should contain a comma-separated list of keywords to be added to the reference. Each keyword can consist of a single word or multiple words but should not contain special characters (e.g. no quotes, apostrophes, etc). Keywords will automatically be sorted into alphabetical order on DataStore.
-
-
-
-
-
-
-
-
+The keywords column in the input.xlsx file should contain a comma-separated list of keywords to be added to the reference. Each keyword can consist of a single word or multiple words but should not contain special characters (e.g. no quotes, apostrophes, etc). Keywords will automatically be sorted into alphabetical order on DataStore.

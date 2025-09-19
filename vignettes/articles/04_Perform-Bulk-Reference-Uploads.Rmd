@@ -10,40 +10,42 @@ knitr::opts_chunk$set(
 ```
 
 # Overview
-Once you have finished filling out your input.txt file, you are ready to create references on DataStore! It can be quite easy to make hundreds or even thousands of references so if this is the first time you have used this package please consider testing a subset of your input.txt file using the development server.
+Once you have finished filling out your input.xlsx file, you are ready to create references on DataStore! It can be quite easy to make hundreds or even thousands of references so if this is the first time you have used this package please consider testing a subset of your input.xlsx file using the development server.
 
 # Testing on the development server
 
-To test your input.txt file on the development server, you should consider truncating the input.txt file and limiting it to just a few rows (references) to create. Save this truncated version with a new name and pass it to the `bulk_reference_generation()` function while setting the `dev` parameter to `TRUE`:
+To test your input.xlsx file on the development server, you should consider truncating the input.xlsx file and limiting it to just a few rows (references) to create. Save this truncated version with a new name and pass it to the `bulk_reference_generation()` function while setting the `dev` parameter to `TRUE`. You will also need to specify which sheet within the xlxs you want to use to generate references on DataStore:
 
 ```{r dev_testing, eval=FALSE}
-
-dev_refs <- bulk_reference_generation(filename = "truncated_input.txt",
+dev_refs <- bulk_reference_generation(filename = "truncated_input.xlsx",
                                       path = getwd(),
+                                      sheet = "AudioRecording",
                                       dev = TRUE))
 ```
-Once the function has run, you can look at your draft references on the [DataStore development server](https://irmadev.nps.gov/DataStore/) to make sure everything is copasetic. Make any necessary adjustments to your full input.txt file before using it with the `bulk_reference_generation()` with the `dev` parameter set to `FALSE`.
+Once the function has run, you can look at your draft references on the [DataStore development server](https://irmadev.nps.gov/DataStore/) to make sure everything is copasetic. Make any necessary adjustments to your full input.xlsx file before using it with the `bulk_reference_generation()` with the `dev` parameter set to `FALSE`.
 
-You may want to check the object `dev_refs` to see a list of the newly created reference numbers, which has been added to the information you supplied in your `truncated_input.txt` file.
+You may want to check the object `dev_refs` to see a list of the newly created reference numbers, which has been added to the information you supplied in your `truncated_input.xlsx` file.
 
 # Create references already!
-Creating references is the easy part! Run the following line of code to supply your full (not truncated) input.txt file:
+Creating references is the easy part! Run the following line of code to supply your full (not truncated) input.xlsx file:
 
 ```{r DSuploads, eval = FALSE}
-new_refs <- bulk_reference_generation(filename = "input.txt",
+new_refs <- bulk_reference_generation(filename = "DSbulkUplaodR_input.xlsx",
                           path = getwd(),
+                          sheet = "AudioRecording",
                           dev = FALSE))
 ```
 
 ## Address errors and warnings
-If the data validation steps in the `bulk_reference_generation()` function produced any errors, you will have to address those before proceeding. See the [Data Validation Checks](05_Data-Validation-Checks.html) vignette for additional information on these tests and how to fix your input.txt file.
+If the data validation steps in the `bulk_reference_generation()` function produced any errors, you will have to address those before proceeding. See the [Data Validation Checks](05_Data-Validation-Checks.html) vignette for additional information on these tests and how to fix your input.xlsx file.
 
 ## Increase file numbers and sizes
 For safety's sake, the `bulk_reference_generation()` function has a setting for the maximum allowable number of files and volume of data that can be uploaded during a single operation. These defaults are 500 files and 10 GB. You can increase the allowable upload file number and size above the default settings by changing those parameters (see the documentation for `bulk_reference_geneartion()`). For instance, to increase the maximum file number to 5,000 and the maximum volume of data to 500 GB, you would run the following code:
 
 ```{r increase_max, eval = FALSE}
-new_refs <- bulk_reference_generation(filename = "input.txt",
+new_refs <- bulk_reference_generation(filename = "DSbulkUploadR_input.xlsx",
                           path = getwd(),
+                          sheet = "AudioRecording",
                           max_file_upload = 5000,
                           max_file_size = 500
                           dev = FALSE))
@@ -62,7 +64,9 @@ readr::write_csv(new_refs,
 # Review and activate references
 You're not done yet! 
 
-You should carefully inspect each reference you create and make sure each reference gets the appropriate review (peer, technical, or administrative) as required for that reference. Most references should at a minimum recieve a technical review to make sure the reference is sound and an administrative review to make sure that, among other things, sensitive information is not inadvertently being released.
+You should carefully inspect each reference you create and make sure each reference gets the appropriate review (peer, technical, or administrative) as required for that reference. Most references should at a minimum receive a technical review to make sure the reference is sound and an administrative review to make sure that, among other things, sensitive information is not inadvertently being released.
+
+In draft format, only owners will be able to access the draft references. Reviewers will need to be added to the owner list of each reference prior to review. You may wish to remove reviewers from the owners list after the review is complete.
 
 After all the references have been appropriately reviewed, you can manually navigate to each draft reference on DataStore and click the "Activate" button to publish them!
 
