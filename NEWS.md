@@ -1,5 +1,8 @@
 # DSbulkUploadR (development version)
 
+##2025-09-18
+  * Update functions and documentation as well as articles to take an .xlsx input file and add ability to specify the sheet within the .xlsx input file to use.
+
 ##2025-09-16
   * Fix bugs in setting core bibliography for AudioRecordings and GenericDocuments
   
