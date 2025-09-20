@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 # What this Package Does
 
 The `DSbulkUploadR` package only requires using two R functions: 
-`make_input_template()` creates an excel spreadsheet (DSbulkUploadR_input.xlsx) with a separate sheet for each supported reference type. After the .xlsx file is populated, a second function `bulk_reference_generation()` takes the data in the input.xlsx file and uses it to perform the bulk upload. The bulk upload consists of:
+`write_input_template()` creates an excel spreadsheet (DSbulkUploadR_input.xlsx) with a separate sheet for each supported reference type. After the .xlsx file is populated, a second function `bulk_reference_generation()` takes the data in the input.xlsx file and uses it to perform the bulk upload. The bulk upload consists of:
 
 1) Data validation
 3) Create draft reference(s) on DataStore

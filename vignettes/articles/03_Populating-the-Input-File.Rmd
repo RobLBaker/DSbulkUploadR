@@ -47,7 +47,7 @@ The column title in the input.xlsx file should contain your Reference Title. Eac
 
 Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
 
-Titles are limited in length to ____ characters.
+Titles are limited in length to 512 characters (including spaces).
 
 ## Working with dates
 To prevent excel from automatically changing your dates into a non-ISO 8601 format (anything other than YYYY-MM-DD), you need to change some global settings on your computer. For PCs search for "date and time format" from the start menu. Select "Change the date and time format" (which is part of the system settings). In the panel "Short Date" choose the date formatted as YYYY-MM-DD.

@@ -1,5 +1,7 @@
 #' Write a template input file
 #'
+#' `r lifecycle::badge("deprecated")`
+#'
 #' Writes a template input file (e.g. "AutioRecording_input.txt") to the specified path. The template input file can then be edited as needed, saved, and passed to the `bulk_reference_generation` function to create the specified references.
 #'
 #' The currently supported reference_types are: AudioRecording.
@@ -16,6 +18,12 @@
 #' }
 make_input_template <- function(reference_type = "AudioRecording",
                                 write_path = getwd()) {
+
+  lifecycle::deprecate_warn("0.0.1",
+                            "make_input_template()",
+                            "write_input_template()")
+
+
   template_file <- paste0(reference_type, "_input.txt")
   dat <- read.delim(system.file("extdata",
                                 template_file,
@@ -32,4 +40,28 @@ make_input_template <- function(reference_type = "AudioRecording",
     fileEncoding = "UTF-8"
   )
   return(invisible(dat))
+}
+
+#' Write a template input file
+#'
+#' Writes a template .xlsx file ("DSbulkUploadR_input.xlsx") to the specified location.
+#'
+#' @param write_path String. The path where the input.xlsx file should be written. Defaults to the current working directory
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' write_input_template()
+#' }
+write_input_template <- function(write_path = getwd()) {
+  template_file <- "DSbulkUploadR_input.xlsx"
+  destination_path <- write_path
+  cli::cli_inform("Writing: {.file {template_file}} to {destination_path}.")
+  file.copy(system.file("extdata",
+                        template_file,
+                        package = "DSbulkUploadR"), destination_path)
+  return(invisible(NULL))
+
 }
