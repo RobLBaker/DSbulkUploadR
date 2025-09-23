@@ -74,7 +74,9 @@ check_ref_type_supported <- function(path = getwd(),
   refs <- upload_data$reference_type
 
   # hardcoded list of supported refs. Will need manual updates
-  supported_refs <- c("AudioRecording", "GenericDocument")
+  supported_refs <- c("AudioRecording",
+                      "GenericDocument",
+                      "WebSite")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
