@@ -461,6 +461,11 @@ check_author_email <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  if (any(upload_data$reference_type == "WebSite")) {
+    msg <- "Refernce type WebSite does not require authors"
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
 
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
