@@ -334,6 +334,7 @@ bulk_reference_generation <- function(path = getwd(),
 
     write_core_bibliography(reference_id = ref_code,
                             filename = filename,
+                            sheet_name = sheet,
                             row_num = i,
                             path = path,
                             dev = dev)
