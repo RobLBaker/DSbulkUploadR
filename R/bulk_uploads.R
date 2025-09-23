@@ -374,6 +374,12 @@ bulk_reference_generation <- function(path = getwd(),
                keywords = keywords_to_add,
                dev = dev)
 
+  #add the newly created reference to the supplied project ID
+  NPSdatastore::add_to_project(project_id = upload_data$project_id[i],
+                               reference_ids = ref_code,
+                               dev = dev,
+                               interactive = FALSE)
+
   # set license type
     NPSdatastore::set_license(reference_id = ref_code,
                               dev = dev,

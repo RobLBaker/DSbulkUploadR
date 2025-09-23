@@ -1,5 +1,10 @@
 # DSbulkUploadR (development version)
 
+##2025-09-22
+  * Add the capability to add newly recreated DataStore references to an existing DataStore Project using the supplied project_id from the input.xlsx file.
+  * Add a project_id column to all sheets on the input.xlsx template file
+  * Add WebSite reference type column to the input.xlsx template file
+
 ##2025-09-19
   * Deprecate `make_input_template()` (.txt) in favor of `write_input_template()` (.xlsx)
 
