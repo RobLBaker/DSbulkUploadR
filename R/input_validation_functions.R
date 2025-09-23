@@ -286,6 +286,7 @@ check_unique_title <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  duplicates <- duplicated(upload_data$title)
   if (any(duplicates)) {
     msg <- paste0("All reference titles must be unique. The following titles ",
                   "are duplicated: {upload_data$title[duplicates]}.")
