@@ -584,6 +584,13 @@ check_orcid_format <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
+  #skip test for WebSite reference type which does not have authors
+  if (any(upload_data$reference_type == "WebSite")) {
+    msg <- "Refernce type WebSite does not require authors"
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
