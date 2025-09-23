@@ -260,6 +260,7 @@ bulk_reference_generation <- function(path = getwd(),
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
                                      path = path,
+                                     sheet = sheet,
                                      max_file_upload = max_file_upload,
                                      max_data_upload = max_data_upload,
                                      dev = dev)
