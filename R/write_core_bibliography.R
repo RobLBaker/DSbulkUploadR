@@ -19,7 +19,8 @@
 #'                         sheet_name = "AudioRecording",
 #'                         path = getwd(),
 #'                         dev = TRUE)}
-write_core_bibliography <- function(path = getwd(),
+write_core_bibliography <- function(reference_id = ref_code,
+                                    path = getwd(),
                                     filename = "DSbulkUploadR_input.xlsx",
                                     sheet_name,
                                     row_num,
