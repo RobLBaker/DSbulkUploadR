@@ -1,5 +1,5 @@
 pandoc: '3.4'
-pkgdown: 2.1.3
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   articles/01_Overview: 01_Overview.html
@@ -7,7 +7,7 @@ articles:
   articles/03_Populating-the-Input-File: 03_Populating-the-Input-File.html
   articles/04_Perform-Bulk-Reference-Uploads: 04_Perform-Bulk-Reference-Uploads.html
   articles/05_Data-Validation-Checks-Performed: 05_Data-Validation-Checks-Performed.html
-last_built: 2025-09-22T22:10Z
+last_built: 2025-09-24T03:07Z
 urls:
   reference: https://nationalparkservice.github.io/DSbulkUploadR/reference
   article: https://nationalparkservice.github.io/DSbulkUploadR/articles
