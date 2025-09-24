@@ -2,6 +2,7 @@
 #'
 #' This function takes in a file with the required pre-validated input data (see `run_input_validation`) and uses it to populate the core bibliography tab for DataStore references. It currently supports AudioRecording and GenericDocument reference types.
 #'
+#' @param reference_id String (or integer). Seven-digit reference ID for the DataStore reference to which the bibliographic information should be added.
 #' @param filename String. The name of the input.xlsx file containing data to be added to the reference page. Defaults to "DSbulkUploadR_input.xlsx".
 #' @param sheet_name String. The name of the sheet within the xlsx to get data from.
 #' @param row_num Integer. The row in the file of the xlsx sheet to be used
@@ -19,7 +20,7 @@
 #'                         sheet_name = "AudioRecording",
 #'                         path = getwd(),
 #'                         dev = TRUE)}
-write_core_bibliography <- function(reference_id = ref_code,
+write_core_bibliography <- function(reference_id,
                                     path = getwd(),
                                     filename = "DSbulkUploadR_input.xlsx",
                                     sheet_name,
