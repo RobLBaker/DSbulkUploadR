@@ -440,10 +440,9 @@ bulk_reference_generation <- function(path = getwd(),
 
   cli::cli_inform("Adding reference {ref_code} to project {upload_data$project_id[i]}.")
   #add the newly created reference to the supplied project ID
-
-
-
+  add_ref_to_projects(reference_id = ref_code,
+                      project_id = projects_to_add,
+                      dev = dev)
   }
-
   return(upload_data)
 }
