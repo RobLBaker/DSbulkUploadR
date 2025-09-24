@@ -1,5 +1,10 @@
 # DSbulkUploadR (development version)
 
+##2025-09-23
+  * Add function `add_ref_to_projects()` to address bug in external function
+  * Lots of testing and bug fixes to enable WebSite reference type
+  * Updates to DSbulkUploadR_input.xlsx template
+
 ##2025-09-22
   * Add the capability to add newly recreated DataStore references to an existing DataStore Project using the supplied project_id from the input.xlsx file.
   * Add a project_id column to all sheets on the input.xlsx template file
