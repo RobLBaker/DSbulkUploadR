@@ -226,6 +226,54 @@ add_keywords <- function(reference_id,
   return(invisible(NULL))
 }
 
+#' Adds a product reference to one or more project references
+#'
+#' @param reference_id String (or Integer). The seven-digit DataStore reference ID of the product to be added to one or more Project References on DataStore. For instance this could be a Data Package, Web Site, etc.
+#' @param project_id Integer, String, or Vector. One or more DataStore Project Reference IDs to which the Product reference will be added.
+#' @param dev Logical. Whether or not the actions will occur on the development server. Defaults to TRUE.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' add_ref_to_projects(reference_id = 1234567, project_id = 7654321)
+#' add_ref_to_projects(reference_id = 1234567, project_id = c(7654321,
+#'                                                            9876543))}
+add_ref_to_projects <- function(reference_id,
+                           project_id,
+                           dev = TRUE) {
+
+  bdy <- jsonlite::toJSON(reference_id, pretty = TRUE)
+
+  for (i in 1:length(project_id)) {
+
+    # construct request URL
+    if(dev == TRUE){
+      post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       project_id[i],
+                       "/ProductReference")
+    } else {
+      post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       project_id[i],
+                       "/ProductReference")
+    }
+
+    req <- httr::POST(post_url,
+                     httr::authenticate(":", "", "ntlm"),
+                     httr::add_headers('Content-Type'='application/json'),
+                     body = bdy)
+  }
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  return(invisible(NULL))
+}
+
+
 
 #' Launch bulk reference creation and file upload tool
 #'
@@ -260,6 +308,7 @@ bulk_reference_generation <- function(path = getwd(),
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
                                      path = path,
+                                     sheet = sheet,
                                      max_file_upload = max_file_upload,
                                      max_data_upload = max_data_upload,
                                      dev = dev)
@@ -277,9 +326,11 @@ bulk_reference_generation <- function(path = getwd(),
                   "addressing these warnings?","\n",
                   "1: Yes", "\n","2: No","\n")
     cli::cli_inform(c("!" = msg))
-    var1 <- readline(prompt= "")
-    if (var1 ==2) {
+    var1 <- readline(prompt= " ")
+    if (var1 != 1) {
+      cat(paste0("This is var1: ", var1))
       cat("Exiting the function.")
+
       return()
     }
   }
@@ -288,7 +339,7 @@ bulk_reference_generation <- function(path = getwd(),
   upload_data <- readxl::read_excel(path = paste0(path,
                                                   "/",
                                                   filename),
-                                    sheet = sheet_name)
+                                    sheet = sheet)
 
 
   #calculate number of files to upload:
@@ -314,10 +365,11 @@ bulk_reference_generation <- function(path = getwd(),
                 "involve uploading {file_num} files and ",
                 "{round(file_gb, 3)} GB of data.")
   cli::cli_inform(msg)
-  var1 <- readline(prompt = "1: Yes\n2: No\n")
-  if (var1 == 2) {
+  var2 <- readline(prompt = "1: Yes\n2: No\n ")
+  if (var2 != 1) {
+    cat(paste0("This is var2 ", var2))
     cli::cli_inform("Exiting the function.")
-    return()
+    return(var2)
   }
 
   #get system date
@@ -333,6 +385,7 @@ bulk_reference_generation <- function(path = getwd(),
 
     write_core_bibliography(reference_id = ref_code,
                             filename = filename,
+                            sheet_name = sheet,
                             row_num = i,
                             path = path,
                             dev = dev)
@@ -369,23 +422,27 @@ bulk_reference_generation <- function(path = getwd(),
                                          ", "))
   keywords_to_add <- stringr::str_trim(keywords_to_add)
 
-
+  cli::cli_inform("Adding keywords to reference {ref_code}.")
   add_keywords(reference_id = ref_code,
                keywords = keywords_to_add,
                dev = dev)
 
-  #add the newly created reference to the supplied project ID
-  NPSdatastore::add_to_project(project_id = upload_data$project_id[i],
-                               reference_ids = ref_code,
-                               dev = dev,
-                               interactive = FALSE)
-
+  cli::cli_inform("Setting license for {ref_code}.")
   # set license type
-    NPSdatastore::set_license(reference_id = ref_code,
-                              dev = dev,
-                              license_type_id = upload_data$license_code[i],
-                              interactive = FALSE)
-  }
+  NPSdatastore::set_license(reference_id = ref_code,
+                            license_type_id = upload_data$license_code[i],
+                            dev = dev,
+                            interactive = FALSE)
 
+  projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
+                                               ", "))
+  projects_to_add <- stringr::str_trim(projects_to_add)
+
+  cli::cli_inform("Adding reference {ref_code} to project {upload_data$project_id[i]}.")
+  #add the newly created reference to the supplied project ID
+  add_ref_to_projects(reference_id = ref_code,
+                      project_id = projects_to_add,
+                      dev = dev)
+  }
   return(upload_data)
 }

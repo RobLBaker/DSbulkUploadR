@@ -26,7 +26,9 @@ run_input_validation <- function(path = getwd(),
   msg1 <- "Validating input file data..."
   cli::cli_h1(msg1)
 
-  tryCatch(check_ref_type(filename = filename, path = path),
+  tryCatch(check_ref_type(path = path,
+                          filename = filename,
+                          sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -37,7 +39,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(  check_ref_type_supported(filename = filename, path = path),
+  tryCatch(check_ref_type_supported(path = path,
+                                    filename = filename,
+                                    sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -48,7 +52,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_files_exist(filename = filename, path = path),
+  tryCatch(check_files_exist(path = path,
+                             filename = filename,
+                             sheet_name = sheet),
             error = function(e) {
               err_count <<- err_count + 1
               cli::cli_bullets(c(e$message, e$body))
@@ -59,9 +65,10 @@ run_input_validation <- function(path = getwd(),
             }
   )
 
-  tryCatch(check_file_number(filename = filename,
-                              path = path,
-                              file_number_error = max_file_upload),
+  tryCatch(check_file_number(path = path,
+                             filename = filename,
+                             sheet_name = sheet,
+                             file_number_error = max_file_upload),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -72,9 +79,10 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_file_size(filename = filename,
-                              path = path,
-                              file_size_error = max_data_upload),
+  tryCatch(check_file_size(path = path,
+                           filename = filename,
+                           sheet_name = sheet,
+                           file_size_error = max_data_upload),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -85,7 +93,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_508_format(filename = filename, path = path),
+  tryCatch(check_508_format(path = path,
+                            filename = filename,
+                            sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -96,7 +106,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_unique_title(filename = filename, path = path),
+  tryCatch(check_unique_title(path = path,
+                              filename = filename,
+                              sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -108,7 +120,9 @@ run_input_validation <- function(path = getwd(),
   )
 
 
-  tryCatch(check_start_date(filename = filename, path = path),
+  tryCatch(check_start_date(path = path,
+                            filename = filename,
+                            sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -119,7 +133,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_end_date(filename = filename, path = path),
+  tryCatch(check_end_date(path = path,
+                          filename = filename,
+                          sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -130,7 +146,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_end_after_start(filename = filename, path = path),
+  tryCatch(check_end_after_start(path = path,
+                                 filename = filename,
+                                 sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -141,7 +159,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_dates_past(filename = filename, path = path),
+  tryCatch(check_dates_past(path = path,
+                            filename = filename,
+                            sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -152,7 +172,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_author_email(filename = filename, path = path),
+  tryCatch(check_author_email(path = path,
+                              filename = filename,
+                              sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -163,7 +185,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_authors_orcid(filename = filename, path = path),
+  tryCatch(check_authors_orcid(path = path,
+                               filename = filename,
+                               sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -174,7 +198,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_orcid_format(filename = filename, path = path),
+  tryCatch(check_orcid_format(path = path,
+                              filename = filename,
+                              sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -185,7 +211,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_license_type(filename = filename, path = path),
+  tryCatch(check_license_type(path = path,
+                              filename = filename,
+                              sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -196,7 +224,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_prod_units(filename = filename, path = path),
+  tryCatch(check_prod_units(path = path,
+                            filename = filename,
+                            sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))
@@ -207,7 +237,9 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_content_units(filename = filename, path = path),
+  tryCatch(check_content_units(path = path,
+                               filename = filename,
+                               sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
              cli::cli_bullets(c(e$message, e$body))

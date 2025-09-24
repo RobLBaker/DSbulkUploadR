@@ -18,6 +18,7 @@ The `DSbulkUploadR` package only requires using two R functions:
 3) Create draft reference(s) on DataStore
 4) Populate each draft reference with the supplied information
 5) Upload **all** the file(s) in the specified directory to the draft reference(s)
+6) Connect your reference to a pre-existing DataStore Project reference
 
 The `bulk_reference generation()` will return a dataframe containing all of the information supplied in the input .xlsx file with one additional column containing the datastore reference ID for each newly created reference. You may wish to write this dataframe to a .csv, .txt, or similar for your records.
 

@@ -74,7 +74,9 @@ check_ref_type_supported <- function(path = getwd(),
   refs <- upload_data$reference_type
 
   # hardcoded list of supported refs. Will need manual updates
-  supported_refs <- c("AudioRecording", "GenericDocument")
+  supported_refs <- c("AudioRecording",
+                      "GenericDocument",
+                      "WebSite")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
@@ -284,6 +286,7 @@ check_unique_title <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  duplicates <- duplicated(upload_data$title)
   if (any(duplicates)) {
     msg <- paste0("All reference titles must be unique. The following titles ",
                   "are duplicated: {upload_data$title[duplicates]}.")
@@ -458,6 +461,12 @@ check_author_email <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  #skip test for WebSite reference type which does not have authors
+  if (any(upload_data$reference_type == "WebSite")) {
+    msg <- "Refernce type WebSite does not require authors"
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
 
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
@@ -513,6 +522,13 @@ check_authors_orcid <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
+  #skip test for WebSite reference type which does not have authors
+  if (any(upload_data$reference_type == "WebSite")) {
+    msg <- "Refernce type WebSite does not require authors"
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
@@ -567,6 +583,13 @@ check_orcid_format <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+
+  #skip test for WebSite reference type which does not have authors
+  if (any(upload_data$reference_type == "WebSite")) {
+    msg <- "Refernce type WebSite does not require authors"
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
 
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {

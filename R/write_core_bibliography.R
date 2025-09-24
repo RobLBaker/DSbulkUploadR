@@ -2,9 +2,9 @@
 #'
 #' This function takes in a file with the required pre-validated input data (see `run_input_validation`) and uses it to populate the core bibliography tab for DataStore references. It currently supports AudioRecording and GenericDocument reference types.
 #'
-#' @param reference_id Integer. The 7-digit DataStore reference ID where data will be written
+#' @param reference_id String (or integer). Seven-digit reference ID for the DataStore reference to which the bibliographic information should be added.
 #' @param filename String. The name of the input.xlsx file containing data to be added to the reference page. Defaults to "DSbulkUploadR_input.xlsx".
-#' @param sheet String. The name of the sheet within the xlsx to get data from.
+#' @param sheet_name String. The name of the sheet within the xlsx to get data from.
 #' @param row_num Integer. The row in the file of the xlsx sheet to be used
 #' @param path String. Path to xlsx file in `filename`. Defaults to `getwd()`.
 #' @param dev Logical. Whether data should be written to the development server or not. Defaults to TRUE.
@@ -17,10 +17,11 @@
 #' write_core_bibliography(reference_id = 1234567,
 #'                         filename = "DSbulkUploadR_input.xlsx",
 #'                         row_num = 1,
-#'                         sheet = "AudioRecording",
+#'                         sheet_name = "AudioRecording",
 #'                         path = getwd(),
 #'                         dev = TRUE)}
-write_core_bibliography <- function(path = getwd(),
+write_core_bibliography <- function(reference_id,
+                                    path = getwd(),
                                     filename = "DSbulkUploadR_input.xlsx",
                                     sheet_name,
                                     row_num,
@@ -35,7 +36,9 @@ write_core_bibliography <- function(path = getwd(),
   begin_date <- upload_data$content_begin_date[row_num]
   end_date <- upload_data$content_end_date[row_num]
 
-  #create author list ====
+  # create author list ====
+  # Websites don't have authors
+  if (upload_data$reference_type[row_num] != "WebSite") {
   usr_email <- unlist(stringr::str_split(
     upload_data$author_email_list[row_num],
     ", "))
@@ -66,7 +69,8 @@ write_core_bibliography <- function(path = getwd(),
                      isCorporate = FALSE,
                      ORCID = rjson$extensionAttribute2[j])
       contacts <- append(contacts, list(author))
-    }
+      }
+  }
 
   #get system date
   today <- Sys.Date()
@@ -138,6 +142,38 @@ write_core_bibliography <- function(path = getwd(),
                    #metadataStandardID = "",
                    #licenseTypeID = upload_data$license[row_num]
                    )
+  } else if (upload_data$reference_type[row_num] == "WebSite") {
+      mylist <- list(title = upload_data$title[row_num],
+                     issuedDate = list(year = lubridate::year(today),
+                                       month = lubridate::month(today),
+                                       day = lubridate::day(today),
+                                       precision = ""),
+                     contentBeginDate = list(year = lubridate::year(begin_date),
+                                             month = lubridate::month(begin_date),
+                                             day = lubridate::day(begin_date),
+                                             precision = ""),
+                     contentEndDate = list(year = lubridate::year(end_date),
+                                           month = lubridate::month(end_date),
+                                           day = lubridate::day(end_date),
+                                           precision = ""),
+                     location = upload_data$URL[row_num],
+                     miscellaneousCode = "",
+                     volume = "",
+                     issue = "",
+                     pageRange = "",
+                     edition = "",
+                     dateRange = "",
+                     meetingPlace = "",
+                     abstract = upload_data$description[row_num],
+                     notes = upload_data$notes[row_num],
+                     purpose = upload_data$purpose[row_num],
+                     tableOfContents = ""
+                     #publisher = "Fort Collins, CO",
+                     #size1 = upload_data$length_of_recording[row_num],
+                     #contacts1 = contacts
+                     #metadataStandardID = ""
+                     #licenseTypeID = upload_data$license[row_num]
+      )
   }
 
   #for testing purposes and to look at the json sent:

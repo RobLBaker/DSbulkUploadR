@@ -2,6 +2,7 @@
 
 export("%>%")
 export(add_keywords)
+export(add_ref_to_projects)
 export(bulk_reference_generation)
 export(check_508_format)
 export(check_author_email)
