@@ -1,5 +1,8 @@
 # DSbulkUploadR (development version)
 
+## 2025-09-24
+  * Move functions from bulk_uploads.R to set_ref_properties.R for better function/file management.
+
 ## 2025-09-23
   * Add function `add_ref_to_projects()` to address bug in external function
   * Lots of testing and bug fixes to enable WebSite reference type
