@@ -33,6 +33,7 @@ The `bulk_reference generation()` will return a dataframe containing all of the 
 # Supported DataStore Reference Types
 1) Audio Recording
 2) Generic Document
+3) Web Site
 
 # Supported File Types
 Upload of all file types is supported. There is no distinction made among file types and no need to designate specific file types. Changing the default settings can result in virtually limitless numbers and sizes of files to upload. Use caution when changing the default settings!
