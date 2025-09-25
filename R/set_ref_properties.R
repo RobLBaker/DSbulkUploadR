@@ -272,3 +272,27 @@ add_ref_to_projects <- function(reference_id,
   }
   return(invisible(NULL))
 }
+
+set_content_units <- function(reference_id,
+                                producing_units,
+                                dev = TRUE) {
+  #generate body of API call:
+  bdy<-NULL
+  if (length(producing_units < 2)) {
+    prod_units <- list(list("unitCode" = producing_units,
+                 "andLinkedUnits" = TRUE,
+                 "andBoundingBox" = TRUE))
+    bdy <- jsonlite::toJSON(prod_units, pretty = TRUE, auto_unbox = TRUE)
+  } else {
+    for (i in 1:length(producing_units)) {
+      prod_units <- list("unitCode" = producing_units[i],
+                         "andLinkedUnits" = TRUE,
+                         "andBoundingBox" = TRUE)
+      bdy <- append(bdy, list(prod_units))
+    }
+    bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
+  }
+
+
+
+}
