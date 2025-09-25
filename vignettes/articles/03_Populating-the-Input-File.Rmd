@@ -12,11 +12,11 @@ knitr::opts_chunk$set(
 # Overview
 The input template is designed to be easy to understand and human-readable with some data validation incorporated into the .xlsx file. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the DSbulkUploadR_input.xlsx template. Do **not** change any of the column names or sheet names. 
 
-Each reference type on DataStore has a specific set of back-end attributes. You must use a reference-type specific sheet within the DSbulkdUploadR_input.xlsx file (see [Generate the Input File](02_Generate-the-Input-File.html). The sheets within the input.xlsx may had different columns. If your reference-type specific input.xlsx sheet lacks a column, you can safely ignore the instructions for that column. Do not edit or change the column names or sheet names.
+Each reference type on DataStore has a specific set of back-end attributes. You must **use a reference-type specific sheet** within the DSbulkdUploadR_input.xlsx file (see [Generate the Input File](02_Generate-the-Input-File.html). The sheets within the input.xlsx may had different columns. If your reference-type specific input.xlsx sheet lacks a column, you can safely ignore the instructions for that column. However, you cannot leave any blanks in the .xlsx sheet for your reference type. Do not delete, edit, or change the column names or sheet names.
 
 Most of the data you supply will be subjected to a series of data validation checks to make sure it is correctly formatted. If any errors are found, you will be given an opportunity to fix them prior to performing the bulk reference generation. But it is much faster to supply the data correctly the first time (and there are likely ways to do it incorrectly that the checks cannot account for). So please read the instructions carefully.
 
-The DSbulkUploadR_input.xlsx template file also has some basic validation built in for some of the simpler columns. However, even this basica validation will not work if you copy and paste data into the sheet so copy and paste with care (why you does the validation ignore copy-paste data you ask? This is a GREAT question and I encourage you to address it directly to Microsoft....good luck).
+The DSbulkUploadR_input.xlsx template file also has some basic validation built in for some of the simpler columns. However, even this basic validation will not work if you copy and paste data into the sheet so copy and paste with care (why you does the validation ignore copy-paste data you ask? This is a GREAT question and I encourage you to address it directly to Microsoft....good luck).
 
 One common problem is with date formats and Excel. Excel LOVES to reformat dates and hates ISO 8601 date format (again why? GREAT question for the Microsoft development team). Please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
 
@@ -38,7 +38,7 @@ The `bulk_reference_generation()` function can impose some limits on the total n
 Additionally, before the `bulk_reference_generation()` function creates anything on DataStore, you will be informed of the total number of references the function will create, the total number of files it will upload, and the total data volume (in GB) that will be uploaded. You will have an option to proceed or end the function if any of these values do not look correct to you.
 
 ## 508 
-You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("yes") or not ("no"). These values apply to ALL of the files in the supplied file path/for a given reference and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
+You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("Yes") or not ("No"). These values apply to ALL of the files in the supplied file path/for a given reference and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
 
 This column is subject to data validation within excel; when you click on a cell in this column a drop-down menus should appear from which you can select one of the only two valid responses: yes or no.
 
@@ -70,6 +70,9 @@ The purpose column in the input.xlsx file should contain a brief description of 
 ## Notes
 The notes column in the input.xlsx file should contain any notes that may be important for understanding the reference. 
 
+## URL
+The web address of the resource.
+
 ## Author email addresses
 The author_email_list column in input.xlsx should contain a comma-separated list of all the authors' email addresses. Use full email addresses rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one author. Do not include extra text (no quotations, angle brackets, etc). 
 
@@ -92,6 +95,50 @@ The license_code column in input.xlsx should contain a numeric code (1,2,3,4 or 
 
 If all license codes supplied (as integers ranging from 1-5) are valid, the function passes.
 
+## Controlled Unclassified Information
+
+### CUI label
+Enter one or more reasons why these data should be restricted. Each reason should be separated by a comma. If data should not be restricted, use the CUI label "PUBLIC" (without quotations). The following are valid CUI labels. If your reference does not fall into one of these categories it likely cannot be restricted. If you feel strongly that it should or must be restricted despite not fitting into any of the accepted categories, please contact [Joe DeViVo](mailto:joe_divivo@nps.gov) or [Judd Patterson](mailto:judd_patterson@nps.gov).
+
+**The following are accepted CUI labels:**
+PUBLIC
+National Park System Resources
+Archeological Resources
+Historical Properties
+Cave Resources
+Paleontological Resources
+Copyrighted
+Information Systems Vulnerability Information
+Personnel Records
+General Privacy
+Non-NPS Proprietary Data
+Tribal Data Sovereignty
+Critical Infrastructure: General Critical Infrastructure Information
+Critical Infrastructure: Emergency Management
+Financial: Budget
+Law Enforcement Communication
+Controlled Substance
+Criminal History Record Information
+General Law Enforcement
+Investigation
+Terrorist Screening
+Whistleblower Identity
+Legal: Administrative Proceedings
+Legal: Victim
+Privacy: Health Information
+General Procurement and Acquisition 
+Procurement and Acquisition: Source Selection
+General Proprietary Business Information 
+Legal: Legal Privilege
+Wells
+
+### CUI contact name
+Please enter the name of a person who can be contacted for more information about the CUI restrictions.
+
+### CUI contact email
+Please enter an email address to contact about the CUI restrictions. It does not need to be the email address of the contact person. If there is a relevant group email that is preferable to an individual email as there can be substantial turnover in individual persons.
+
+
 ## Producing Unit(s)
 The column producing_unit in the input.xlsx file should contain a comma-separated list of acronyms for the NPS units that contributed to producing the reference or its content. For instance, an IMD network or region might be responsible for creating a reference or its content (e.g. IMR or ROMN). These must be valid NPS unit acronyms, e.g. ROMO not RMNP for Rocky Mountain National Park or IMD for the Inventory and Monitoring Division (not IM&D). 
 
@@ -100,3 +147,8 @@ The column content_units in the input.xlsx file should contain a comma-separated
 
 ## Keywords
 The keywords column in the input.xlsx file should contain a comma-separated list of keywords to be added to the reference. Each keyword can consist of a single word or multiple words but should not contain special characters (e.g. no quotes, apostrophes, etc). Keywords will automatically be sorted into alphabetical order on DataStore.
+
+## Projects
+The project_id column should contain one or more (separated by a comma) DataStore Project type reference codes. The newly created reference on DataStore will automatically be added to the Project. The Project must already exist on DataStore, however it can be in draft mode.
+
+
