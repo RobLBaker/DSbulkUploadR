@@ -127,6 +127,7 @@ change the names of the sheets.</p>
 <ol style="list-style-type: decimal">
 <li>AudioRecording</li>
 <li>GenericDocument</li>
+<li>WebSite</li>
 </ol>
 <p>For example, the following line of code</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
@@ -147,19 +148,16 @@ use a separate sheet within the DSbulkUploadR_input.xlsx file for each
 reference type you plan on creating. Supported reference types will have
 a sheet in the template file. You can leave entire sheets blank if you
 do not need that specific reference type.</p>
-<p>If you want to create 3,600 Audio Recordings references, you can do
-it all using the single AudioRecording sheet in the
-DSbulkUploadR_input.xlsx file. However, if you want to make 3,549 Audio
-Recording references and 51 Generic Document references, you will need
-to put the Audio Recording data in the AudioRecording sheet and the
+<p>For instance, if you want to create 3,600 Audio Recordings
+references, you can do it all using the single AudioRecording sheet in
+the DSbulkUploadR_input.xlsx file. However, if you want to make 3,549
+Audio Recording references and 51 Generic Document references, you will
+need to put the Audio Recording data in the AudioRecording sheet and the
 Generic Document data in the GenericDocument sheet of the
 DSbulkUploadR_input.xlsx file. You will also need to run the
 <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function twice: once supplying
-the AudioRecording sheet and oncesupplying the GenericDocument sheet for
-the DSbulkdUploadR_input.xlsx file.</p>
-<p>As an aside, you will also have to wait for this package to support
-additional DataStore reference types. This development version only
-supports the Audio Recording and Generic Document reference types.</p>
+the AudioRecording sheet and once supplying the GenericDocument sheet
+for the DSbulkdUploadR_input.xlsx file.</p>
 </div>
   </div>
 
