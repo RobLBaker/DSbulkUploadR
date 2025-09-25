@@ -1,5 +1,9 @@
 # DSbulkUploadR (development version)
 
+## 2025-09-25
+  * Add CUI labels, CUI contact name, and CUI contact address fields to input.xlsx template
+  * Update documentation to reflect support for WebSite reference type and CUI fields in input.xlsx
+
 ## 2025-09-24
   * Move functions from bulk_uploads.R to set_ref_properties.R for better function/file management.
 

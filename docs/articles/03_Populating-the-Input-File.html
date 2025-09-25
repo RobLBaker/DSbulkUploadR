@@ -109,12 +109,13 @@ some rules that may not seem intuitive. Please take care to read these
 instructions when populating the DSbulkUploadR_input.xlsx template. Do
 <strong>not</strong> change any of the column names or sheet names.</p>
 <p>Each reference type on DataStore has a specific set of back-end
-attributes. You must use a reference-type specific sheet within the
-DSbulkdUploadR_input.xlsx file (see <a href="02_Generate-the-Input-File.html">Generate the Input File</a>. The
+attributes. You must <strong>use a reference-type specific
+sheet</strong> within the DSbulkdUploadR_input.xlsx file (see <a href="02_Generate-the-Input-File.html">Generate the Input File</a>. The
 sheets within the input.xlsx may had different columns. If your
 reference-type specific input.xlsx sheet lacks a column, you can safely
-ignore the instructions for that column. Do not edit or change the
-column names or sheet names.</p>
+ignore the instructions for that column. However, you cannot leave any
+blanks in the .xlsx sheet for your reference type. Do not delete, edit,
+or change the column names or sheet names.</p>
 <p>Most of the data you supply will be subjected to a series of data
 validation checks to make sure it is correctly formatted. If any errors
 are found, you will be given an opportunity to fix them prior to
@@ -124,8 +125,8 @@ do it incorrectly that the checks cannot account for). So please read
 the instructions carefully.</p>
 <p>The DSbulkUploadR_input.xlsx template file also has some basic
 validation built in for some of the simpler columns. However, even this
-basica validation will not work if you copy and paste data into the
-sheet so copy and paste with care (why you does the validation ignore
+basic validation will not work if you copy and paste data into the sheet
+so copy and paste with care (why you does the validation ignore
 copy-paste data you ask? This is a GREAT question and I encourage you to
 address it directly to Microsoft….good luck).</p>
 <p>One common problem is with date formats and Excel. Excel LOVES to
@@ -190,7 +191,7 @@ of these values do not look correct to you.</p>
 <h3 id="section">508<a class="anchor" aria-label="anchor" href="#section"></a>
 </h3>
 <p>You will need to supply information on whether the files you are
-uploading to each reference are 508 compliant (“yes”) or not (“no”).
+uploading to each reference are 508 compliant (“Yes”) or not (“No”).
 These values apply to ALL of the files in the supplied file path/for a
 given reference and will be universally applied to all of the files
 uploaded to each reference. References cannot have mixes of files some
@@ -276,6 +277,11 @@ identical to the description or may be different.</p>
 </h3>
 <p>The notes column in the input.xlsx file should contain any notes that
 may be important for understanding the reference.</p>
+</div>
+<div class="section level3">
+<h3 id="url">URL<a class="anchor" aria-label="anchor" href="#url"></a>
+</h3>
+<p>The web address of the resource.</p>
 </div>
 <div class="section level3">
 <h3 id="author-email-addresses">Author email addresses<a class="anchor" aria-label="anchor" href="#author-email-addresses"></a>
@@ -366,6 +372,50 @@ contains confidential unclassified information - CUI)</td>
 valid, the function passes.</p>
 </div>
 <div class="section level3">
+<h3 id="controlled-unclassified-information">Controlled Unclassified Information<a class="anchor" aria-label="anchor" href="#controlled-unclassified-information"></a>
+</h3>
+<div class="section level4">
+<h4 id="cui-label">CUI label<a class="anchor" aria-label="anchor" href="#cui-label"></a>
+</h4>
+<p>Enter one or more reasons why these data should be restricted. Each
+reason should be separated by a comma. If data should not be restricted,
+use the CUI label “PUBLIC” (without quotations). The following are valid
+CUI labels. If your reference does not fall into one of these categories
+it likely cannot be restricted. If you feel strongly that it should or
+must be restricted despite not fitting into any of the accepted
+categories, please contact <a href="mailto:joe_divivo@nps.gov">Joe
+DeViVo</a> or <a href="mailto:judd_patterson@nps.gov">Judd
+Patterson</a>.</p>
+<p><strong>The following are accepted CUI labels:</strong> PUBLIC
+National Park System Resources Archeological Resources Historical
+Properties Cave Resources Paleontological Resources Copyrighted
+Information Systems Vulnerability Information Personnel Records General
+Privacy Non-NPS Proprietary Data Tribal Data Sovereignty Critical
+Infrastructure: General Critical Infrastructure Information Critical
+Infrastructure: Emergency Management Financial: Budget Law Enforcement
+Communication Controlled Substance Criminal History Record Information
+General Law Enforcement Investigation Terrorist Screening Whistleblower
+Identity Legal: Administrative Proceedings Legal: Victim Privacy: Health
+Information General Procurement and Acquisition Procurement and
+Acquisition: Source Selection General Proprietary Business Information
+Legal: Legal Privilege Wells</p>
+</div>
+<div class="section level4">
+<h4 id="cui-contact-name">CUI contact name<a class="anchor" aria-label="anchor" href="#cui-contact-name"></a>
+</h4>
+<p>Please enter the name of a person who can be contacted for more
+information about the CUI restrictions.</p>
+</div>
+<div class="section level4">
+<h4 id="cui-contact-email">CUI contact email<a class="anchor" aria-label="anchor" href="#cui-contact-email"></a>
+</h4>
+<p>Please enter an email address to contact about the CUI restrictions.
+It does not need to be the email address of the contact person. If there
+is a relevant group email that is preferable to an individual email as
+there can be substantial turnover in individual persons.</p>
+</div>
+</div>
+<div class="section level3">
 <h3 id="producing-units">Producing Unit(s)<a class="anchor" aria-label="anchor" href="#producing-units"></a>
 </h3>
 <p>The column producing_unit in the input.xlsx file should contain a
@@ -396,6 +446,15 @@ comma-separated list of keywords to be added to the reference. Each
 keyword can consist of a single word or multiple words but should not
 contain special characters (e.g. no quotes, apostrophes, etc). Keywords
 will automatically be sorted into alphabetical order on DataStore.</p>
+</div>
+<div class="section level3">
+<h3 id="projects">Projects<a class="anchor" aria-label="anchor" href="#projects"></a>
+</h3>
+<p>The project_id column should contain one or more (separated by a
+comma) DataStore Project type reference codes. The newly created
+reference on DataStore will automatically be added to the Project. The
+Project must already exist on DataStore, however it can be in draft
+mode.</p>
 </div>
 </div>
   </div>
