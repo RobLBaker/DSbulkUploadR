@@ -10,6 +10,7 @@ bulk_reference_generation(
   sheet,
   max_file_upload = 500,
   max_data_upload = 10,
+  joe = FALSE,
   dev = TRUE
 )
 }
@@ -23,6 +24,8 @@ bulk_reference_generation(
 \item{max_file_upload}{Integer. The maximum allowable number of files to upload. Defaults to 500.}
 
 \item{max_data_upload}{Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.}
+
+\item{joe}{Logical. Is Joe running the this function? Defaults to FALSE. If you are Joe and you want to create a bunch of draft reference but not upload any files to them, set the parameter \code{joe} to \code{TRUE}.}
 
 \item{dev}{Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.}
 }

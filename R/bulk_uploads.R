@@ -13,6 +13,7 @@
 #' @param sheet String. Name of the sheet within the .xlsx to read data from.
 #' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
 #' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
+#' @param joe Logical. Is Joe running the function? Defaults to FALSE. If you are Joe and you want to create a bunch of draft reference but not upload any files to them, set the parameter `joe` to `TRUE`.
 #' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.
 #'
 #' @returns Dataframe
@@ -26,6 +27,7 @@ bulk_reference_generation <- function(path = getwd(),
                                       sheet,
                                       max_file_upload = 500,
                                       max_data_upload = 10,
+                                      joe = FALSE,
                                       dev = TRUE) {
 
   #check upload file validity:
@@ -63,31 +65,40 @@ bulk_reference_generation <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet)
-
-
-  #calculate number of files to upload:
-  file_num <- 0
-  for (i in 1:nrow(upload_data)) {
-    files_per_ref <- length(list.files(upload_data$file_path[i]))
-    file_num <- (file_num + files_per_ref)
-  }
-
-  #calculate total file size to upload:
-  file_size <- 0
-  for (i in 1:nrow(upload_data)) {
-    file_size <- file_size +
-      sum(file.info(list.files(upload_data$file_path[i],
-                               full.names = TRUE))$size)
-  }
-  file_gb <- file_size/1073741824
-
-  #ask to proceed; verify number of refs to create, files to upload, and total upload size:
+  #number of refs to create:
   ref_count <- nrow(upload_data)
-  msg <- paste0("Would you like to upload all of your files and create ",
+
+  if (joe != TRUE) {
+    #calculate number of files to upload:
+    file_num <- 0
+      for (i in 1:nrow(upload_data)) {
+        files_per_ref <- length(list.files(upload_data$file_path[i]))
+        file_num <- (file_num + files_per_ref)
+      }
+
+    #calculate total file size to upload:
+    file_size <- 0
+    for (i in 1:nrow(upload_data)) {
+      file_size <- file_size +
+        sum(file.info(list.files(upload_data$file_path[i],
+                                 full.names = TRUE))$size)
+    }
+    file_gb <- file_size/1073741824
+
+    #ask to proceed; verify number of refs to create, files to upload, and total upload size:
+
+    msg <- paste0("Would you like to upload all of your files and create ",
                 "{ref_count} new references on DataStore? This will ",
                 "involve uploading {file_num} files and ",
                 "{round(file_gb, 3)} GB of data.")
-  cli::cli_inform(msg)
+    cli::cli_inform(msg)
+  } else {
+    # if joe is TRUE (no file uploads)
+    msg <- paste0("Would you like to crate {ref_count} new references on ",
+                  "DataStore? No files will be uploaded to these references.")
+    cli::cli_inform(msg)
+  }
+
   var2 <- readline(prompt = "1: Yes\n2: No\n ")
   if (var2 != 1) {
     cat(paste0("This is var2 ", var2))
@@ -95,8 +106,6 @@ bulk_reference_generation <- function(path = getwd(),
     return(var2)
   }
 
-  #get system date
-  #today <- Sys.Date()
   upload_data$reference_id <- NULL
 
   for (i in 1:nrow(upload_data)) {
@@ -115,30 +124,34 @@ bulk_reference_generation <- function(path = getwd(),
                             dev = dev)
 
     # upload files to reference ----
+    # don't upload if joe == TRUE
+    if (joe != TRUE) {
+      #translate 508compliance:
+      compliant <- NULL
+      if (upload_data$files_508_compliant[i] == "yes") {
+        compliant <- TRUE
+      } else {
+        compliant <- FALSE
+      }
 
-    #translate 508compliance:
-    compliant <- NULL
-    if (upload_data$files_508_compliant[i] == "yes") {
-      compliant <- TRUE
-    } else {
-      compliant <- FALSE
+      file_list <- list.files(path = upload_data$file_path[i],
+                              full.names = TRUE)
+
+      for (j in 1:length(file_list)) {
+        msg <- "Uploading file {j} of {length(file_list)} to reference {ref_code}."
+        cli::cli_inform(msg)
+        suppressWarnings(upload_files(
+          filename = list.files(upload_data$file_path[i])[j],
+          path = upload_data$file_path[i],
+          reference_id = ref_code,
+          is_508 = compliant,
+          chunk_size_mb = 1,
+          retry = 1,
+          dev = dev))
+      }
     }
 
-    file_list <- list.files(path = upload_data$file_path[i],
-                            full.names = TRUE)
-
-    for (j in 1:length(file_list)) {
-      msg <- "Uploading file {j} of {length(file_list)} to reference {ref_code}."
-      cli::cli_inform(msg)
-      suppressWarnings(upload_files(filename = list.files(upload_data$file_path[i])[j],
-                   path = upload_data$file_path[i],
-                   reference_id = ref_code,
-                   is_508 = compliant,
-                   chunk_size_mb = 1,
-                   retry = 1,
-                   dev = dev))
-    }
-    #add reference id column to dataframe to make it easier to find them all
+      #add reference id column to dataframe to make it easier to find them all
     upload_data$reference_id[i] <- ref_code
 
     #  add keywords ----
