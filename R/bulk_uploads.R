@@ -13,7 +13,7 @@
 #' @param sheet String. Name of the sheet within the .xlsx to read data from.
 #' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
 #' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
-#' @param joe Logical. Is Joe running the function? Defaults to FALSE. If you are Joe and you want to create a bunch of draft reference but not upload any files to them, set the parameter `joe` to `TRUE`.
+#' @param data_upload Logical. Defaults to TRUE. To create a bunch of draft reference but not upload any files to them, set the parameter `data_upload` to `FALSE`.
 #' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.
 #'
 #' @returns Dataframe
@@ -27,7 +27,7 @@ bulk_reference_generation <- function(path = getwd(),
                                       sheet,
                                       max_file_upload = 500,
                                       max_data_upload = 10,
-                                      joe = FALSE,
+                                      data_upload = TRUE,
                                       dev = TRUE) {
 
   #check upload file validity:
@@ -68,7 +68,7 @@ bulk_reference_generation <- function(path = getwd(),
   #number of refs to create:
   ref_count <- nrow(upload_data)
 
-  if (joe != TRUE) {
+  if (data_upload != TRUE) {
     #calculate number of files to upload:
     file_num <- 0
       for (i in 1:nrow(upload_data)) {
@@ -93,7 +93,7 @@ bulk_reference_generation <- function(path = getwd(),
                 "{round(file_gb, 3)} GB of data.")
     cli::cli_inform(msg)
   } else {
-    # if joe is TRUE (no file uploads)
+    # if data_upload is FALSE (no file uploads)
     msg <- paste0("Would you like to crate {ref_count} new references on ",
                   "DataStore? No files will be uploaded to these references.")
     cli::cli_inform(msg)
@@ -124,8 +124,8 @@ bulk_reference_generation <- function(path = getwd(),
                             dev = dev)
 
     # upload files to reference ----
-    # don't upload if joe == TRUE
-    if (joe != TRUE) {
+    # don't upload if data_upload == FALSE
+    if (data_upload != TRUE) {
       #translate 508compliance:
       compliant <- NULL
       if (upload_data$files_508_compliant[i] == "yes") {
