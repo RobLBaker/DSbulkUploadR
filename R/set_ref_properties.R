@@ -273,6 +273,24 @@ add_ref_to_projects <- function(reference_id,
   return(invisible(NULL))
 }
 
+#' Set content unit links and bounding boxes
+#'
+#' This function takes one or more content unit codes and adds them, along with their bounding boxes, as content unit links to the specified reference on DataStore.
+#'
+#' @param reference_id String. Integer. The seven-digit DataStore ID for the reference that content unit links will be added to.
+#' @param content_units String. Vector. One or more NPS park unit codes.
+#' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' set_content_units(reference_id = 1234567,
+#'                   content_units = "ROMO")
+#' set_content_units(reference_id = 1234567,
+#'                   content_units = c("ROMO", "YELL",
+#'                   dev = FALSE))}
 set_content_units <- function(reference_id,
                                 content_units,
                                 dev = TRUE) {
