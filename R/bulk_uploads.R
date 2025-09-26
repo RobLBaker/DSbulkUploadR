@@ -141,30 +141,38 @@ bulk_reference_generation <- function(path = getwd(),
     #add reference id column to dataframe to make it easier to find them all
     upload_data$reference_id[i] <- ref_code
 
-    # ---- add keywords
+    #  add keywords ----
     keywords_to_add <- unlist(stringr::str_split(upload_data$keywords[i],
                                          ", "))
     keywords_to_add <- stringr::str_trim(keywords_to_add)
 
-    cli::cli_inform("Adding keywords to reference {ref_code}.")
+    #cli::cli_inform("Adding keywords to reference {ref_code}.")
     add_keywords(reference_id = ref_code,
                  keywords = keywords_to_add,
                  dev = dev)
 
-    cli::cli_inform("Setting license for {ref_code}.")
+    # add content unit links ----
+    links_to_add <- unlist(stringr::str_split(upload_data$content_units[i],
+                                              ", "))
+    links_to_add <- stringr::str_trim(links_to_add)
+
+    set_content_units(reference_id = ref_code,
+                      content_units = links_to_add,
+                      dev = dev)
+
+    # add license information ----
+    #cli::cli_inform("Setting license for {ref_code}.")
     # set license type
-    suppressWarnings(
-      NPSdatastore::set_license(reference_id = ref_code,
+    NPSdatastore::set_license(reference_id = ref_code,
                               license_type_id = upload_data$license_code[i],
                               dev = dev,
-                              interactive = FALSE))
-
+                              interactive = FALSE)
+    #  add reference to project(s) ----
     projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
                                                ", "))
     projects_to_add <- stringr::str_trim(projects_to_add)
 
-    cli::cli_inform("Adding reference {ref_code} to project {upload_data$project_id[i]}.")
-    #add the newly created reference to the supplied project ID
+    #cli::cli_inform("Adding reference {ref_code} to project {upload_data$project_id[i]}.")
     add_ref_to_projects(reference_id = ref_code,
                         project_id = projects_to_add,
                         dev = dev)
