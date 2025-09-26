@@ -274,25 +274,38 @@ add_ref_to_projects <- function(reference_id,
 }
 
 set_content_units <- function(reference_id,
-                                producing_units,
+                                content_units,
                                 dev = TRUE) {
   #generate body of API call:
   bdy<-NULL
-  if (length(producing_units < 2)) {
-    prod_units <- list(list("unitCode" = producing_units,
-                 "andLinkedUnits" = TRUE,
-                 "andBoundingBox" = TRUE))
-    bdy <- jsonlite::toJSON(prod_units, pretty = TRUE, auto_unbox = TRUE)
+  for (i in 1:length(content_units)) {
+    cont_units <- list("unitCode" = content_units[i],
+                       "andLinkedUnits" = TRUE,
+                       "andBoundingBox" = TRUE)
+    bdy <- append(bdy, list(cont_units))
+  }
+  bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
+
+  # construct request URL
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Units")
   } else {
-    for (i in 1:length(producing_units)) {
-      prod_units <- list("unitCode" = producing_units[i],
-                         "andLinkedUnits" = TRUE,
-                         "andBoundingBox" = TRUE)
-      bdy <- append(bdy, list(prod_units))
-    }
-    bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Units")
   }
 
-
-
+  req <- httr::POST(post_url,
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'),
+                    body = bdy)
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  return(invisible(NULL))
 }
