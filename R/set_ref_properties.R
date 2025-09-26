@@ -272,3 +272,58 @@ add_ref_to_projects <- function(reference_id,
   }
   return(invisible(NULL))
 }
+
+#' Set content unit links and bounding boxes
+#'
+#' This function takes one or more content unit codes and adds them, along with their bounding boxes, as content unit links to the specified reference on DataStore.
+#'
+#' @param reference_id String. Integer. The seven-digit DataStore ID for the reference that content unit links will be added to.
+#' @param content_units String. Vector. One or more NPS park unit codes.
+#' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' set_content_units(reference_id = 1234567,
+#'                   content_units = "ROMO")
+#' set_content_units(reference_id = 1234567,
+#'                   content_units = c("ROMO", "YELL",
+#'                   dev = FALSE))}
+set_content_units <- function(reference_id,
+                                content_units,
+                                dev = TRUE) {
+  #generate body of API call:
+  bdy<-NULL
+  for (i in 1:length(content_units)) {
+    cont_units <- list("unitCode" = content_units[i],
+                       "andLinkedUnits" = TRUE,
+                       "andBoundingBox" = TRUE)
+    bdy <- append(bdy, list(cont_units))
+  }
+  bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
+
+  # construct request URL
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Units")
+  } else {
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Units")
+  }
+
+  req <- httr::POST(post_url,
+                    httr::authenticate(":", "", "ntlm"),
+                    httr::add_headers('Content-Type'='application/json'),
+                    body = bdy)
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  return(invisible(NULL))
+}

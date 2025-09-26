@@ -1,6 +1,7 @@
 # DSbulkUploadR (development version)
 
 ## 2025-09-25
+  * Add `set_content_units()` function; add ability to set content units (and bounding boxes) to the `bulk_reference_generation()` function
   * Add CUI labels, CUI contact name, and CUI contact address fields to input.xlsx template
   * Update documentation to reflect support for WebSite reference type and CUI fields in input.xlsx
 
