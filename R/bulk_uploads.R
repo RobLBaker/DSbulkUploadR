@@ -13,7 +13,7 @@
 #' @param sheet String. Name of the sheet within the .xlsx to read data from.
 #' @param max_file_upload Integer. The maximum allowable number of files to upload. Defaults to 500.
 #' @param max_data_upload Integer. The maximum allowable amount of data to upload (in GB). Defaults to 100.
-#' @param joe Logical. Is Joe running the this function? Defaults to FALSE. If you are Joe and you want to create a bunch of draft reference but not upload any files to them, set the parameter `joe` to `TRUE`.
+#' @param joe Logical. Is Joe running the function? Defaults to FALSE. If you are Joe and you want to create a bunch of draft reference but not upload any files to them, set the parameter `joe` to `TRUE`.
 #' @param dev Logical. Whether the reference creation/file uploads will occur on the development server (TRUE) or the production server (FALSE). Defaults to TRUE.
 #'
 #' @returns Dataframe
