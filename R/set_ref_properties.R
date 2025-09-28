@@ -295,7 +295,7 @@ set_content_units <- function(reference_id,
                                 content_units,
                                 dev = TRUE) {
   #generate body of API call:
-  bdy<-NULL
+  bdy <- NULL
   for (i in 1:length(content_units)) {
     cont_units <- list("unitCode" = content_units[i],
                        "andLinkedUnits" = TRUE,
@@ -326,4 +326,65 @@ set_content_units <- function(reference_id,
     stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
   }
   return(invisible(NULL))
+}
+
+#' Add one or more owners to a DataStore reference
+#'
+#'
+#'
+#' @param reference_id
+#' @param owner_list
+#' @param dev
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+add_owners <- function(reference_id,
+                       owner_list,
+                       dev = TRUE) {
+  # get user info from email list:
+  bdy <- owner_list
+  req_url <- paste0("https://irmaservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  bdy <- NULL
+  for (i in 1:nrow(rjson)) {
+    owners <- list("userCode" = rjson$userPrincipalName[i],
+                   "lastName" = rjson$sn[i],
+                   "fistName" = rjson$givenName[i],
+                   "email" = rjson$mail[i])
+      bdy <- append(bdy, list(owners))
+    }
+  bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
+
+  # construct request URL
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Owners")
+  } else {
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Owners")
+  }
+
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+  }
 }
