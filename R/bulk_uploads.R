@@ -154,7 +154,7 @@ bulk_reference_generation <- function(path = getwd(),
       #add reference id column to dataframe to make it easier to find them all
     upload_data$reference_id[i] <- ref_code
 
-    #  add keywords ----
+    # add keywords ----
     keywords_to_add <- unlist(stringr::str_split(upload_data$keywords[i],
                                          ", "))
     keywords_to_add <- stringr::str_trim(keywords_to_add)
@@ -180,7 +180,7 @@ bulk_reference_generation <- function(path = getwd(),
                               license_type_id = upload_data$license_code[i],
                               dev = dev,
                               interactive = FALSE)
-    #  add reference to project(s) ----
+    # add reference to project(s) ----
     projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
                                                ", "))
     projects_to_add <- stringr::str_trim(projects_to_add)
@@ -189,6 +189,16 @@ bulk_reference_generation <- function(path = getwd(),
     add_ref_to_projects(reference_id = ref_code,
                         project_id = projects_to_add,
                         dev = dev)
+
+    # add owners to project (person uploading is also added as an owner) ----
+    owners_to_add <- unlist(stringr::str_split(upload_data$owner_email_list[i],
+                                                 ", "))
+    owners_to_add <- stringr::str_trim(owners_to_add)
+
+    add_owners(reference_id = ref_code,
+               owner_list = owners_to_add,
+               dev = dev)
+
   }
   return(upload_data)
 }
