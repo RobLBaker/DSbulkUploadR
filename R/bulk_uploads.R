@@ -68,7 +68,7 @@ bulk_reference_generation <- function(path = getwd(),
   #number of refs to create:
   ref_count <- nrow(upload_data)
 
-  if (data_upload != TRUE) {
+  if (data_upload == TRUE) {
     #calculate number of files to upload:
     file_num <- 0
       for (i in 1:nrow(upload_data)) {
@@ -125,7 +125,7 @@ bulk_reference_generation <- function(path = getwd(),
 
     # upload files to reference ----
     # don't upload if data_upload == FALSE
-    if (data_upload != TRUE) {
+    if (data_upload == TRUE) {
       #translate 508compliance:
       compliant <- NULL
       if (upload_data$files_508_compliant[i] == "yes") {
