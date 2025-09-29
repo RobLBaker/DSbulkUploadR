@@ -484,7 +484,7 @@ check_author_email <- function(path = getwd(),
                     body = rjson::toJSON(bdy))
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
-    cli::cli_abort(c("x" = "ERROR: Datastore connection failed."))
+    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
   }
   json <- httr::content(req, "text")
   rjson <- jsonlite::fromJSON(json)
