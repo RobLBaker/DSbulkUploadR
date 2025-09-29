@@ -380,7 +380,8 @@ add_owners <- function(reference_id,
                        "/Owners")
   }
 
-  req <- httr::POST(req_url,
+  req <- httr::POST(post_url,
+                    httr::authenticate(":", "", "ntlm"),
                     httr::add_headers('Content-Type' = 'application/json'),
                     body = rjson::toJSON(bdy))
   status_code <- httr::stop_for_status(req)$status_code
@@ -389,10 +390,10 @@ add_owners <- function(reference_id,
   }
 }
 
-#remove_owners <- function(reference_id,
-#                          owners_to_remove,
-#                          dev = TRUE) {
-#
-#
-#
+#remove_owner <- function(reference_id,
+#                          owner_to_remove,
+#                          dev = TRUE) {#
+
+
+
 #}
