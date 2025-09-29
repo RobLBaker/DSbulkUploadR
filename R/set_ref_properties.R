@@ -330,11 +330,11 @@ set_content_units <- function(reference_id,
 
 #' Add one or more owners to a DataStore reference
 #'
+#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. john_doe@nps.gov not jdoe@npsg.gov.
 #'
-#'
-#' @param reference_id
-#' @param owner_list
-#' @param dev
+#' @param reference_id String or Integer. The seven-digit DataStore ID for the reference that owners will be added to
+#' @param owner_list String or Vector. The owner(s) that will be added to the reference
+#' @param dev Logical. Whether or not the operations will be performed on the development server. Defaults to TRUE.
 #'
 #' @returns
 #' @export
@@ -388,3 +388,11 @@ add_owners <- function(reference_id,
     cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
   }
 }
+
+#remove_owners <- function(reference_id,
+#                          owners_to_remove,
+#                          dev = TRUE) {
+#
+#
+#
+#}
