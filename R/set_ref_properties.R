@@ -336,10 +336,14 @@ set_content_units <- function(reference_id,
 #' @param owner_list String or Vector. The owner(s) that will be added to the reference
 #' @param dev Logical. Whether or not the operations will be performed on the development server. Defaults to TRUE.
 #'
-#' @returns
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' add_owners(reference_id = 1234567,
+#'            owner_list = "john_doe@nps.gov")
+#'            }
 add_owners <- function(reference_id,
                        owner_list,
                        dev = TRUE) {
@@ -387,8 +391,7 @@ add_owners <- function(reference_id,
                     body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
-    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+    cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
   }
-  json <- httr::content(req, "text")
-  rjson <- jsonlite::fromJSON(json)
+  return(invisible(NULL))
 }
