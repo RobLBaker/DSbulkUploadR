@@ -296,13 +296,13 @@ add_ref_to_projects <- function(reference_id,
 set_content_units <- function(reference_id,
                               content_units,
                               dev = TRUE,
-                              and_links = TRUE,
+                              add_link = TRUE,
                               add_boundingbox = TRUE) {
   #generate body of API call:
   bdy <- NULL
   for (i in 1:length(content_units)) {
     cont_units <- list("unitCode" = content_units[i],
-                       "andLinkedUnits" = add_links,
+                       "andLinkedUnits" = add_link,
                        "andBoundingBox" = add_boundingbox)
     bdy <- append(bdy, list(cont_units))
   }
@@ -407,7 +407,7 @@ add_owners <- function(reference_id,
 #' @param unit_to_remove String. A single NPS park unit code.
 #' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
 #'
-#' @returns
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
@@ -448,4 +448,52 @@ remove_content_unit <- function(reference_id,
   return(invisible(NULL))
 }
 
+#' Adds a keyword to a list of existing keywords for a DataStore reference
+#'
+#' add_another_keyword differs from add_keywords in that it does not replace the existing set of keywords but instead just adds one (or more - haven't tested mulitple keywords yet) to the reference.
+#'
+#' @param reference_id String. Integer. A DataStore reference ID to have keywords added to.
+#' @param keyword String. The keyword to be added
+#' @param dev Logical. Whether the operation occur on the develoment or production server. Defaults to TRUE (development server)
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' add_another_keyword(1234567, "Ants")}
+add_another_keyword <- function(reference_id,
+                                keyword,
+                                dev = TRUE){
+  if (length(keyword < 2)) {
+    bdy <- jsonlite::toJSON(keyword, pretty = TRUE, auto_unbox = FALSE)
+  } else {
+    bdy <- jsonlite::toJSON(keyword, pretty = TRUE, auto_unbox = TRUE)
+  }
+
+  # construct request URL
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  } else {
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  }
+  #submit PUT request
+  req <- httr::POST(post_url,
+                   httr::authenticate(":", "", "ntlm"),
+                   httr::add_headers('Content-Type'='application/json'),
+                   body = bdy)
+
+  #check status code; suggest logging in to VPN if errors occur:
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  return(invisible(NULL))
+}
 
