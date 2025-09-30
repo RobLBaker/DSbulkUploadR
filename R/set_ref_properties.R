@@ -322,15 +322,15 @@ set_content_units <- function(reference_id,
                     httr::add_headers('Content-Type'='application/json'),
                     body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
-  if(!status_code == 200){
-    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
-  }
+  #if(!status_code == 200){
+  #  stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  #}
   return(invisible(NULL))
 }
 
 #' Add one or more owners to a DataStore reference
 #'
-#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. john_doe@nps.gov not jdoe@npsg.gov.
+#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
 #'
 #' @param reference_id String or Integer. The seven-digit DataStore ID for the reference that owners will be added to
 #' @param owner_list String or Vector. The owner(s) that will be added to the reference
@@ -397,18 +397,19 @@ add_owners <- function(reference_id,
 }
 
 
-#' Title
+#' Remove a specific unit code from one or more references
 #'
-#' @param reference_id
-#' @param unit_to_remove
-#' @param dev
+#' @param reference_id String. Integer. Vector. One or more of the seven-digit DataStore reference IDs for the reference(s) that content unit link will be removed.
+#' @param unit_to_remove String. A single NPS park unit code.
+#' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
 #'
 #' @returns
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' remove_content_unit(2315542, "ROMO")}
+#' remove_content_unit(2315542, "ROMO")
+#' remove_content_unit(c(2315542, 2315551), "ROMO")}
 remove_content_unit <- function(reference_id,
                                 unit_to_remove,
                                 dev = TRUE) {
@@ -436,6 +437,8 @@ remove_content_unit <- function(reference_id,
     if (!status_code == 200) {
       cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
     }
+
+    print(reference_id[i])
 
   }
   return(invisible(NULL))
