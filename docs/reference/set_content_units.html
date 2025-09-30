@@ -75,7 +75,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_content_units</span><span class="op">(</span><span class="va">reference_id</span>, <span class="va">content_units</span>, dev <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_content_units</span><span class="op">(</span></span>
+<span>  <span class="va">reference_id</span>,</span>
+<span>  <span class="va">content_units</span>,</span>
+<span>  dev <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  add_link <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  add_boundingbox <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -92,6 +98,14 @@
 
 <dt id="arg-dev">dev<a class="anchor" aria-label="anchor" href="#arg-dev"></a></dt>
 <dd><p>Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.</p></dd>
+
+
+<dt id="arg-add-link">add_link<a class="anchor" aria-label="anchor" href="#arg-add-link"></a></dt>
+<dd><p>Logical. Should content unit links be added? Defaults to TRUE</p></dd>
+
+
+<dt id="arg-add-boundingbox">add_boundingbox<a class="anchor" aria-label="anchor" href="#arg-add-boundingbox"></a></dt>
+<dd><p>Logical. Should a bounding box be added? Defaults to TRUE</p></dd>
 
 </dl></div>
     <div id="value">
