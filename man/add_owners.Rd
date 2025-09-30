@@ -17,7 +17,7 @@ add_owners(reference_id, owner_list, dev = TRUE)
 NULL (invisibly)
 }
 \description{
-Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. john_doe@nps.gov not jdoe@npsg.gov.
+Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
 }
 \examples{
 \dontrun{

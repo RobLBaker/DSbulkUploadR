@@ -280,6 +280,8 @@ add_ref_to_projects <- function(reference_id,
 #' @param reference_id String. Integer. The seven-digit DataStore ID for the reference that content unit links will be added to.
 #' @param content_units String. Vector. One or more NPS park unit codes.
 #' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
+#' @param add_link Logical. Should content unit links be added? Defaults to TRUE
+#' @param add_boundingbox Logical. Should a bounding box be added? Defaults to TRUE
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -292,14 +294,16 @@ add_ref_to_projects <- function(reference_id,
 #'                   content_units = c("ROMO", "YELL",
 #'                   dev = FALSE))}
 set_content_units <- function(reference_id,
-                                content_units,
-                                dev = TRUE) {
+                              content_units,
+                              dev = TRUE,
+                              add_link = TRUE,
+                              add_boundingbox = TRUE) {
   #generate body of API call:
   bdy <- NULL
   for (i in 1:length(content_units)) {
     cont_units <- list("unitCode" = content_units[i],
-                       "andLinkedUnits" = TRUE,
-                       "andBoundingBox" = TRUE)
+                       "andLinkedUnits" = add_link,
+                       "andBoundingBox" = add_boundingbox)
     bdy <- append(bdy, list(cont_units))
   }
   bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
@@ -322,15 +326,15 @@ set_content_units <- function(reference_id,
                     httr::add_headers('Content-Type'='application/json'),
                     body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
-  if(!status_code == 200){
-    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
-  }
+  #if(!status_code == 200){
+  #  stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  #}
   return(invisible(NULL))
 }
 
 #' Add one or more owners to a DataStore reference
 #'
-#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. john_doe@nps.gov not jdoe@npsg.gov.
+#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
 #'
 #' @param reference_id String or Integer. The seven-digit DataStore ID for the reference that owners will be added to
 #' @param owner_list String or Vector. The owner(s) that will be added to the reference
@@ -395,3 +399,101 @@ add_owners <- function(reference_id,
   }
   return(invisible(NULL))
 }
+
+
+#' Remove a specific unit code from one or more references
+#'
+#' @param reference_id String. Integer. Vector. One or more of the seven-digit DataStore reference IDs for the reference(s) that content unit link will be removed.
+#' @param unit_to_remove String. A single NPS park unit code.
+#' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' remove_content_unit(2315542, "ROMO")
+#' remove_content_unit(c(2315542, 2315551), "ROMO")}
+remove_content_unit <- function(reference_id,
+                                unit_to_remove,
+                                dev = TRUE) {
+
+
+  for (i in 1:length(reference_id)) {
+    if(dev == TRUE){
+      delete_url <- paste0(.ds_dev_api(),
+                         "Reference/",
+                         reference_id[i],
+                         "/Units/",
+                         unit_to_remove)
+    } else {
+      delete_url <- paste0(.ds_secure_api(),
+                         "Reference/",
+                         reference_id[i],
+                         "/Units/",
+                         unit_to_remove)
+    }
+
+    req <- httr::DELETE(url = delete_url,
+                      httr::authenticate(":", "", "ntlm"),
+                      httr::add_headers('Content-Type' = 'application/json'))
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+    }
+
+    print(reference_id[i])
+
+  }
+  return(invisible(NULL))
+}
+
+#' Adds a keyword to a list of existing keywords for a DataStore reference
+#'
+#' add_another_keyword differs from add_keywords in that it does not replace the existing set of keywords but instead just adds one (or more - haven't tested mulitple keywords yet) to the reference.
+#'
+#' @param reference_id String. Integer. A DataStore reference ID to have keywords added to.
+#' @param keyword String. The keyword to be added
+#' @param dev Logical. Whether the operation occur on the develoment or production server. Defaults to TRUE (development server)
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' add_another_keyword(1234567, "Ants")}
+add_another_keyword <- function(reference_id,
+                                keyword,
+                                dev = TRUE){
+  if (length(keyword < 2)) {
+    bdy <- jsonlite::toJSON(keyword, pretty = TRUE, auto_unbox = FALSE)
+  } else {
+    bdy <- jsonlite::toJSON(keyword, pretty = TRUE, auto_unbox = TRUE)
+  }
+
+  # construct request URL
+  if(dev == TRUE){
+    post_url <- paste0(.ds_dev_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  } else {
+    post_url <- paste0(.ds_secure_api(),
+                       "Reference/",
+                       reference_id,
+                       "/Keywords")
+  }
+  #submit PUT request
+  req <- httr::POST(post_url,
+                   httr::authenticate(":", "", "ntlm"),
+                   httr::add_headers('Content-Type'='application/json'),
+                   body = bdy)
+
+  #check status code; suggest logging in to VPN if errors occur:
+  status_code <- httr::stop_for_status(req)$status_code
+  if(!status_code == 200){
+    stop("ERROR: DataStore connection failed. Are you logged in to the VPN?\n")
+  }
+  return(invisible(NULL))
+}
+

@@ -21,9 +21,11 @@ check_orcid_format(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
+Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
 }
 \examples{
 \dontrun{
-check_orcid_format("test_file.txt")}
+check_orcid_format(path = getwd(),
+                   filename = "DSbulkUploadR_input.xlsx",
+                   sheet_name = "AudioRecording")}
 }

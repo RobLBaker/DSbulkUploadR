@@ -4,7 +4,13 @@
 \alias{set_content_units}
 \title{Set content unit links and bounding boxes}
 \usage{
-set_content_units(reference_id, content_units, dev = TRUE)
+set_content_units(
+  reference_id,
+  content_units,
+  dev = TRUE,
+  add_link = TRUE,
+  add_boundingbox = TRUE
+)
 }
 \arguments{
 \item{reference_id}{String. Integer. The seven-digit DataStore ID for the reference that content unit links will be added to.}
@@ -12,6 +18,10 @@ set_content_units(reference_id, content_units, dev = TRUE)
 \item{content_units}{String. Vector. One or more NPS park unit codes.}
 
 \item{dev}{Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.}
+
+\item{add_link}{Logical. Should content unit links be added? Defaults to TRUE}
+
+\item{add_boundingbox}{Logical. Should a bounding box be added? Defaults to TRUE}
 }
 \value{
 NULL (invisibly)
