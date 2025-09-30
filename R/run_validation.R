@@ -119,7 +119,6 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-
   tryCatch(check_start_date(path = path,
                             filename = filename,
                             sheet_name = sheet),
@@ -229,6 +228,19 @@ run_input_validation <- function(path = getwd(),
                               sheet_name = sheet),
            error = function(e) {
              err_count <<- err_count + 1
+             cli::cli_bullets(c(e$message, e$body))
+           },
+           warning = function(w) {
+             warn_count <<- warn_count + 1
+             cli::cli_bullets(c(w$message, w$body))
+           }
+  )
+
+  tryCatch(check_CUI_label_valid(path = path,
+                              filename = filename,
+                              sheet_name = sheet),
+           error = function(e) {
+             err_count <<- err_count +1
              cli::cli_bullets(c(e$message, e$body))
            },
            warning = function(w) {
