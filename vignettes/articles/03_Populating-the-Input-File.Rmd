@@ -107,37 +107,37 @@ If all license codes supplied (as integers ranging from 1-5) are valid, the func
 ### CUI label
 Enter one or more reasons why these data should be restricted. Each reason should be separated by a comma. If data should not be restricted, use the CUI label "PUBLIC" (without quotations). The following are valid CUI labels. If your reference does not fall into one of these categories it likely cannot be restricted. If you feel strongly that it should or must be restricted despite not fitting into any of the accepted categories, please contact [Joe DeViVo](mailto:joe_divivo@nps.gov) or [Judd Patterson](mailto:judd_patterson@nps.gov).
 
-**The following are accepted CUI labels:**
-PUBLIC
-National Park System Resources
-Archeological Resources
-Historical Properties
-Cave Resources
-Paleontological Resources
-Copyrighted
-Information Systems Vulnerability Information
-Personnel Records
-General Privacy
-Non-NPS Proprietary Data
-Tribal Data Sovereignty
-Critical Infrastructure: General Critical Infrastructure Information
-Critical Infrastructure: Emergency Management
-Financial: Budget
-Law Enforcement Communication
-Controlled Substance
-Criminal History Record Information
-General Law Enforcement
-Investigation
-Terrorist Screening
-Whistleblower Identity
-Legal: Administrative Proceedings
-Legal: Victim
-Privacy: Health Information
-General Procurement and Acquisition 
-Procurement and Acquisition: Source Selection
-General Proprietary Business Information 
-Legal: Legal Privilege
-Wells
+**The following are accepted CUI labels:**  
+PUBLIC  
+National Park System Resources  
+Archeological Resources  
+Historical Properties  
+Cave Resources  
+Paleontological Resources  
+Copyrighted  
+Information Systems Vulnerability Information  
+Personnel Records  
+General Privacy  
+Non-NPS Proprietary Data  
+Tribal Data Sovereignty  
+Critical Infrastructure: General Critical Infrastructure Information  
+Critical Infrastructure: Emergency Management  
+Financial: Budget  
+Law Enforcement Communication  
+Controlled Substance  
+Criminal History Record Information  
+General Law Enforcement  
+Investigation  
+Terrorist Screening  
+Whistleblower Identity  
+Legal: Administrative Proceedings  
+Legal: Victim  
+Privacy: Health Information  
+General Procurement and Acquisition   
+Procurement and Acquisition: Source Selection  
+General Proprietary Business Information  
+Legal: Legal Privilege  
+Wells  
 
 ### CUI contact name
 Please enter the name of a person who can be contacted for more information about the CUI restrictions.
