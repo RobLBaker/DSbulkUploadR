@@ -1,4 +1,7 @@
 # DSbulkUploadR (development version)
+## 2025-09-30
+  * Add function `add_another_keyword()` and `remove_content_unit()`. Bug fixes and upgrades to other functions.
+
 ## 2025-09-29
   * Add `add_owners()` function and build the ability to add additional reference owners into the `bulk_reference_generation()` function.
 
