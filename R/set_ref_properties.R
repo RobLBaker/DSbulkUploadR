@@ -345,11 +345,12 @@ add_owners <- function(reference_id,
                        dev = TRUE) {
   # get user info from email list:
   bdy <- owner_list
-  req_url <- paste0("https://irmaservices.nps.gov/",
+  bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
   req <- httr::POST(req_url,
                     httr::add_headers('Content-Type' = 'application/json'),
-                    body = rjson::toJSON(bdy))
+                    body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
     cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
@@ -383,17 +384,11 @@ add_owners <- function(reference_id,
   req <- httr::POST(post_url,
                     httr::authenticate(":", "", "ntlm"),
                     httr::add_headers('Content-Type' = 'application/json'),
-                    body = rjson::toJSON(bdy))
+                    body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
     cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
   }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
 }
-
-#remove_owner <- function(reference_id,
-#                          owner_to_remove,
-#                          dev = TRUE) {#
-
-
-
-#}
