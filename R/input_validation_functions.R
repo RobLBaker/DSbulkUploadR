@@ -565,7 +565,7 @@ check_authors_orcid <- function(path = getwd(),
 
 #' Checks the formatting of ORCiDs associated with NPS emails supplied in a file
 #'
-#' Reads in a .txt file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -574,7 +574,9 @@ check_authors_orcid <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_orcid_format("test_file.txt")}
+#' check_orcid_format(path = getwd(),
+#'                    filename = "DSbulkUploadR_input.xlsx",
+#'                    sheet_name = "AudioRecording")}
 check_orcid_format <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
@@ -626,7 +628,19 @@ check_orcid_format <- function(path = getwd(),
   return(invisible(NULL))
 }
 
-#' check_author_email("test_file.txt")}
+
+#' Checks owner emails for valid NPS emails
+#'
+#' Reads in the specified sheet from an .xlsx file and checks that all email addresses in the owner_email_list column are valid using the AD API.
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_owner_email()}
 check_owner_email <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
@@ -692,7 +706,8 @@ check_license_type <- function(path = getwd(),
     msg <- paste0("You must supply a license type for all references.")
     cli::cli_abort(c("x" = msg))
   }
-  valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
+  good_values <- c(1,2,3,4,5)
+  valid_license <- sum(!(upload_data$license_code %in% good_values))
   if (valid_license > 0) {
     msg <- paste0("You have supplied an invalid license code. ",
                   "Please supply a valid license code.")
