@@ -395,3 +395,50 @@ add_owners <- function(reference_id,
   }
   return(invisible(NULL))
 }
+
+
+#' Title
+#'
+#' @param reference_id
+#' @param unit_to_remove
+#' @param dev
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' remove_content_unit(2315542, "ROMO")}
+remove_content_unit <- function(reference_id,
+                                unit_to_remove,
+                                dev = TRUE) {
+
+
+  for (i in 1:length(reference_id)) {
+    if(dev == TRUE){
+      delete_url <- paste0(.ds_dev_api(),
+                         "Reference/",
+                         reference_id[i],
+                         "/Units/",
+                         unit_to_remove)
+    } else {
+      delete_url <- paste0(.ds_secure_api(),
+                         "Reference/",
+                         reference_id[i],
+                         "/Units/",
+                         unit_to_remove)
+    }
+
+    req <- httr::DELETE(url = delete_url,
+                      httr::authenticate(":", "", "ntlm"),
+                      httr::add_headers('Content-Type' = 'application/json'))
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+    }
+
+  }
+  return(invisible(NULL))
+}
+
+
