@@ -718,6 +718,86 @@ check_license_type <- function(path = getwd(),
   return(invisible(NULL))
 }
 
+#' Check a file for valid CUI labels
+#'
+#' Checks the supplied CUI labels against a hard-coded set of accepted CUI markings
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_CUI_label_vald(sheet_name = "AudioRecording")}
+check_CUI_label_valid <- function(path =getwd(),
+                                 filename = "DSbulkUploadR_input.xlsx",
+                                 sheet_name) {
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+  if (any(is.na(upload_data$CUI_label))) {
+    msg <- paste0("You must supply a CUI label for all references.")
+    cli::cli_abort(c("x" = msg))
+  }
+  good_values <- c("PUBLIC",
+                   "National Park System Resources",
+                   "Archeological Resources",
+                   "Historical Properties",
+                   "Cave Resources",
+                   "Paleontological Resources",
+                   "Copyrighted",
+                   "Information Systems Vulnerability Information",
+                   "Personnel Records",
+                   "General Privacy",
+                   "Non-NPS Proprietary Data",
+                   "Tribal Data Sovereignty",
+                   "Critical Infrastructure: General Critical Infrastructure Information",
+                   "Critical Infrastructure: Emergency Management",
+                   "Financial: Budget",
+                   "Law Enforcement Communication",
+                   "Controlled Substance",
+                   "Criminal History Record Information",
+                   "General Law Enforcement",
+                   "Investigation",
+                   "Terrorist Screening",
+                   "Whistleblower Identity",
+                   "Legal: Administrative Proceedings",
+                   "Legal: Victim",
+                   "Privacy: Health Information",
+                   "General Procurement and Acquisition",
+                   "Procurement and Acquisition: Source Selection",
+                   "General Proprietary Business Information",
+                   "Legal: Legal Privilege",
+                   "Wells")
+  valid_CUI_label <- sum(!(upload_data$CUI_label %in% good_values))
+
+  if (valid_CUI_label > 0) {
+    msg <- paste0("You have supplied an invalid CUI marking. ",
+                  "Please supply a valid license code. ",
+                  "See {.url https://nationalparkservice.github.io/DSbulkUploadR/articles/03_Populating-the-Input-File.html#cui-label} ",
+                  "for a list of valid CUI labels.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    cli::cli_inform(c("v" = "All CUI labels are valid."))
+  }
+  return(invisible(NULL))
+}
+
+#check_CUI_license_match <- function(path =getwd(),
+#                                    filename = "DSbulkUploadR_input.xlsx",
+#                                    sheet_name) {
+
+#  upload_data <- readxl::read_excel(path = paste0(path,
+#                                                  "/",
+#                                                  filename),
+#                                    sheet = sheet_name)
+
+#}
+
+
+
 #' Checks for valid producing unit codes in a file
 #'
 #' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
