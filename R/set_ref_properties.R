@@ -330,26 +330,31 @@ set_content_units <- function(reference_id,
 
 #' Add one or more owners to a DataStore reference
 #'
+#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. john_doe@nps.gov not jdoe@npsg.gov.
 #'
+#' @param reference_id String or Integer. The seven-digit DataStore ID for the reference that owners will be added to
+#' @param owner_list String or Vector. The owner(s) that will be added to the reference
+#' @param dev Logical. Whether or not the operations will be performed on the development server. Defaults to TRUE.
 #'
-#' @param reference_id
-#' @param owner_list
-#' @param dev
-#'
-#' @returns
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' add_owners(reference_id = 1234567,
+#'            owner_list = "john_doe@nps.gov")
+#'            }
 add_owners <- function(reference_id,
                        owner_list,
                        dev = TRUE) {
   # get user info from email list:
   bdy <- owner_list
-  req_url <- paste0("https://irmaservices.nps.gov/",
+  bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
   req <- httr::POST(req_url,
                     httr::add_headers('Content-Type' = 'application/json'),
-                    body = rjson::toJSON(bdy))
+                    body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
     cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
@@ -380,11 +385,13 @@ add_owners <- function(reference_id,
                        "/Owners")
   }
 
-  req <- httr::POST(req_url,
+  req <- httr::POST(post_url,
+                    httr::authenticate(":", "", "ntlm"),
                     httr::add_headers('Content-Type' = 'application/json'),
-                    body = rjson::toJSON(bdy))
+                    body = bdy)
   status_code <- httr::stop_for_status(req)$status_code
   if (!status_code == 200) {
-    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+    cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
   }
+  return(invisible(NULL))
 }

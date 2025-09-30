@@ -1,4 +1,6 @@
 # DSbulkUploadR (development version)
+## 2025-09-29
+  * Add `add_owners()` function and build the ability to add additional reference owners into the `bulk_reference_generation()` function.
 
 ## 2025-09-25
   * Add ability to use `bulk_reference_generation()` to create references but NOT upload files to them.

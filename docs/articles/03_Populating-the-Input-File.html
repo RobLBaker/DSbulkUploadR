@@ -313,6 +313,24 @@ supplied email addresses and use that information to populate the
 authors of the reference.</p>
 </div>
 <div class="section level3">
+<h3 id="owner-email-addresses">Owner email addresses<a class="anchor" aria-label="anchor" href="#owner-email-addresses"></a>
+</h3>
+<p>The owner_email_list column in the input.xlsx file should contain a
+comma-separated list of all the owners’ email addresses. Use the full
+email address rather than user names (e.g. <a href="mailto:fist_last@nps.gov" class="email">fist_last@nps.gov</a> not
+<a href="mailto:FMLast@nps.gov" class="email">FMLast@nps.gov</a>). All
+references require at least one owner.</p>
+<p>Reference owners have the ability to see reference in draft form (a
+particularly useful role for reviewers) as well as have full editorial
+abilities over the reference and can change any field or activate the
+reference.</p>
+<p>In addition to the owners in the owner_email_list field, whoever runs
+the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function will also
+automatically be added as an owner. If the Central Support Office is
+generating your references for you, they can at your request remove
+their names from the owner list for a given reference.</p>
+</div>
+<div class="section level3">
 <h3 id="licenses">Licenses<a class="anchor" aria-label="anchor" href="#licenses"></a>
 </h3>
 <p>The license_code column in input.xlsx should contain a numeric code
