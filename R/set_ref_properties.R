@@ -280,6 +280,8 @@ add_ref_to_projects <- function(reference_id,
 #' @param reference_id String. Integer. The seven-digit DataStore ID for the reference that content unit links will be added to.
 #' @param content_units String. Vector. One or more NPS park unit codes.
 #' @param dev Logical. Whether or not the operation will be performed on the development server. Defaults to TRUE.
+#' @param add_links Logical. Should content unit links be added? Defaults to TRUE
+#' @param add_boundingbox Logical. Should a bounding box be added? Defaults to TRUE
 #'
 #' @returns NULL (invisibly)
 #' @export
@@ -292,14 +294,16 @@ add_ref_to_projects <- function(reference_id,
 #'                   content_units = c("ROMO", "YELL",
 #'                   dev = FALSE))}
 set_content_units <- function(reference_id,
-                                content_units,
-                                dev = TRUE) {
+                              content_units,
+                              dev = TRUE,
+                              and_links = TRUE,
+                              add_boundingbox = TRUE) {
   #generate body of API call:
   bdy <- NULL
   for (i in 1:length(content_units)) {
     cont_units <- list("unitCode" = content_units[i],
-                       "andLinkedUnits" = TRUE,
-                       "andBoundingBox" = TRUE)
+                       "andLinkedUnits" = add_links,
+                       "andBoundingBox" = add_boundingbox)
     bdy <- append(bdy, list(cont_units))
   }
   bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
