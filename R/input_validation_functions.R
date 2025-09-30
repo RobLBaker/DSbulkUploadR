@@ -565,7 +565,7 @@ check_authors_orcid <- function(path = getwd(),
 
 #' Checks the formatting of ORCiDs associated with NPS emails supplied in a file
 #'
-#' Reads in a .txt file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -574,7 +574,9 @@ check_authors_orcid <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_orcid_format("test_file.txt")}
+#' check_orcid_format(path = getwd(),
+#'                    filename = "DSbulkUploadR_input.xlsx",
+#'                    sheet_name = "AudioRecording")}
 check_orcid_format <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
@@ -626,6 +628,60 @@ check_orcid_format <- function(path = getwd(),
   return(invisible(NULL))
 }
 
+
+#' Checks owner emails for valid NPS emails
+#'
+#' Reads in the specified sheet from an .xlsx file and checks that all email addresses in the owner_email_list column are valid using the AD API.
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_owner_email()}
+check_owner_email <- function(path = getwd(),
+                               filename = "DSbulkUploadR_input.xlsx",
+                               sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+
+  owner_email <- NULL
+  for (i in 1:nrow(upload_data)) {
+    owner_email <-
+      append(owner_email,
+             unlist(stringr::str_split(upload_data$owner_email_list[i], ",")))
+  }
+  owner_email <- stringr::str_trim(owner_email)
+  owner_email <- unique(owner_email)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  bdy <- owner_email
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = rjson::toJSON(bdy))
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  if (all(rjson$found)) {
+    cli::cli_inform(c("v" = "All owner emails are valid."))
+  } else {
+    bad_owner_emails <- dplyr::filter(rjson, found==FALSE)$searchTerm
+    msg <- paste0("Please supply valid emails. The following emails ",
+                  "are invalid: {bad_owner_emails}.")
+    cli::cli_abort(c("x" = msg))
+  }
+  return(invisible(NULL))
+}
+
 #' Checks an file for valid license types
 #'
 #' Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
@@ -650,7 +706,8 @@ check_license_type <- function(path = getwd(),
     msg <- paste0("You must supply a license type for all references.")
     cli::cli_abort(c("x" = msg))
   }
-  valid_license <- sum(upload_data$license_code != (1 | 2 |3 | 4 | 5))
+  good_values <- c(1,2,3,4,5)
+  valid_license <- sum(!(upload_data$license_code %in% good_values))
   if (valid_license > 0) {
     msg <- paste0("You have supplied an invalid license code. ",
                   "Please supply a valid license code.")
