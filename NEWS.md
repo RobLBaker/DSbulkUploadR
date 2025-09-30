@@ -1,6 +1,8 @@
 # DSbulkUploadR (development version)
 ## 2025-09-30
   * Add function `add_another_keyword()` and `remove_content_unit()`. Bug fixes and upgrades to other functions.
+  * Add `check_CUI_label_valid()` function; add function to list of functions run when validating an input file
+  * Fix list of valid CUI Label codes in articles
 
 ## 2025-09-29
   * Add `add_owners()` function and build the ability to add additional reference owners into the `bulk_reference_generation()` function.
