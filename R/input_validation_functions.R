@@ -785,16 +785,47 @@ check_CUI_label_valid <- function(path =getwd(),
   return(invisible(NULL))
 }
 
-#check_CUI_license_match <- function(path =getwd(),
-#                                    filename = "DSbulkUploadR_input.xlsx",
-#                                    sheet_name) {
+#' Checks that license codes are matched with appropriate CUI labels
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_CUI_license_match(sheet_name = "AudioRecording")}
+check_CUI_license_match <- function(path =getwd(),
+                                    filename = "DSbulkUploadR_input.xlsx",
+                                    sheet_name) {
 
-#  upload_data <- readxl::read_excel(path = paste0(path,
-#                                                  "/",
-#                                                  filename),
-#                                    sheet = sheet_name)
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
 
-#}
+  for (i in 1:nrow(upload_data)) {
+    license_type <- upload_data$license_code[i]
+    CUI_label <- upload_data$CUI_label[i]
+
+    if (license_type == 5 && CUI_label == "PUBLIC") {
+      msg <- paste0("You have selected a restricted license for public data.",
+                    "Please make sure all public data have non-restricted ",
+                    "licenses (e.g. license code 1-4)")
+      cli::cli_abort(c("x" = msg))
+    }
+    if (license_type < 5 && CUI_label != "PUBLIC") {
+      msg <- paste0("You have selected a public license for restricted data.",
+                    "Pleae make sure all restricted data have restricted ",
+                    "licenses (e.g. license code 5).")
+      cli::cli_abort(c("x" = msg))
+    }
+  }
+  msg <- paste0("All license codes are compatible with data restrictions ",
+                "(if applicable).")
+  cli::cli_inform(c("v" = msg))
+  return(invisible(NULL))
+}
 
 
 
