@@ -11,8 +11,7 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/LICENSE-text.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/LICENSE.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/news/index.html</loc></url>
-<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_another_keyword.html</loc></url>
-<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_keywords.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_keyword.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_owners.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_ref_to_projects.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html</loc></url>
@@ -42,6 +41,7 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/make_input_template.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/pipe.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/remove_content_unit.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/replace_keywords.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/run_input_validation.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/set_content_units.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/upload_files.html</loc></url>
