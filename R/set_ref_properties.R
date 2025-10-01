@@ -189,8 +189,8 @@ upload_files <- function(filename,
 #'
 #' @examples
 #' \dontrun{
-#' add_keywords(reference_id = 1234567, keywords = c("test", "testing"))}
-add_keywords <- function(reference_id,
+#' replace_keywords(reference_id = 1234567, keywords = c("test", "testing"))}
+replace_keywords <- function(reference_id,
                          keywords,
                          dev = TRUE) {
 
@@ -461,8 +461,8 @@ remove_content_unit <- function(reference_id,
 #'
 #' @examples
 #' \dontrun{
-#' add_another_keyword(1234567, "Ants")}
-add_another_keyword <- function(reference_id,
+#' add_keyword(1234567, "Ants")}
+add_keyword <- function(reference_id,
                                 keyword,
                                 dev = TRUE){
   if (length(keyword < 2)) {

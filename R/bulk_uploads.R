@@ -160,7 +160,7 @@ bulk_reference_generation <- function(path = getwd(),
     keywords_to_add <- stringr::str_trim(keywords_to_add)
 
     #cli::cli_inform("Adding keywords to reference {ref_code}.")
-    add_keywords(reference_id = ref_code,
+    replace_keywords(reference_id = ref_code,
                  keywords = keywords_to_add,
                  dev = dev)
 
