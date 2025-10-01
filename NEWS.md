@@ -1,4 +1,6 @@
 # DSbulkUploadR (development version)
+## 2025-10-01
+  * Update keyword function names to better reflect their actual properties (add_keywords -> `replace_keywords()`; add_another_keyword -> `add_keyword()`). Did not bother deprecating, etc as there has not been a formal release yet.
 ## 2025-09-30
   * Add function `add_another_keyword()` and `remove_content_unit()`. Bug fixes and upgrades to other functions.
   * Add `check_CUI_label_valid()` function; add function to list of functions run when validating an input file
