@@ -1,4 +1,7 @@
 # DSbulkUploadR (development version)
+## 2025-11-14
+  * Caught some typos in documentation!
+  
 ## 2025-10-01
   * Update keyword function names to better reflect their actual properties (add_keywords -> `replace_keywords()`; add_another_keyword -> `add_keyword()`). Did not bother deprecating, etc as there has not been a formal release yet.
     * Add `check_CUI_license_match()` function; add this function to the list of functions run during input data validation
