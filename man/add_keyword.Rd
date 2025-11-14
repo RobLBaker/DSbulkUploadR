@@ -11,13 +11,13 @@ add_keyword(reference_id, keyword, dev = TRUE)
 
 \item{keyword}{String. The keyword to be added}
 
-\item{dev}{Logical. Whether the operation occur on the develoment or production server. Defaults to TRUE (development server)}
+\item{dev}{Logical. Whether the operation occur on the development or production server. Defaults to TRUE (development server)}
 }
 \value{
 NULL (invisibly)
 }
 \description{
-add_another_keyword differs from add_keywords in that it does not replace the existing set of keywords but instead just adds one (or more - haven't tested mulitple keywords yet) to the reference.
+add_another_keyword differs from add_keywords in that it does not replace the existing set of keywords but instead just adds one (or more - haven't tested multiple keywords yet) to the reference.
 }
 \examples{
 \dontrun{
