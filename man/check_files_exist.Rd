@@ -21,10 +21,10 @@ check_files_exist(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
+Reads in a .xlsx file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
 }
 \examples{
 \dontrun{
-check_files_exist("test_file.txt")
+check_files_exist("test_file.xlsx")
 }
 }

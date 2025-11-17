@@ -21,9 +21,9 @@ check_authors_orcid(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
+Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
 }
 \examples{
 \dontrun{
-check_authors_orcid("test_file.txt")}
+check_authors_orcid("test_file.xlsx")}
 }

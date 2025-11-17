@@ -21,10 +21,10 @@ check_prod_units(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+Reads in a .xlsx file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 }
 \examples{
 \dontrun{
-check_units("test_file.txt")
+check_units("test_file.xlsx")
 }
 }

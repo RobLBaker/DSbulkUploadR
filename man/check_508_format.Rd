@@ -21,9 +21,9 @@ check_508_format(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
+Reads in a .xlsx file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
 }
 \examples{
 \dontrun{
-check_508_format("test_file.txt")}
+check_508_format("test_file.xlsx")}
 }

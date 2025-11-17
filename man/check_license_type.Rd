@@ -21,9 +21,9 @@ check_license_type(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
+Reads in a .xlsx file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
 }
 \examples{
 \dontrun{
-check_license_type("test_file.txt")}
+check_license_type("test_file.xlsx")}
 }

@@ -21,9 +21,9 @@ check_author_email(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
+Reads in a .xlsx file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
 }
 \examples{
 \dontrun{
-check_author_email("test_file.txt")}
+check_author_email("test_file.xlsx")}
 }

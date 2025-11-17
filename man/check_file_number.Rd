@@ -24,10 +24,10 @@ check_file_number(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50\% of the file_number_error value the function produces a warning. Otherwise the function passes.
+Reads in a .xlsx file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50\% of the file_number_error value the function produces a warning. Otherwise the function passes.
 }
 \examples{
 \dontrun{
-check_file_number("test_file.txt")
+check_file_number("test_file.xlsx")
 }
 }

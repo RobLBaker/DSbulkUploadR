@@ -21,9 +21,9 @@ check_content_units(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+Reads in a .xlsx file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 }
 \examples{
 \dontrun{
-check_content_units("test_file.txt")}
+check_content_units("test_file.xlsx")}
 }
