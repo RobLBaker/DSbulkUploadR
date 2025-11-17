@@ -1,4 +1,7 @@
 # DSbulkUploadR (development version)
+## 2025-11-17
+  * Upadate documentation to specify correct input file format (.xlsx rather than .txt)
+  
 ## 2025-11-14
   * Caught some typos in documentation!
   
