@@ -2,7 +2,7 @@
 
 #' Checks the reference types in a file are valid Data Store reference types
 #'
-#' Reads in a .txt file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
+#' Reads in a .xlsx file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
 #'
 #' @param filename String. Input file to check. Defaults to "DSbulkdUploadR_input.xlsx"
 #' @param path String. Path to the file. Defaults to the current working directory.
@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' check_ref_type("test_file.txt")}
+#' check_ref_type("test_file.xlsx")}
 check_ref_type <- function(path = getwd(),
                            filename = "DSbulkUploadR_input.xlsx",
                            sheet_name) {
@@ -52,7 +52,7 @@ check_ref_type <- function(path = getwd(),
 
 #' Check that Reference Types are Supported
 #'
-#' Runs a check against a hardcoded list of currently supporte DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
+#' Runs a check against a hard coded list of currently supported DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -61,7 +61,7 @@ check_ref_type <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_ref_type_supported(filename = "test_file.txt")}
+#' check_ref_type_supported(filename = "test_file.xlsx")}
 check_ref_type_supported <- function(path = getwd(),
                                      filename = "DSbulkUploadR_input.xlsx",
                                      sheet_name) {
@@ -94,7 +94,7 @@ check_ref_type_supported <- function(path = getwd(),
 
 #' Checks that each file_path in a file contains files
 #'
-#' Reads in a .txt file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
+#' Reads in a .xlsx file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -103,7 +103,7 @@ check_ref_type_supported <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_files_exist("test_file.txt")
+#' check_files_exist("test_file.xlsx")
 #' }
 check_files_exist <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
@@ -133,7 +133,7 @@ check_files_exist <- function(path = getwd(),
 
 #' Checks whether the total number of file to upload exceeds a threshold
 #'
-#' Reads in a .txt file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
+#' Reads in a .xlsx file for data validation. Checks the number of files located in each directory supplied via the column file_path. If the total number of files exceeds the file_number_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
 #'
 #' @inheritParams check_ref_type
 #' @param file_number_error Integer. Maximum allowable number of files. Defaults to 500.
@@ -143,7 +143,7 @@ check_files_exist <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_file_number("test_file.txt")
+#' check_file_number("test_file.xlsx")
 #' }
 check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
                               path = getwd(),
@@ -181,7 +181,7 @@ check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
 
 #' Checks whether the total file size to upload exceeds some threshold
 #'
-#'  Reads in a .txt file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
+#'  Reads in a .xlsx file for data validation. Checks the file size of files located in each directory supplied via the column file_path. If the total file size exceeds the file_size_error value, the function produces an error. If the total number of files exceeds 50% of the file_number_error value the function produces a warning. Otherwise the function passes.
 #'
 #' @inheritParams check_ref_type
 #' @param file_size_error Integer. The maximum allowable total file size in GB. Defaults to 100 GB.
@@ -191,7 +191,7 @@ check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
 #'
 #' @examples
 #' \dontrun{
-#' check_file_size("test_file.txt")
+#' check_file_size("test_file.xlsx")
 #' }
 check_file_size <- function(filename = "DSbulkUploadR_input.xlsx",
                             path = getwd(),
@@ -233,7 +233,7 @@ check_file_size <- function(filename = "DSbulkUploadR_input.xlsx",
 
 #' Checks a column within a supplied file to ascertain whether 508 status has been supplied.
 #'
-#' Reads in a .txt file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Checks the column files_508_compliant to make sure that all values are either 'yes' or 'no', which indicates the 508 compliant status of any associated files to be uploaded to DataStore. If any values are missing or are not 'yes' or 'no' (where case is ignored), the function throws an error. If all values have either a 'yes' or 'no' value associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -242,7 +242,7 @@ check_file_size <- function(filename = "DSbulkUploadR_input.xlsx",
 #'
 #' @examples
 #' \dontrun{
-#' check_508_format("test_file.txt")}
+#' check_508_format("test_file.xlsx")}
 check_508_format <- function(path = getwd(),
                              filename = "DSbulkUploadR_input.xlsx",
                              sheet_name) {
@@ -268,7 +268,7 @@ check_508_format <- function(path = getwd(),
 
 #' Checks for duplicated reference titles
 #'
-#' Reads in a .txt file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
+#' Reads in a .xlsx file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -277,7 +277,7 @@ check_508_format <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_unique_title("test_file.txt")}
+#' check_unique_title("test_file.xlsx")}
 check_unique_title <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
@@ -299,7 +299,7 @@ check_unique_title <- function(path = getwd(),
 
 #' Checks the begin_content_date column of an input file for ISO 8601 formatting
 #'
-#' Reads in a .txt file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
+#' Reads in a .xlsx file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -308,7 +308,7 @@ check_unique_title <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_start_date <- ("test_file.txt")}
+#' check_start_date <- ("test_file.xlsx")}
 check_start_date <- function(path = getwd(),
                             filename = "DSbulkUploadR_input.xlsx",
                             sheet_name) {
@@ -334,7 +334,7 @@ check_start_date <- function(path = getwd(),
 
 #' Checks the end_content_date column of an input file for ISO 8601 formatting
 #'
-#' Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
+#' Reads in a .xlsx file for data validation. Throws an error if any dates in the content_end_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -343,7 +343,7 @@ check_start_date <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_end_date("test_file.txt")
+#' check_end_date("test_file.xlsx")
 #' }
 check_end_date <- function(path = getwd(),
                           filename = "DSbulkUploadR_input.xlsx",
@@ -369,7 +369,7 @@ check_end_date <- function(path = getwd(),
 
 #' Checks that content_end_dates occur after content_begin_dates in a file.
 #'
-#' Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column occur before the date in the same row for the content_begin_date column. Passes if all end dates occur on or after the being date.
+#' Reads in a .xlsx file for data validation. Throws an error if any dates in the content_end_date column occur before the date in the same row for the content_begin_date column. Passes if all end dates occur on or after the being date.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -378,7 +378,7 @@ check_end_date <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_end_after_start("test_file.txt")
+#' check_end_after_start("test_file.xlsx")
 #' }
 check_end_after_start <- function(path = getwd(),
                                   filename = "DSbulkUploadR_input.xlsx",
@@ -404,7 +404,7 @@ check_end_after_start <- function(path = getwd(),
 
 #' Checks that dates in a file occurred in the past.
 #'
-#' Reads in a .txt file for data validation. Throws an error if dates in either the content_begin_date or content_end_date occur after the current system date. If any dates occur in the future the function results in an error. The test passes if all dates occur in the past (or on the present day).
+#' Reads in a .xlsx file for data validation. Throws an error if dates in either the content_begin_date or content_end_date occur after the current system date. If any dates occur in the future the function results in an error. The test passes if all dates occur in the past (or on the present day).
 #'
 #' @inheritParams check_ref_type
 #'
@@ -413,7 +413,7 @@ check_end_after_start <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_dates_past("test_file.txt")
+#' check_dates_past("test_file.xlsx")
 #' }
 check_dates_past <- function(path = getwd(),
                             filename = "DSbulkUploadR_input.xlsx",
@@ -443,7 +443,7 @@ check_dates_past <- function(path = getwd(),
 
 #' Verifies author emails supplied in file.
 #'
-#' Reads in a .txt file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
+#' Reads in a .xlsx file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -452,7 +452,7 @@ check_dates_past <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_author_email("test_file.txt")}
+#' check_author_email("test_file.xlsx")}
 check_author_email <- function(path = getwd(),
                               filename = "DSbulkUploadR_input.xlsx",
                               sheet_name) {
@@ -503,7 +503,7 @@ check_author_email <- function(path = getwd(),
 #checks to make sure all users have orcids and that orcids are correctly formatted. Does not check whether orcids are valid/associated with the correct username.
 #' Checks to make sure all author email accounts have ORCiDs
 #'
-#' Reads in a .txt file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -512,7 +512,7 @@ check_author_email <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_authors_orcid("test_file.txt")}
+#' check_authors_orcid("test_file.xlsx")}
 check_authors_orcid <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
@@ -684,7 +684,7 @@ check_owner_email <- function(path = getwd(),
 
 #' Checks an file for valid license types
 #'
-#' Reads in a .txt file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
+#' Reads in a .xlsx file for data validation. Checks all values supplied in the license_code column for valid DataStore license codes. Valid codes are as follows: 1) "Creative Commons Zero v1.0 Universal (CC0)". This is the preferred license for all public content. 2) "Creative Commons Attribution 4.0 International", 3) "Creative commons Attribution Non Commercial 4.0 International" (This license may be useful when working with partners external to NPS), 4) "Public Domain", 5) "Unlicensed (not for public dissemination)" (should only be used for restricted content that contains confidential unclassified information - CUI). If all license codes supplied (as integers ranging from 1-5) are valid, the function passes. If any license code is missing or invalid, the function throws an error.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -693,7 +693,7 @@ check_owner_email <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_license_type("test_file.txt")}
+#' check_license_type("test_file.xlsx")}
 check_license_type <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
@@ -831,7 +831,7 @@ check_CUI_license_match <- function(path =getwd(),
 
 #' Checks for valid producing unit codes in a file
 #'
-#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+#' Reads in a .xlsx file for data validation. Uses the NPS Unit Service API to check that the producing_units column contains valid NPS unit codes. If invalid producing units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -840,7 +840,7 @@ check_CUI_license_match <- function(path =getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_units("test_file.txt")
+#' check_units("test_file.xlsx")
 #' }
 check_prod_units <- function(path = getwd(),
                             filename = "DSbulkUploadR_input.xlsx",
@@ -882,7 +882,7 @@ check_prod_units <- function(path = getwd(),
 
 #' Checks for valid content unit codes in a file
 #'
-#' Reads in a .txt file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
+#' Reads in a .xlsx file for data validation. Uses the NPS Unit Service API to check that the content_units column contains valid NPS unit codes. If invalid content units are encountered, the function throws an error and prints a list of the invalid units to the console. If all units are valid, the test passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -891,7 +891,7 @@ check_prod_units <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_content_units("test_file.txt")}
+#' check_content_units("test_file.xlsx")}
 check_content_units <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
@@ -936,7 +936,7 @@ check_content_units <- function(path = getwd(),
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the accounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
+#' Reads in a .xlsx file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the accounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.
 #'
 #' @param filename String. File to check.
 #' @param path String. Path to file. Defaults to the current working directory.
@@ -946,7 +946,7 @@ check_content_units <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_users_AD("test_file.txt")}
+#' check_users_AD("test_file.xlsx")}
 check_users_AD <- function(filename, path = getwd()){
   lifecycle::deprecate_warn("0.0.1",
                             "check_users_AD()",

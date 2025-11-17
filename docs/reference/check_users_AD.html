@@ -96,13 +96,13 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>Reads in a .txt file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the accounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.</p>
+    <p>Reads in a .xlsx file for data validation. Checks all user names supplied in the column author_upn against Active Directory using a powershell script to verify that the accounts are valid NPS accounts. The function throws an error and lists any invalid accounts if they are encountered. Additionally, if all accounts are valid the function throws and error if any accounts do not have ORCiDs associated with them (and lists those accounts). If all accounts are valid and have ORCiDs, the function passes.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="fu">check_users_AD</span><span class="op">(</span><span class="st">"test_file.txt"</span><span class="op">)</span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="fu">check_users_AD</span><span class="op">(</span><span class="st">"test_file.xlsx"</span><span class="op">)</span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>

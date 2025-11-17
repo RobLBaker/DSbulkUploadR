@@ -21,10 +21,10 @@ check_end_after_start(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Throws an error if any dates in the content_end_date column occur before the date in the same row for the content_begin_date column. Passes if all end dates occur on or after the being date.
+Reads in a .xlsx file for data validation. Throws an error if any dates in the content_end_date column occur before the date in the same row for the content_begin_date column. Passes if all end dates occur on or after the being date.
 }
 \examples{
 \dontrun{
-check_end_after_start("test_file.txt")
+check_end_after_start("test_file.xlsx")
 }
 }

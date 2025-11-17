@@ -21,10 +21,10 @@ check_dates_past(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Throws an error if dates in either the content_begin_date or content_end_date occur after the current system date. If any dates occur in the future the function results in an error. The test passes if all dates occur in the past (or on the present day).
+Reads in a .xlsx file for data validation. Throws an error if dates in either the content_begin_date or content_end_date occur after the current system date. If any dates occur in the future the function results in an error. The test passes if all dates occur in the past (or on the present day).
 }
 \examples{
 \dontrun{
-check_dates_past("test_file.txt")
+check_dates_past("test_file.xlsx")
 }
 }

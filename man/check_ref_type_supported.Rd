@@ -21,9 +21,9 @@ check_ref_type_supported(
 NULL (invisibly)
 }
 \description{
-Runs a check against a hardcoded list of currently supporte DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
+Runs a check against a hard coded list of currently supported DataStore reference types. If an unsupported reference type is supplied, the function will fail with an error and the error message will return the specific reference type(s) that are unsupported. If the reference types are all supported, the function will pass.  See the \href{https://nationalparkservice.github.io/DSbulkUploadR/articles/02_Generate-the-Input-File.html#create-an-input-template}{package documentation} for a list of currently supported references and information on using them.
 }
 \examples{
 \dontrun{
-check_ref_type_supported(filename = "test_file.txt")}
+check_ref_type_supported(filename = "test_file.xlsx")}
 }

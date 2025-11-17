@@ -21,9 +21,9 @@ check_start_date(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
+Reads in a .xlsx file for data validation. Throws an error if any dates in the content_begin_date column are not in ISO 8601 (yyyy-mm-dd). Passes if all dates in the content_begin_date column are in ISO 8601 format.
 }
 \examples{
 \dontrun{
-check_start_date <- ("test_file.txt")}
+check_start_date <- ("test_file.xlsx")}
 }

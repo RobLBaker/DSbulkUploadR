@@ -21,9 +21,9 @@ check_unique_title(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
+Reads in a .xlsx file for data validation. Checks the column title to make sure all values are unique. If any values are duplicated, the function throws an error and returns a list of the duplicated values. If all the values are unique, the function passes.
 }
 \examples{
 \dontrun{
-check_unique_title("test_file.txt")}
+check_unique_title("test_file.xlsx")}
 }

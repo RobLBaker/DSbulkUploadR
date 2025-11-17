@@ -21,9 +21,9 @@ check_ref_type(
 NULL (invisibly)
 }
 \description{
-Reads in a .txt file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
+Reads in a .xlsx file for data validation. Checks the values supplied in the column reference_type using the DataStore API to determine whether they are valid reference types, as stored in the DataStore backend. Note that the Reference Type listed on the DataStore web page (e.g. Audio Recording) is NOT the correct, valid reference type. In this case the valid reference type would be AudioRecording. If any reference type is invalid, the function throws an error and prints a list of the invalid reference types. If all reference types are valid, the function passes.
 }
 \examples{
 \dontrun{
-check_ref_type("test_file.txt")}
+check_ref_type("test_file.xlsx")}
 }
