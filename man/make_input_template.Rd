@@ -18,7 +18,7 @@ dataframe (invisibly)
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \details{
-Writes a template input file (e.g. "AutioRecording_input.txt") to the specified path. The template input file can then be edited as needed, saved, and passed to the \code{bulk_reference_generation} function to create the specified references.
+Writes a template input file (e.g. "AutioRecording_input.xlsx") to the specified path. The template input file can then be edited as needed, saved, and passed to the \code{bulk_reference_generation} function to create the specified references.
 
 The currently supported reference_types are: AudioRecording.
 }
