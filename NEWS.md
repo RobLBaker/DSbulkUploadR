@@ -1,5 +1,8 @@
 # DSbulkUploadR (development version)
 ## 2025-11-17
+  * Update readme to include full list of currently supported reference types.
+
+## 2025-11-17
   * Upadate documentation to specify correct input file format (.xlsx rather than .txt)
   
 ## 2025-11-14
