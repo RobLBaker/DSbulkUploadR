@@ -10,5 +10,6 @@ So please consult with the NPS Inventory and Monitoring Central Support Office D
 A set of step-by-step detailed instructions on how to use the bulk uploader, what file types and reference types are supported, etc. is available via the [articles](articles/index.html) included on the package website.
 
 # Currently supported DataStore reference types
-Audio Recording
-Generic Document
+* Audio Recording
+* Generic Document
+* Web Site
