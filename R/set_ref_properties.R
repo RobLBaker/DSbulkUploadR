@@ -415,7 +415,7 @@ remove_editors <- function(reference_id,
                           dev = TRUE) {
 
   for (i in 1:reference_id) {
-
+    #get upn for each email in a list of emails:
     bdy <- owner_list[i]
     bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
     req_url <- paste0("https://irmadevservices.nps.gov/",
@@ -430,30 +430,31 @@ remove_editors <- function(reference_id,
     json <- httr::content(req, "text")
     rjson <- jsonlite::fromJSON(json)
 
-    bdy <- NULL
-    for (i in 1:nrow(rjson)) {
-      owners <- list("userCode" = rjson$userPrincipalName[i],
-                     "lastName" = rjson$sn[i],
-                     "fistName" = rjson$givenName[i],
-                     "email" = rjson$mail[i])
-      bdy <- append(bdy, list(owners))
+    owners <- NULL
+    for (j in 1:nrow(rjson)) {
+      upns <- rjson$userPrincipalName[j]
+      owners <- append(owners, upns)
     }
-    bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
 
-  # construct request URL
-    if(dev == TRUE){
-      post_url <- paste0(.ds_dev_api(),
-                         "Reference/",
-                         reference_id,
-                         "/Owners")
-    } else {
-      post_url <- paste0(.ds_secure_api(),
-                         "Reference/",
-                         reference_id,
-                         "/Owners")
-  }
+    for (j in 1:nrow(owners)) {
 
-    req <- httr::POST(post_url,
+    # construct request URL
+      if(dev == TRUE){
+        post_url <- paste0(.ds_dev_api(),
+                           "Reference/",
+                           reference_id[i],
+                           "/Owners?userCode=",
+                           owners[j])
+      } else {
+        post_url <- paste0(.ds_secure_api(),
+                           "Reference/",
+                           reference_id[i],
+                           "/Owners?userCode=",
+                           owners[j]
+                           )
+    }
+
+    req <- httr::DELETE(post_url,
                       httr::authenticate(":", "", "ntlm"),
                       httr::add_headers('Content-Type' = 'application/json'),
                       body = bdy)
