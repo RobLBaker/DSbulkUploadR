@@ -3,7 +3,7 @@
   * Update readme to include full list of currently supported reference types.
 
 ## 2025-11-17
-  * Upadate documentation to specify correct input file format (.xlsx rather than .txt)
+  * Update documentation to specify correct input file format (.xlsx rather than .txt)
   
 ## 2025-11-14
   * Caught some typos in documentation!

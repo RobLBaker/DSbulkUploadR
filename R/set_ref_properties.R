@@ -400,6 +400,76 @@ add_owners <- function(reference_id,
   return(invisible(NULL))
 }
 
+#' Title
+#'
+#' @param reference_id
+#' @param owner_list
+#' @param dev
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+remove_editors <- function(reference_id,
+                          owner_list,
+                          dev = TRUE) {
+
+  for (i in 1:reference_id) {
+    #get upn for each email in a list of emails:
+    bdy <- owner_list[i]
+    bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
+    req_url <- paste0("https://irmadevservices.nps.gov/",
+                      "adverification/v1/rest/lookup/email")
+    req <- httr::POST(req_url,
+                      httr::add_headers('Content-Type' = 'application/json'),
+                      body = bdy)
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+    }
+    json <- httr::content(req, "text")
+    rjson <- jsonlite::fromJSON(json)
+
+    owners <- NULL
+    for (j in 1:nrow(rjson)) {
+      upns <- rjson$userPrincipalName[j]
+      owners <- append(owners, upns)
+    }
+
+    for (j in 1:nrow(owners)) {
+
+    # construct request URL
+      if(dev == TRUE){
+        post_url <- paste0(.ds_dev_api(),
+                           "Reference/",
+                           reference_id[i],
+                           "/Owners?userCode=",
+                           owners[j])
+      } else {
+        post_url <- paste0(.ds_secure_api(),
+                           "Reference/",
+                           reference_id[i],
+                           "/Owners?userCode=",
+                           owners[j]
+                           )
+    }
+
+    req <- httr::DELETE(post_url,
+                      httr::authenticate(":", "", "ntlm"),
+                      httr::add_headers('Content-Type' = 'application/json'),
+                      body = bdy)
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+    }
+    return(invisible(NULL))
+  }
+}
+
+
+
+}
+
 
 #' Remove a specific unit code from one or more references
 #'
