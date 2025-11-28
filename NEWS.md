@@ -1,4 +1,7 @@
 # DSbulkUploadR (development version)
+## 2025-11-28
+  * Finish first pass of remove_editors function; add function documentation
+  
 ## 2025-11-17
   * Update readme to include full list of currently supported reference types.
 

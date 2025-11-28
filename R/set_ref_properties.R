@@ -400,16 +400,23 @@ add_owners <- function(reference_id,
   return(invisible(NULL))
 }
 
-#' Title
+#' Remove editors (owners) from a DataStore reference
 #'
-#' @param reference_id
-#' @param owner_list
-#' @param dev
+#' You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all owners from a reference; all references must have at least one owner/editor. For each of a list of reference IDs supplied, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
 #'
-#' @returns
+#' @param reference_id String or list. Contains one or more 7-digit DataStore reference IDs
+#' @param owner_list String or list. Contains one or more owner/editor email addresses. Can be a nested list.
+#' @param dev Logical. Defaults to TRUE. Determines whether the operation will be executed on the development server (TRUE) or the production server (FALSE).
+#'
+#' @returns NULL (invisibly)
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#'    remove_editors(c(1234567, 7654321),
+#'                   c(john_doe@nps.gov, c(john_doe@nps.gov,
+#'                                         jane_doe@partner.nps.gov )))
+#'    }
 remove_editors <- function(reference_id,
                           owner_list,
                           dev = TRUE) {
@@ -430,12 +437,13 @@ remove_editors <- function(reference_id,
     json <- httr::content(req, "text")
     rjson <- jsonlite::fromJSON(json)
 
+    # store upn for email supplied:
     owners <- NULL
     for (j in 1:nrow(rjson)) {
       upns <- rjson$userPrincipalName[j]
       owners <- append(owners, upns)
     }
-
+    #remove editors/owners one at a time:
     for (j in 1:nrow(owners)) {
 
     # construct request URL
@@ -452,22 +460,21 @@ remove_editors <- function(reference_id,
                            "/Owners?userCode=",
                            owners[j]
                            )
+      }
+
+      req <- httr::DELETE(post_url,
+                        httr::authenticate(":", "", "ntlm"),
+                        httr::add_headers('Content-Type' = 'application/json'),
+                        body = bdy)
+      status_code <- httr::stop_for_status(req)$status_code
+      if (!status_code == 200) {
+        cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+      }
+
+      # when j == nrow(rjson) store existing list of owners for each reference?
+      }
     }
-
-    req <- httr::DELETE(post_url,
-                      httr::authenticate(":", "", "ntlm"),
-                      httr::add_headers('Content-Type' = 'application/json'),
-                      body = bdy)
-    status_code <- httr::stop_for_status(req)$status_code
-    if (!status_code == 200) {
-      cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
-    }
-    return(invisible(NULL))
-  }
-}
-
-
-
+  return(invisible(NULL))
 }
 
 
