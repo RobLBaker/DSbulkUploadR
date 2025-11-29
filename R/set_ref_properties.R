@@ -439,22 +439,22 @@ remove_editors <- function(reference_id,
 
     # store upn for email supplied:
     owners <- NULL
-    for (j in 1:nrow(rjson)) {
+    for (j in 1:length(seq_along(nrow(rjson)))) {
       upns <- rjson$userPrincipalName[j]
       owners <- append(owners, upns)
     }
     #remove editors/owners one at a time:
-    for (j in 1:nrow(owners)) {
+    for (j in 1:length(seq_along(owners))) {
 
     # construct request URL
       if(dev == TRUE){
-        post_url <- paste0(.ds_dev_api(),
+        delete_url <- paste0(.ds_dev_api(),
                            "Reference/",
                            reference_id[i],
                            "/Owners?userCode=",
                            owners[j])
       } else {
-        post_url <- paste0(.ds_secure_api(),
+        delete_url <- paste0(.ds_secure_api(),
                            "Reference/",
                            reference_id[i],
                            "/Owners?userCode=",
@@ -462,18 +462,11 @@ remove_editors <- function(reference_id,
                            )
       }
 
-      req <- httr::DELETE(post_url,
+      del <- httr::DELETE(delete_url,
                         httr::authenticate(":", "", "ntlm"),
-                        httr::add_headers('Content-Type' = 'application/json'),
-                        body = bdy)
-      status_code <- httr::stop_for_status(req)$status_code
-      if (!status_code == 200) {
-        cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
-      }
-
-      # when j == nrow(rjson) store existing list of owners for each reference?
-      }
+                        httr::add_headers('Content-Type' = 'application/json'))
     }
+  }
   return(invisible(NULL))
 }
 
