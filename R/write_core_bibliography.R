@@ -174,6 +174,39 @@ write_core_bibliography <- function(reference_id,
                      #metadataStandardID = ""
                      #licenseTypeID = upload_data$license[row_num]
       )
+  } else if (upload_data$reference_type[row_num] == "GenericDataset") {
+    mylist <- list(title = upload_data$title[row_num],
+                   issuedDate = list(year = lubridate::year(today),
+                                     month = lubridate::month(today),
+                                     day = lubridate::day(today),
+                                     precision = ""),
+                   contentBeginDate = list(year = lubridate::year(begin_date),
+                                           month = lubridate::month(begin_date),
+                                           day = lubridate::day(begin_date),
+                                           precision = ""),
+                   contentEndDate = list(year = lubridate::year(end_date),
+                                         month = lubridate::month(end_date),
+                                         day = lubridate::day(end_date),
+                                         precision = ""),
+                   location = upload_data$URL[row_num],
+                   miscellaneousCode = "",
+                   volume = "",
+                   issue = "",
+                   pageRange = "",
+                   edition = "",
+                   dateRange = "",
+                   meetingPlace = "",
+                   abstract = upload_data$description[row_num],
+                   notes = upload_data$notes[row_num],
+                   purpose = upload_data$purpose[row_num],
+                   tableOfContents = ""
+                   #publisher = "Fort Collins, CO",
+                   #size1 = upload_data$length_of_recording[row_num],
+                   #contacts1 = contacts
+                   #metadataStandardID = ""
+                   #licenseTypeID = upload_data$license[row_num]
+    )
+
   }
 
   #for testing purposes and to look at the json sent:
