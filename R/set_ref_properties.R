@@ -421,7 +421,7 @@ remove_editors <- function(reference_id,
                           owner_list,
                           dev = TRUE) {
 
-  for (i in 1:reference_id) {
+  for (i in 1:length(seq_along(reference_id))) {
     #get upn for each email in a list of emails:
     bdy <- owner_list[i]
     bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
@@ -462,9 +462,13 @@ remove_editors <- function(reference_id,
                            )
       }
 
-      del <- httr::DELETE(delete_url,
+      req2 <- httr::DELETE(delete_url,
                         httr::authenticate(":", "", "ntlm"),
                         httr::add_headers('Content-Type' = 'application/json'))
+      status_code <- httr::stop_for_status(req2)$status_code
+      if (!status_code == 200) {
+        cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+      }
     }
   }
   return(invisible(NULL))
