@@ -402,10 +402,10 @@ add_owners <- function(reference_id,
 
 #' Remove editors (owners) from a DataStore reference
 #'
-#' You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all owners from a reference; all references must have at least one owner/editor. For each of a list of reference IDs supplied, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
+#' You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all owners from a reference; all references must have at least one owner/editor. For a given reference ID, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
 #'
-#' @param reference_id String or list. Contains one or more 7-digit DataStore reference IDs
-#' @param owner_list String or list. Contains one or more owner/editor email addresses. Can be a nested list.
+#' @param reference_id String. Contains one 7-digit DataStore reference IDs
+#' @param owner_list String or list. Contains one or more owner/editor email addresses to be removed from the specified reference.
 #' @param dev Logical. Defaults to TRUE. Determines whether the operation will be executed on the development server (TRUE) or the production server (FALSE).
 #'
 #' @returns NULL (invisibly)
@@ -413,58 +413,58 @@ add_owners <- function(reference_id,
 #'
 #' @examples
 #' \dontrun{
-#'    remove_editors(c(1234567, 7654321),
-#'                   c(john_doe@nps.gov, c(john_doe@nps.gov,
-#'                                         jane_doe@partner.nps.gov )))
+#'    remove_editors(reference_id = 1234567,
+#'                  owner_list = c("john_doe@nps.gov",
+#'                                 "jane_doe@partner.nps.gov"))
 #'    }
 remove_editors <- function(reference_id,
                           owner_list,
                           dev = TRUE) {
 
-  for (i in 1:reference_id) {
-    #get upn for each email in a list of emails:
-    bdy <- owner_list[i]
-    bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
-    req_url <- paste0("https://irmadevservices.nps.gov/",
-                      "adverification/v1/rest/lookup/email")
-    req <- httr::POST(req_url,
-                      httr::add_headers('Content-Type' = 'application/json'),
-                      body = bdy)
-    status_code <- httr::stop_for_status(req)$status_code
+  #get upn for each email in a list of emails:
+  bdy <- jsonlite::toJSON(owner_list, pretty = TRUE, auto_unbox = FALSE)
+  req_url <- paste0("https://irmadevservices.nps.gov/",
+                    "adverification/v1/rest/lookup/email")
+  req <- httr::POST(req_url,
+                    httr::add_headers('Content-Type' = 'application/json'),
+                    body = bdy)
+  status_code <- httr::stop_for_status(req)$status_code
+  if (!status_code == 200) {
+    cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
+  }
+  json <- httr::content(req, "text")
+  rjson <- jsonlite::fromJSON(json)
+
+  # store upn for email supplied:
+  owners <- NULL
+  for (i in 1:nrow(rjson)) {
+    upns <- rjson$userPrincipalName[i]
+    owners <- append(owners, upns)
+  }
+  #remove editors/owners one at a time:
+  for (i in 1:length(seq_along(owners))) {
+
+  # construct request URL
+    if(dev == TRUE){
+      delete_url <- paste0(.ds_dev_api(),
+                         "Reference/",
+                         reference_id,
+                         "/Owners?userCode=",
+                         owners[i])
+    } else {
+      delete_url <- paste0(.ds_secure_api(),
+                         "Reference/",
+                         reference_id,
+                         "/Owners?userCode=",
+                         owners[i])
+    }
+
+    req2 <- httr::DELETE(delete_url,
+                      httr::authenticate(":", "", "ntlm"),
+                      httr::add_headers('Content-Type' = 'application/json'))
+    status_code <- httr::stop_for_status(req2)$status_code
     if (!status_code == 200) {
-      cli::cli_abort(c("x" = "ERROR: Active Directory connection failed."))
-    }
-    json <- httr::content(req, "text")
-    rjson <- jsonlite::fromJSON(json)
-
-    # store upn for email supplied:
-    owners <- NULL
-    for (j in 1:length(seq_along(nrow(rjson)))) {
-      upns <- rjson$userPrincipalName[j]
-      owners <- append(owners, upns)
-    }
-    #remove editors/owners one at a time:
-    for (j in 1:length(seq_along(owners))) {
-
-    # construct request URL
-      if(dev == TRUE){
-        delete_url <- paste0(.ds_dev_api(),
-                           "Reference/",
-                           reference_id[i],
-                           "/Owners?userCode=",
-                           owners[j])
-      } else {
-        delete_url <- paste0(.ds_secure_api(),
-                           "Reference/",
-                           reference_id[i],
-                           "/Owners?userCode=",
-                           owners[j]
-                           )
-      }
-
-      del <- httr::DELETE(delete_url,
-                        httr::authenticate(":", "", "ntlm"),
-                        httr::add_headers('Content-Type' = 'application/json'))
+      cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
     }
   }
   return(invisible(NULL))

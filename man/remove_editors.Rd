@@ -7,9 +7,9 @@
 remove_editors(reference_id, owner_list, dev = TRUE)
 }
 \arguments{
-\item{reference_id}{String or list. Contains one or more 7-digit DataStore reference IDs}
+\item{reference_id}{String. Contains one 7-digit DataStore reference IDs}
 
-\item{owner_list}{String or list. Contains one or more owner/editor email addresses. Can be a nested list.}
+\item{owner_list}{String or list. Contains one or more owner/editor email addresses to be removed from the specified reference.}
 
 \item{dev}{Logical. Defaults to TRUE. Determines whether the operation will be executed on the development server (TRUE) or the production server (FALSE).}
 }
@@ -17,12 +17,12 @@ remove_editors(reference_id, owner_list, dev = TRUE)
 NULL (invisibly)
 }
 \description{
-You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all owners from a reference; all references must have at least one owner/editor. For each of a list of reference IDs supplied, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
+You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all owners from a reference; all references must have at least one owner/editor. For a given reference ID, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
 }
 \examples{
 \dontrun{
-   remove_editors(c(1234567, 7654321),
-                  c(john_doe@nps.gov, c(john_doe@nps.gov,
-                                        jane_doe@partner.nps.gov )))
+   remove_editors(reference_id = 1234567,
+                 owner_list = c("john_doe@nps.gov",
+                                "jane_doe@partner.nps.gov"))
    }
 }
