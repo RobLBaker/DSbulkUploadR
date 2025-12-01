@@ -423,7 +423,7 @@ remove_editors <- function(reference_id,
 
   for (i in 1:length(seq_along(reference_id))) {
     #get upn for each email in a list of emails:
-    bdy <- owner_list[i]
+    bdy <- owner_list
     bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
     req_url <- paste0("https://irmadevservices.nps.gov/",
                       "adverification/v1/rest/lookup/email")
@@ -439,7 +439,7 @@ remove_editors <- function(reference_id,
 
     # store upn for email supplied:
     owners <- NULL
-    for (j in 1:length(seq_along(nrow(rjson)))) {
+    for (j in 1:nrow(rjson)) {
       upns <- rjson$userPrincipalName[j]
       owners <- append(owners, upns)
     }
