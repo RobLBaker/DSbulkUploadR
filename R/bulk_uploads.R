@@ -152,7 +152,7 @@ bulk_reference_generation <- function(path = getwd(),
     }
 
       #add reference id column to dataframe to make it easier to find them all
-    upload_data$reference_id[i] <- ref_code
+    suppressWarnings(upload_data$reference_id[i] <- ref_code)
 
     # add keywords ----
     keywords_to_add <- unlist(stringr::str_split(upload_data$keywords[i],

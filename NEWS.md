@@ -1,4 +1,7 @@
 # DSbulkUploadR (development version)
+## 2025-12-02
+  * Add support for Generic Dataset reference type
+  
 ## 2025-11-28
   * Finish first pass of remove_editors function; add function documentation
   
