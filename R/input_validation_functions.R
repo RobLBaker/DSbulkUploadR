@@ -76,7 +76,8 @@ check_ref_type_supported <- function(path = getwd(),
   # hardcoded list of supported refs. Will need manual updates
   supported_refs <- c("AudioRecording",
                       "GenericDocument",
-                      "WebSite")
+                      "WebSite",
+                      "GenericDataset")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
