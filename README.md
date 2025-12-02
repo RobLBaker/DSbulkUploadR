@@ -13,3 +13,4 @@ A set of step-by-step detailed instructions on how to use the bulk uploader, wha
 * Audio Recording
 * Generic Document
 * Web Site
+* Generic Dataset
