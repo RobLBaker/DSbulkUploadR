@@ -17,13 +17,7 @@ We strongly recommend testing (a subset of?) your input file on the development 
 # Create an input template
 Each DataStore reference type has a potentially unique backend storage system and potentially unique set of possible fields. Therefore you will need to use a separate sheet within the input.xlsx template file for each reference type you plan to upload to DataStore. Do not change the names of the sheets.
 
-To create the relevant template input file, use the function `write_input_template()`.
-
-  1. AudioRecording
-  2. GenericDocument
-  3. WebSite
-
-For example, the following line of code
+To create the template input file, use the function `write_input_template()`. For example, the following line of code
 
 ```{r eval=FALSE}
 write_input_template()
