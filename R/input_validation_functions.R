@@ -520,6 +520,19 @@ check_dates_past <- function(path = getwd(),
   check_start <- lubridate::interval(start_dates, today)
   check_end <- lubridate::interval(end_dates, today)
 
+  # Projects don't have end dates:
+  if(all(upload_data$reference_type == "Project")) {
+    if(any(check_start < 0)) {
+      msg <- paste0("Some of your content start or end dates occur in the ",
+                    "future. Please make sure all dates occur in the past.")
+      cli::cli_abort(c("x" = msg))
+    } else {
+      msg <- paste0("All content start and end dates occur in the past.")
+      cli::cli_inform(c("v" = msg))
+    }
+    return(invisible(NULL))
+  }
+
   if (any(check_start < 0) | any(check_end < 0)) {
     msg <- paste0("Some of your content start or end dates occur in the ",
                   "future. Please make sure all dates occur in the past.")
