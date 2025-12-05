@@ -25,5 +25,5 @@ Runs a check against a hard coded list of currently supported DataStore referenc
 }
 \examples{
 \dontrun{
-check_ref_type_supported(filename = "test_file.xlsx")}
+check_ref_type_supported(sheet_name = "GenericDocument")}
 }

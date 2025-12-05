@@ -21,7 +21,7 @@ check_authors_orcid(
 NULL (invisibly)
 }
 \description{
-Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
+Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_email_list and verifies whether these emails have ORCiDs associated with the via an NPS API. For the Project reference type, the function checks the leads_email_list instead of author_email_list. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
 }
 \examples{
 \dontrun{
