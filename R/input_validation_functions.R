@@ -114,7 +114,7 @@ check_refs_identical <- function (path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  if (length(seq_along(upload_data$reference_type != 1))) {
+  if (length(seq_along(unique(upload_data$reference_type))) != 1) {
     msg <- paste0("For each upload all reference types must be the same. ",
                   "Please check that you have only one reference type in ",
                   "your input file.")
