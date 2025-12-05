@@ -77,7 +77,8 @@ check_ref_type_supported <- function(path = getwd(),
   supported_refs <- c("AudioRecording",
                       "GenericDocument",
                       "WebSite",
-                      "GenericDataset")
+                      "GenericDataset",
+                      "Project")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
@@ -114,10 +115,29 @@ check_files_exist <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  #Projects don't have files; skip/pass this test.
+  #not sure if this is how all_of works but if so, slick.
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require files to upload.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   bad_files <- NULL
+
   for (i in 1:nrow(upload_data)) {
-    if (!file.exists(path = upload_data$file_path[i])) {
+    path_to_file <- upload_data$file_path[i]
+    if(is.na(path_to_file)) {
+      msg <- paste0("All references must have files to upload. ",
+                    "The following references have a bad file path ",
+                    "or no files associated with them:\n {bad_files}")
       bad_files <- append(bad_files, upload_data$title[i])
+    }
+    if (!is.na(path_to_file)) {
+      if (!file.exists(path_to_file)) {
+        bad_files <- append(bad_files, upload_data$title[i])
+      }
     }
   }
   if (!is.null(bad_files)) {
