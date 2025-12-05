@@ -34,32 +34,44 @@ write_core_bibliography <- function(reference_id,
 
   # populate draft reference bibliography ----
   begin_date <- upload_data$content_begin_date[row_num]
-  end_date <- upload_data$content_end_date[row_num]
+
+  # Projects don't get end dates for this uploader tool.
+  if (upload_data$reference_type[row_num] != "Project") {
+    end_date <- upload_data$content_end_date[row_num]
+  }
 
   # create author list ====
   # Websites don't have authors
   if (upload_data$reference_type[row_num] != "WebSite") {
-  usr_email <- unlist(stringr::str_split(
-    upload_data$author_email_list[row_num],
-    ", "))
-  usr_email <- stringr::str_trim(usr_email)
-  usr_email <- unique(usr_email)
+    # for Projects, "authors" are equivalent to "leads":
+    usr_email_list <- NULL
+    if (upload_data$reference_type[row_num] == "Project") {
+      usr_email_list <- upload_data$leads_email_list[row_num]
+    } else {
+      usr_email_list <- upload_data$author_email_list[row_num]
+    }
 
-  req_url <- paste0("https://irmadevservices.nps.gov/",
+    usr_email <- unlist(stringr::str_split(
+      usr_email_list,
+      ", "))
+    usr_email <- stringr::str_trim(usr_email)
+    usr_email <- unique(usr_email)
+
+    req_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
-  bdy <- usr_email
-  req <- httr::POST(req_url,
-                    httr::add_headers('Content-Type' = 'application/json'),
-                    body = jsonlite::toJSON(bdy))
-  status_code <- httr::stop_for_status(req)$status_code
-  if (!status_code == 200) {
-    stop("ERROR: DataStore connection failed.")
-  }
-  json <- httr::content(req, "text")
-  rjson <- jsonlite::fromJSON(json)
+    bdy <- usr_email
+    req <- httr::POST(req_url,
+                      httr::add_headers('Content-Type' = 'application/json'),
+                      body = jsonlite::toJSON(bdy))
+    status_code <- httr::stop_for_status(req)$status_code
+    if (!status_code == 200) {
+      stop("ERROR: DataStore connection failed.")
+    }
+    json <- httr::content(req, "text")
+    rjson <- jsonlite::fromJSON(json)
 
-  contacts <- NULL
-      for (j in 1:length(usr_email)) {
+    contacts <- NULL
+    for (j in 1:length(usr_email)) {
       author <- list(title = "",
                      primaryName = rjson$sn[j],
                      firstName = rjson$givenName[j],
@@ -69,7 +81,7 @@ write_core_bibliography <- function(reference_id,
                      isCorporate = FALSE,
                      ORCID = rjson$extensionAttribute2[j])
       contacts <- append(contacts, list(author))
-      }
+    }
   }
 
   #get system date
@@ -207,7 +219,36 @@ write_core_bibliography <- function(reference_id,
                    #metadataStandardID = "",
                    licenseTypeID = upload_data$license_code[row_num]
     )
-
+  } else if (upload_data$reference_type[row_num] == "Project") {
+    mylist <- list(title = upload_data$title[row_num],
+                   issuedDate = list(year = lubridate::year(today),
+                                     month = lubridate::month(today),
+                                     day = lubridate::day(today),
+                                     precision = ""),
+                   contentBeginDate = list(year = lubridate::year(begin_date),
+                                           month = lubridate::month(begin_date),
+                                           day = lubridate::day(begin_date),
+                                           precision = ""),
+                   contentEndDate = "",
+                   location = "Fort Collins, CO",
+                   miscellaneousCode = "",
+                   #volume = "",
+                   #issue = "",
+                   #pageRange = "",
+                   #edition = "",
+                   #dateRange = "",
+                   #meetingPlace = "",
+                   abstract = upload_data$description[row_num],
+                   notes = upload_data$notes[row_num],
+                   purpose = "",
+                   #tableOfContents = "",
+                   publisher = "National Park Service",
+                   contacts1 = contacts,
+                   contacts2 = "",
+                   contacts3 = "",
+                   #metadataStandardID = "",
+                   licenseTypeID = upload_data$license_code[row_num]
+    )
   }
 
   #for testing purposes and to look at the json sent:
