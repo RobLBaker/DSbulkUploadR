@@ -25,5 +25,5 @@ Reads in a .xlsx file for data validation. Checks the values supplied in the col
 }
 \examples{
 \dontrun{
-check_ref_type("test_file.xlsx")}
+check_ref_type(sheet_name = "GenericDataset")}
 }

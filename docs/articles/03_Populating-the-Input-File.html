@@ -141,10 +141,14 @@ reference to be created using the data in that particular row. Within
 each sheet, the reference_type should be the same and should be the same
 type as indicated by the sheet name (e.g. in the sheet AudioRecording,
 the reference_type column should consist of exclusively the value
-“AudioRecording”). This column is subject to data validation in excel.
-There should be a drop-down selection tool on each cell in the column
-with a single valid value you can select.</p>
-<p>For a full list of reference types, see the <a href="https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
+“AudioRecording”). Capitalization and spacing are important. Be sure to
+use the DataStore backend name for references rather than the name
+displayed by the DataStore web pages. For instance use “AudioRecording”
+not “Audio recording”. A drop-down menu on the .xlsx input sheet should
+supply the correct reference name, capitalization, etc for each
+sheet.</p>
+<p>For a full list of reference types and the appropriate way to specify
+them, see the <a href="https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
 swagger documentation for the appropriate API</a></p>
 </div>
 <div class="section level3">

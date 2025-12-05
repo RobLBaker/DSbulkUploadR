@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' check_ref_type("test_file.xlsx")}
+#' check_ref_type(sheet_name = "GenericDataset")}
 check_ref_type <- function(path = getwd(),
                            filename = "DSbulkUploadR_input.xlsx",
                            sheet_name) {
@@ -61,7 +61,7 @@ check_ref_type <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_ref_type_supported(filename = "test_file.xlsx")}
+#' check_ref_type_supported(sheet_name = "GenericDocument")}
 check_ref_type_supported <- function(path = getwd(),
                                      filename = "DSbulkUploadR_input.xlsx",
                                      sheet_name) {
@@ -77,7 +77,8 @@ check_ref_type_supported <- function(path = getwd(),
   supported_refs <- c("AudioRecording",
                       "GenericDocument",
                       "WebSite",
-                      "GenericDataset")
+                      "GenericDataset",
+                      "Project")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
@@ -91,6 +92,38 @@ check_ref_type_supported <- function(path = getwd(),
     msg <- paste0("All reference types supplied are supported.")
     cli::cli_inform(c("v" = msg))
   }
+}
+
+
+#' Check that all reference types are identical
+#'
+#' Runs a check against all values supplied in the reference_type column of the input file. If all values in this column are identical, the test passes. If any are not identical, the test fails.
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{check_refs_identical(sheet_name = "Project")}
+check_refs_identical <- function (path = getwd(),
+                                  filename = "DSbulkUploadR_input.xlsx",
+                                  sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+  if (length(seq_along(upload_data$reference_type != 1))) {
+    msg <- paste0("For each upload all reference types must be the same. ",
+                  "Please check that you have only one reference type in ",
+                  "your input file.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("Only one reference type is listed for this upload.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisible(NULL))
 }
 
 #' Checks that each file_path in a file contains files
@@ -114,10 +147,29 @@ check_files_exist <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  #Projects don't have files; skip/pass this test.
+  #not sure if this is how all_of works but if so, slick.
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require files to upload.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   bad_files <- NULL
+
   for (i in 1:nrow(upload_data)) {
-    if (!file.exists(path = upload_data$file_path[i])) {
+    path_to_file <- upload_data$file_path[i]
+    if(is.na(path_to_file)) {
+      msg <- paste0("All references must have files to upload. ",
+                    "The following references have a bad file path ",
+                    "or no files associated with them:\n {bad_files}")
       bad_files <- append(bad_files, upload_data$title[i])
+    }
+    if (!is.na(path_to_file)) {
+      if (!file.exists(path_to_file)) {
+        bad_files <- append(bad_files, upload_data$title[i])
+      }
     }
   }
   if (!is.null(bad_files)) {
@@ -155,6 +207,13 @@ check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a file number test.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
 
   file_num <- 0
   for (i in 1:nrow(upload_data)) {
@@ -206,6 +265,14 @@ check_file_size <- function(filename = "DSbulkUploadR_input.xlsx",
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a file size test.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   file_size <- 0
   for (i in 1:nrow(upload_data)) {
     file_size <- file_size +
@@ -252,6 +319,13 @@ check_508_format <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a 508 compliance test.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
 
   is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
     tolower(upload_data$files_508_compliant) != "no"
@@ -354,6 +428,13 @@ check_end_date <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a content end date.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   end_dates <- upload_data$content_end_date
   valid_dates <- !is.na(suppressWarnings(lubridate::ymd(end_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
@@ -389,6 +470,14 @@ check_end_after_start <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
+
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a content enddate.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   end_dates <- lubridate::ymd(upload_data$content_end_date)
   start_dates <- lubridate::ymd(upload_data$content_begin_date)
   time_dif <- lubridate::interval(start_dates, end_dates)
@@ -431,6 +520,19 @@ check_dates_past <- function(path = getwd(),
   check_start <- lubridate::interval(start_dates, today)
   check_end <- lubridate::interval(end_dates, today)
 
+  # Projects don't have end dates:
+  if(all(upload_data$reference_type == "Project")) {
+    if(any(check_start < 0)) {
+      msg <- paste0("Some of your content start or end dates occur in the ",
+                    "future. Please make sure all dates occur in the past.")
+      cli::cli_abort(c("x" = msg))
+    } else {
+      msg <- paste0("All content start and end dates occur in the past.")
+      cli::cli_inform(c("v" = msg))
+    }
+    return(invisible(NULL))
+  }
+
   if (any(check_start < 0) | any(check_end < 0)) {
     msg <- paste0("Some of your content start or end dates occur in the ",
                   "future. Please make sure all dates occur in the past.")
@@ -444,7 +546,7 @@ check_dates_past <- function(path = getwd(),
 
 #' Verifies author emails supplied in file.
 #'
-#' Reads in a .xlsx file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
+#' Reads in a .xlsx file for data validation. Checks that all author emails supplied in the column author_email_list are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails. If the reference type is a Project, this function will test the leads_email_list column instead of the author_email_list column.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -469,11 +571,19 @@ check_author_email <- function(path = getwd(),
     return(invisible(NULL))
   }
 
+  # Projects use "Leads" instead of authors:
+  usr_email_list <- NULL
+  if (any(upload_data$reference_type == "Project")) {
+    usr_email_list <- upload_data$leads_email_list
+  } else {
+    usr_email_list <- upload_data$author_email_list
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
       append(usr_email,
-             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+             unlist(stringr::str_split(usr_email_list[i], ",")))
   }
   usr_email <- stringr::str_trim(usr_email)
   usr_email <- unique(usr_email)
@@ -504,7 +614,7 @@ check_author_email <- function(path = getwd(),
 #checks to make sure all users have orcids and that orcids are correctly formatted. Does not check whether orcids are valid/associated with the correct username.
 #' Checks to make sure all author email accounts have ORCiDs
 #'
-#' Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_email_list and verifies whether these emails have ORCiDs associated with the via an NPS API. For the Project reference type, the function checks the leads_email_list instead of author_email_list. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -530,11 +640,19 @@ check_authors_orcid <- function(path = getwd(),
     return(invisible(NULL))
   }
 
+  # Projects use "Leads" instead of authors:
+  usr_email_list <- NULL
+  if (any(upload_data$reference_type == "Project")) {
+    usr_email_list <- upload_data$leads_email_list
+  } else {
+    usr_email_list <- upload_data$author_email_list
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
       append(usr_email,
-             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+             unlist(stringr::str_split(usr_email_list[i], ",")))
   }
   usr_email <- stringr::str_trim(usr_email)
   usr_email <- unique(usr_email)
@@ -566,7 +684,7 @@ check_authors_orcid <- function(path = getwd(),
 
 #' Checks the formatting of ORCiDs associated with NPS emails supplied in a file
 #'
-#' Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_email_list have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. For the Project reference type, the function will check the column leads_email_list rather than author_email_list. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -594,11 +712,19 @@ check_orcid_format <- function(path = getwd(),
     return(invisible(NULL))
   }
 
+  # Projects use "Leads" instead of authors:
+  usr_email_list <- NULL
+  if (any(upload_data$reference_type == "Project")) {
+    usr_email_list <- upload_data$leads_email_list
+  } else {
+    usr_email_list <- upload_data$author_email_list
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
       append(usr_email,
-             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+             unlist(stringr::str_split(usr_email_list[i], ",")))
   }
   usr_email <- stringr::str_trim(usr_email)
   usr_email <- unique(usr_email)
