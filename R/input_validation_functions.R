@@ -614,7 +614,7 @@ check_author_email <- function(path = getwd(),
 #checks to make sure all users have orcids and that orcids are correctly formatted. Does not check whether orcids are valid/associated with the correct username.
 #' Checks to make sure all author email accounts have ORCiDs
 #'
-#' Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_emails and verifies whether these emails have ORCiDs associated with the via an NPS API. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Checks all the emails listed in the column author_email_list and verifies whether these emails have ORCiDs associated with the via an NPS API. For the Project reference type, the function checks the leads_email_list instead of author_email_list. If any user account associated with an email does not have an ORCiD associated with it (including all emails that are not valid NPS emails), the function throws an error and lists the emails that do not have ORCiDs associated with them. If all emails are tied to valid NPS accounts with ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -640,11 +640,19 @@ check_authors_orcid <- function(path = getwd(),
     return(invisible(NULL))
   }
 
+  # Projects use "Leads" instead of authors:
+  usr_email_list <- NULL
+  if (any(upload_data$reference_type == "Project")) {
+    usr_email_list <- upload_data$leads_email_list
+  } else {
+    usr_email_list <- upload_data$author_email_list
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
       append(usr_email,
-             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+             unlist(stringr::str_split(usr_email_list[i], ",")))
   }
   usr_email <- stringr::str_trim(usr_email)
   usr_email <- unique(usr_email)
