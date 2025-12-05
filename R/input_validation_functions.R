@@ -513,25 +513,26 @@ check_dates_past <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  end_dates <- lubridate::ymd(upload_data$content_end_date)
-  start_dates <- lubridate::ymd(upload_data$content_begin_date)
-  today <- Sys.Date()
 
+  today <- Sys.Date()
+  start_dates <- lubridate::ymd(upload_data$content_begin_date)
   check_start <- lubridate::interval(start_dates, today)
-  check_end <- lubridate::interval(end_dates, today)
 
   # Projects don't have end dates:
   if(all(upload_data$reference_type == "Project")) {
     if(any(check_start < 0)) {
-      msg <- paste0("Some of your content start or end dates occur in the ",
+      msg <- paste0("Some of your content start or dates occur in the ",
                     "future. Please make sure all dates occur in the past.")
       cli::cli_abort(c("x" = msg))
     } else {
-      msg <- paste0("All content start and end dates occur in the past.")
+      msg <- paste0("All content start dates occur in the past.")
       cli::cli_inform(c("v" = msg))
     }
     return(invisible(NULL))
   }
+
+  end_dates <- lubridate::ymd(upload_data$content_end_date)
+  check_end <- lubridate::interval(end_dates, today)
 
   if (any(check_start < 0) | any(check_end < 0)) {
     msg <- paste0("Some of your content start or end dates occur in the ",
