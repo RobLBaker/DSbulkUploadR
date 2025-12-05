@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' check_ref_type("test_file.xlsx")}
+#' check_ref_type(sheet_name = "GenericDataset")}
 check_ref_type <- function(path = getwd(),
                            filename = "DSbulkUploadR_input.xlsx",
                            sheet_name) {
@@ -61,7 +61,7 @@ check_ref_type <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_ref_type_supported(filename = "test_file.xlsx")}
+#' check_ref_type_supported(sheet_name = "GenericDocument")}
 check_ref_type_supported <- function(path = getwd(),
                                      filename = "DSbulkUploadR_input.xlsx",
                                      sheet_name) {
@@ -95,6 +95,17 @@ check_ref_type_supported <- function(path = getwd(),
 }
 
 
+#' Check that all reference types are identical
+#'
+#' Runs a check against all values supplied in the reference_type column of the input file. If all values in this column are identical, the test passes. If any are not identical, the test fails.
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{check_refs_identical(sheet_name = "Project")}
 check_refs_identical <- function (path = getwd(),
                                   filename = "DSbulkUploadR_input.xlsx",
                                   sheet_name) {
