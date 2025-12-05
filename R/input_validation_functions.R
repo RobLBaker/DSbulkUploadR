@@ -684,7 +684,7 @@ check_authors_orcid <- function(path = getwd(),
 
 #' Checks the formatting of ORCiDs associated with NPS emails supplied in a file
 #'
-#' Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_emails have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
+#' Reads in a .xlsx file for data validation. Uses an NPS API to check that all the emails listed in the column author_email_list have properly formatted ORCiDs (xxxx-xxxx-xxx-xxxx) associated with them. For the Project reference type, the function will check the column leads_email_list rather than author_email_list. Lack of an ORCiD, including because the supplied email address is not a valid NPS email, is considered improperly formatted for the purposes of this test. emails supplied do not have properly formatted ORCiDs associated with them the function throws an error and lists the emails that do not have properly formatted ORCiDs associated with them. If all emails are tied to valid NPS accounts with properly formatted ORCiDs associated with them, the function passes.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -712,11 +712,19 @@ check_orcid_format <- function(path = getwd(),
     return(invisible(NULL))
   }
 
+  # Projects use "Leads" instead of authors:
+  usr_email_list <- NULL
+  if (any(upload_data$reference_type == "Project")) {
+    usr_email_list <- upload_data$leads_email_list
+  } else {
+    usr_email_list <- upload_data$author_email_list
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
       append(usr_email,
-             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+             unlist(stringr::str_split(usr_email_list[i], ",")))
   }
   usr_email <- stringr::str_trim(usr_email)
   usr_email <- unique(usr_email)
