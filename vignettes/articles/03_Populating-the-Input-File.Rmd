@@ -21,9 +21,9 @@ The DSbulkUploadR_input.xlsx template file also has some basic validation built 
 One common problem is with date formats and Excel. Excel LOVES to reformat dates and hates ISO 8601 date format (again why? GREAT question for the Microsoft development team). Please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
 
 ## Reference type
-In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Within each sheet, the reference_type should be the same and should be the same type as indicated by the sheet name (e.g. in the sheet AudioRecording, the reference_type column should consist of exclusively the value "AudioRecording"). This column is subject to data validation in excel. There should be a drop-down selection tool on each cell in the column with a single valid value you can select.
+In the "reference_type" column put the reference type for the reference to be created using the data in that particular row. Within each sheet, the reference_type should be the same and should be the same type as indicated by the sheet name (e.g. in the sheet AudioRecording, the reference_type column should consist of exclusively the value "AudioRecording"). Capitalization and spacing are important. Be sure to use the DataStore backend name for references rather than the name displayed by the DataStore web pages. For instance use "AudioRecording" not "Audio recording". A drop-down menu on the .xlsx input sheet should supply the correct reference name, capitalization, etc for each sheet.
 
-For a full list of reference types, see the [DataStore swagger documentation for the appropriate API](https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes)
+For a full list of reference types and the appropriate way to specify them, see the [DataStore swagger documentation for the appropriate API](https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes)
 
 ## Files to upload
 The file_path column in the input.xlsx file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
@@ -137,7 +137,7 @@ General Procurement and Acquisition
 Procurement and Acquisition: Source Selection  
 General Proprietary Business Information  
 Legal: Legal Privilege  
-Wells  
+Wells
 
 ### CUI contact name
 Please enter the name of a person who can be contacted for more information about the CUI restrictions.
