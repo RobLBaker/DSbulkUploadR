@@ -208,6 +208,13 @@ check_file_number <- function(filename = "DSbulkUploadR_input.xlsx",
                                                   filename),
                                     sheet = sheet_name)
 
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a file number test.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   file_num <- 0
   for (i in 1:nrow(upload_data)) {
     files_per_ref <- length(list.files(upload_data$file_path[i]))
