@@ -546,7 +546,7 @@ check_dates_past <- function(path = getwd(),
 
 #' Verifies author emails supplied in file.
 #'
-#' Reads in a .xlsx file for data validation. Checks that all author emails supplied in the column author_emails are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails.
+#' Reads in a .xlsx file for data validation. Checks that all author emails supplied in the column author_email_list are valid NPS emails. Each instance of author emails contain a single email or a comma separated list of emails (e.g. just joe.smith@nps.gov or joe.smith@nps.gov, jane.doe@partner.nps.gov). If any email is not a valid NPS email, the function will throw an error and list the invalid emails (check for typos!). If all emails supplied are valid NPS emails, the function will pass. This function uses an API rather than Active Directory to access lists of valid NPS emails. If the reference type is a Project, this function will test the leads_email_list column instead of the author_email_list column.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -571,11 +571,19 @@ check_author_email <- function(path = getwd(),
     return(invisible(NULL))
   }
 
+  # Projects use "Leads" instead of authors:
+  usr_email_list <- NULL
+  if (any(upload_data$reference_type == "Project")) {
+    usr_email_list <- upload_data$leads_email_list
+  } else {
+    usr_email_list <- upload_data$author_email_list
+  }
+
   usr_email <- NULL
   for (i in 1:nrow(upload_data)) {
     usr_email <-
       append(usr_email,
-             unlist(stringr::str_split(upload_data$author_email_list[i], ",")))
+             unlist(stringr::str_split(usr_email_list[i], ",")))
   }
   usr_email <- stringr::str_trim(usr_email)
   usr_email <- unique(usr_email)
