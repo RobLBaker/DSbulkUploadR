@@ -1,6 +1,6 @@
 # DSbulkUploadR (development version)
 ## 2025-12-05
-  * Begin adding support for the Project reference type including in the .xlsx template and updating data validation functions.
+  * Add support for the Project reference type. Documentation not yet completed.
   * Add a new data validation function to test that all reference types on a given sheet in the input .xlsx are identical.
   
 ## 2025-12-02
