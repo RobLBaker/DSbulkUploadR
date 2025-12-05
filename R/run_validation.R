@@ -15,7 +15,7 @@
 #' \dontrun{
 #' run_input_validation(sheet = "AudioRecording")}
 run_input_validation <- function(path = getwd(),
-                                 filename = "DSbulkdUploadR_input.xlsx",
+                                 filename = "DSbulkUploadR_input.xlsx",
                                  sheet,
                                  max_file_upload = 500,
                                  max_data_upload = 100,
