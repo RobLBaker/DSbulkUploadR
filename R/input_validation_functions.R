@@ -94,6 +94,27 @@ check_ref_type_supported <- function(path = getwd(),
   }
 }
 
+
+check_refs_identical <- function (path = getwd(),
+                                  filename = "DSbulkUploadR_input.xlsx",
+                                  sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+  if (length(seq_along(upload_data$reference_type != 1))) {
+    msg <- paste0("For each upload all reference types must be the same. ",
+                  "Please check that you have only one reference type in ",
+                  "your input file.")
+    cli::cli_abort(c("x" = msg))
+  } else {
+    msg <- paste0("Only one reference type is listed for this upload.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisible(NULL))
+}
+
 #' Checks that each file_path in a file contains files
 #'
 #' Reads in a .xlsx file for data validation. For each item in the column file_path, the function checks whether the path given contains file. If the path given does not contain files (or is not a valid path), the function will throw an error and list the bad paths. If all paths contain valid files, the function passes.
