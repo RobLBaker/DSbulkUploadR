@@ -320,6 +320,13 @@ check_508_format <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
+  if(all(upload_data$reference_type == "Project")) {
+    msg <- paste0("All references of are type \"Project\" which does not ",
+                  "require a 508 compliance test.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
+
   is_508 <- tolower(upload_data$files_508_compliant) != "yes" &
     tolower(upload_data$files_508_compliant) != "no"
   if (sum(is_508) > 0) {
