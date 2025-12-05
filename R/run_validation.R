@@ -52,6 +52,22 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
+  tryCatch(check_refs_identical(path = path,
+                                    filename = filename,
+                                    sheet_name = sheet),
+           error = function(e) {
+             err_count <<- err_count + 1
+             cli::cli_bullets(c(e$message, e$body))
+           },
+           warning = function(w) {
+             warn_count <<- warn_count + 1
+             cli::cli_bullets(c(w$message, w$body))
+           }
+  )
+
+
+
+
   tryCatch(check_files_exist(path = path,
                              filename = filename,
                              sheet_name = sheet),
