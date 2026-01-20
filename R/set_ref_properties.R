@@ -150,7 +150,7 @@ upload_files <- function(filename,
         # If upload is successful, or if error is due to token problem, don't retry
         n_retries <- -1
       } else {
-        # Decrement retries remaining
+        # Decrements retries remaining
         n_retries <- n_retries - 1
       }
     }
