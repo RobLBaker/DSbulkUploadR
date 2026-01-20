@@ -140,7 +140,7 @@ bulk_reference_generation <- function(path = getwd(),
                               full.names = TRUE)
 
       for (j in 1:length(file_list)) {
-        msg <- paste0("Uploading file {j} of {length(file_list)} to",
+        msg <- paste0("Uploading file {j} of {length(file_list)} to ",
                       "reference {ref_code}.")
         cli::cli_inform(msg)
         suppressWarnings(upload_files(
