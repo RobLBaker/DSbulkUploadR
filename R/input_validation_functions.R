@@ -81,6 +81,11 @@ check_ref_type_supported <- function(path = getwd(),
   # hardcoded list of supported refs. Will need manual updates
   supported_refs <- c("AudioRecording",
                       "GenericDocument",
+                      #FieldNotes is not a real reference type on DataStore
+                      #It is only here for user convenience at at request of
+                      #"managers". It will be treated like GenericDocument"
+                      #but will have "Field notes" added as a keyword
+                      #for later triage. Good luck, later triaging people.
                       "FieldNotes",
                       "WebSite",
                       "GenericDataset",
