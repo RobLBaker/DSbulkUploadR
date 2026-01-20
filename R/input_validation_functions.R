@@ -39,6 +39,11 @@ check_ref_type <- function(path = getwd(),
   refs_rjson <- jsonlite::fromJSON(refs_json)
 
   refs <- unique(refs)
+  #treat "FieldNotes" as "GenericDocuments". FieldNotes is a DSbulkUploadR
+  #only field and does not exist in DataStore. They will be uploaded as
+  #GenericDocument  with a keyword "Field notes" added for later triage.
+  refs <- stringr::str_replace(refs, "FieldNotes", "GenericDocument")
+
   bad_refs <- refs[!(refs %in% refs_rjson$key)]
 
   if (length(bad_refs > 0)) {
