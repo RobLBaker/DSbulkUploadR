@@ -167,6 +167,18 @@ bulk_reference_generation <- function(path = getwd(),
                  keywords = keywords_to_add,
                  dev = dev)
 
+    #Items under FieldNotes in the input.xlsx are treated as GenericDocuments
+    #as "field notes" is not a real DataStore reference type.
+    #per management decision the keyword "FieldNotes" added to the
+    #GenericDocument so that it can be triaged later
+    #good luck, future triage team!
+    if (upload_data$reference_type[i] == "FieldNotes") {
+      NPSdatastore::add_keywords(reference_id = ref_code,
+                                 keywords = "FieldNotes",
+                                 dev = dev,
+                                 interactive = FALSE)
+    }
+
     # add content unit links ----
     links_to_add <- unlist(stringr::str_split(upload_data$content_units[i],
                                               ", "))
