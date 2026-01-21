@@ -35,6 +35,9 @@ The `bulk_reference generation()` will return a dataframe containing all of the 
 2) Generic Document
 3) Web Site
 4) Generic Dataset
+5) Field Notes *
+
+* Field Notes are not an actual reference type on DataStore. Information supplied as "Field Notes" to DSbulkUploadR will be treated as a Generic Document with the exception that the keyword "FieldNotes" will be added to the GenericDocument for triage at a later date. 
 
 # Supported File Types
 Upload of all file types is supported. There is no distinction made among file types and no need to designate specific file types. Changing the default settings can result in virtually limitless numbers and sizes of files to upload. Use caution when changing the default settings!

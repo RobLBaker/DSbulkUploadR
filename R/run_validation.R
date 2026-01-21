@@ -15,7 +15,7 @@
 #' \dontrun{
 #' run_input_validation(sheet = "AudioRecording")}
 run_input_validation <- function(path = getwd(),
-                                 filename = "DSbulkdUploadR_input.xlsx",
+                                 filename = "DSbulkUploadR_input.xlsx",
                                  sheet,
                                  max_file_upload = 500,
                                  max_data_upload = 100,
@@ -51,6 +51,22 @@ run_input_validation <- function(path = getwd(),
              cli::cli_bullets(c(w$message, w$body))
            }
   )
+
+  tryCatch(check_refs_identical(path = path,
+                                    filename = filename,
+                                    sheet_name = sheet),
+           error = function(e) {
+             err_count <<- err_count + 1
+             cli::cli_bullets(c(e$message, e$body))
+           },
+           warning = function(w) {
+             warn_count <<- warn_count + 1
+             cli::cli_bullets(c(w$message, w$body))
+           }
+  )
+
+
+
 
   tryCatch(check_files_exist(path = path,
                              filename = filename,

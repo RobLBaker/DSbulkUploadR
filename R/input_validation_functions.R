@@ -39,6 +39,11 @@ check_ref_type <- function(path = getwd(),
   refs_rjson <- jsonlite::fromJSON(refs_json)
 
   refs <- unique(refs)
+  #treat "FieldNotes" as "GenericDocuments". FieldNotes is a DSbulkUploadR
+  #only field and does not exist in DataStore. They will be uploaded as
+  #GenericDocument  with a keyword "Field notes" added for later triage.
+  refs <- stringr::str_replace(refs, "FieldNotes", "GenericDocument")
+
   bad_refs <- refs[!(refs %in% refs_rjson$key)]
 
   if (length(bad_refs > 0)) {
@@ -76,6 +81,12 @@ check_ref_type_supported <- function(path = getwd(),
   # hardcoded list of supported refs. Will need manual updates
   supported_refs <- c("AudioRecording",
                       "GenericDocument",
+                      #FieldNotes is not a real reference type on DataStore
+                      #It is only here for user convenience at at request of
+                      #"managers". It will be treated like GenericDocument"
+                      #but will have "Field notes" added as a keyword
+                      #for later triage. Good luck, later triaging people.
+                      "FieldNotes",
                       "WebSite",
                       "GenericDataset",
                       "Project")
@@ -114,7 +125,7 @@ check_refs_identical <- function (path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  if (length(seq_along(upload_data$reference_type != 1))) {
+  if (length(seq_along(unique(upload_data$reference_type))) != 1) {
     msg <- paste0("For each upload all reference types must be the same. ",
                   "Please check that you have only one reference type in ",
                   "your input file.")
@@ -513,25 +524,26 @@ check_dates_past <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  end_dates <- lubridate::ymd(upload_data$content_end_date)
-  start_dates <- lubridate::ymd(upload_data$content_begin_date)
-  today <- Sys.Date()
 
+  today <- Sys.Date()
+  start_dates <- lubridate::ymd(upload_data$content_begin_date)
   check_start <- lubridate::interval(start_dates, today)
-  check_end <- lubridate::interval(end_dates, today)
 
   # Projects don't have end dates:
   if(all(upload_data$reference_type == "Project")) {
     if(any(check_start < 0)) {
-      msg <- paste0("Some of your content start or end dates occur in the ",
+      msg <- paste0("Some of your content start or dates occur in the ",
                     "future. Please make sure all dates occur in the past.")
       cli::cli_abort(c("x" = msg))
     } else {
-      msg <- paste0("All content start and end dates occur in the past.")
+      msg <- paste0("All content start dates occur in the past.")
       cli::cli_inform(c("v" = msg))
     }
     return(invisible(NULL))
   }
+
+  end_dates <- lubridate::ymd(upload_data$content_end_date)
+  check_end <- lubridate::interval(end_dates, today)
 
   if (any(check_start < 0) | any(check_end < 0)) {
     msg <- paste0("Some of your content start or end dates occur in the ",

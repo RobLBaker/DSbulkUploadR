@@ -15,6 +15,16 @@ create_draft_reference <- function(draft_title = "Temp Title",
                                    ref_type,
                                    dev = TRUE) {
 
+  #Treat "FieldNotes" as "GenericDocument" as per management request.
+  #FieldNotes will be uploaded as "GenericDocuments" because FieldNotes is
+  #not a real reference type and does not exist in DataStore. GenericDocuments
+  #that originated as FieldNotes will have the keyword "FieldNotes" added
+  #to aid in later triage. Enjoy, people who will end up doing the triage!
+  if (ref_type == "FieldNotes") {
+    ref_type <- "GenericDocument"
+  }
+
+
   #generate draft title:
   dynamic_title <- draft_title
   #generate json body for rest api call:
@@ -150,7 +160,7 @@ upload_files <- function(filename,
         # If upload is successful, or if error is due to token problem, don't retry
         n_retries <- -1
       } else {
-        # Decrement retries remaining
+        # Decrements retries remaining
         n_retries <- n_retries - 1
       }
     }

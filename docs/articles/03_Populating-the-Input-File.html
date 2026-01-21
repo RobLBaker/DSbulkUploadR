@@ -150,6 +150,12 @@ sheet.</p>
 <p>For a full list of reference types and the appropriate way to specify
 them, see the <a href="https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
 swagger documentation for the appropriate API</a></p>
+<p>One exception is that “FieldNotes” is a valid “reference type” within
+DSbulkUploadR but is not a reference type on DataStore. Information
+supplied to DSbulkUploadR as “FieldNotes” will be treated as a
+“GenericDocument” with the exception that the keyword “FieldNotes” will
+be added to the GenericDocument creatd on DataStore for triage at a
+later time.</p>
 </div>
 <div class="section level3">
 <h3 id="files-to-upload">Files to upload<a class="anchor" aria-label="anchor" href="#files-to-upload"></a>
@@ -487,6 +493,9 @@ comma-separated list of keywords to be added to the reference. Each
 keyword can consist of a single word or multiple words but should not
 contain special characters (e.g. no quotes, apostrophes, etc). Keywords
 will automatically be sorted into alphabetical order on DataStore.</p>
+<p>For the “reference type” FieldNotes, the keyword “FieldNotes” will
+automatically be added to the GenericDocument reference created on
+DataStore.</p>
 </div>
 <div class="section level3">
 <h3 id="projects">Projects<a class="anchor" aria-label="anchor" href="#projects"></a>

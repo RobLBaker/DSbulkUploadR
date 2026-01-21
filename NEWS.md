@@ -1,6 +1,9 @@
 # DSbulkUploadR (development version)
+## 2026-01-20
+  * Add support for the "reference" type "FieldNotes". Note that "FieldNotes" is not a real reference type on DataStore. Information entered into the "FieldNotes" sheet on the DSbulkUploadR_input.xlsx input file will be treated as a GenericDocument on DataStore and will have the keyword "FieldNotes" added so that this flavor of GenericDocument can be triaged at a later date.
+  
 ## 2025-12-05
-  * Begin adding support for the Project reference type including in the .xlsx template and updating data validation functions.
+  * Add support for the Project reference type. Documentation not yet completed.
   * Add a new data validation function to test that all reference types on a given sheet in the input .xlsx are identical.
   
 ## 2025-12-02

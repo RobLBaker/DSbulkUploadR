@@ -30,6 +30,11 @@ bulk_reference_generation <- function(path = getwd(),
                                       data_upload = TRUE,
                                       dev = TRUE) {
 
+  #Projects cannot have data uploaded directly to them:
+  if (sheet == "Project") {
+    data_upload <- FALSE
+  }
+
   #check upload file validity:
   validation <- run_input_validation(filename = filename,
                                      path = path,
@@ -53,10 +58,8 @@ bulk_reference_generation <- function(path = getwd(),
     cli::cli_inform(c("!" = msg))
     var1 <- readline(prompt= " ")
     if (var1 != 1) {
-      cat(paste0("This is var1: ", var1))
       cat("Exiting the function.")
-
-      return()
+      return(invisible(NULL))
     }
   }
 
@@ -94,16 +97,15 @@ bulk_reference_generation <- function(path = getwd(),
     cli::cli_inform(msg)
   } else {
     # if data_upload is FALSE (no file uploads)
-    msg <- paste0("Would you like to crate {ref_count} new references on ",
+    msg <- paste0("Would you like to create {ref_count} new references on ",
                   "DataStore? No files will be uploaded to these references.")
     cli::cli_inform(msg)
   }
 
   var2 <- readline(prompt = "1: Yes\n2: No\n ")
   if (var2 != 1) {
-    cat(paste0("This is var2 ", var2))
     cli::cli_inform("Exiting the function.")
-    return(var2)
+    return(invisible(NULL))
   }
 
   upload_data$reference_id <- NULL
@@ -138,7 +140,8 @@ bulk_reference_generation <- function(path = getwd(),
                               full.names = TRUE)
 
       for (j in 1:length(file_list)) {
-        msg <- "Uploading file {j} of {length(file_list)} to reference {ref_code}."
+        msg <- paste0("Uploading file {j} of {length(file_list)} to ",
+                      "reference {ref_code}.")
         cli::cli_inform(msg)
         suppressWarnings(upload_files(
           filename = list.files(upload_data$file_path[i])[j],
@@ -164,6 +167,18 @@ bulk_reference_generation <- function(path = getwd(),
                  keywords = keywords_to_add,
                  dev = dev)
 
+    #Items under FieldNotes in the input.xlsx are treated as GenericDocuments
+    #as "field notes" is not a real DataStore reference type.
+    #per management decision the keyword "FieldNotes" added to the
+    #GenericDocument so that it can be triaged later
+    #good luck, future triage team!
+    if (upload_data$reference_type[i] == "FieldNotes") {
+      NPSdatastore::add_keywords(reference_id = ref_code,
+                                 keywords = "FieldNotes",
+                                 dev = dev,
+                                 interactive = FALSE)
+    }
+
     # add content unit links ----
     links_to_add <- unlist(stringr::str_split(upload_data$content_units[i],
                                               ", "))
@@ -180,15 +195,17 @@ bulk_reference_generation <- function(path = getwd(),
                               license_type_id = upload_data$license_code[i],
                               dev = dev,
                               interactive = FALSE)
-    # add reference to project(s) ----
-    projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
+    # add reference to project(s) (but NOT if the ref IS a project) ----
+    if (upload_data$reference_type[i] != "Project") {
+      projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
                                                ", "))
-    projects_to_add <- stringr::str_trim(projects_to_add)
+      projects_to_add <- stringr::str_trim(projects_to_add)
 
-    #cli::cli_inform("Adding reference {ref_code} to project {upload_data$project_id[i]}.")
-    add_ref_to_projects(reference_id = ref_code,
-                        project_id = projects_to_add,
-                        dev = dev)
+      #cli::cli_inform("Adding reference {ref_code} to project   {upload_data$project_id[i]}.")
+      add_ref_to_projects(reference_id = ref_code,
+                          project_id = projects_to_add,
+                          dev = dev)
+    }
 
     # add owners to project (person uploading is also added as an owner) ----
     owners_to_add <- unlist(stringr::str_split(upload_data$owner_email_list[i],

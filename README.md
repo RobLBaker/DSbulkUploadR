@@ -14,3 +14,6 @@ A set of step-by-step detailed instructions on how to use the bulk uploader, wha
 * Generic Document
 * Web Site
 * Generic Dataset
+* Field Notes 
+
+("Field Notes" is not a valid reference type on DataStore. Information supplied to DSbulkUploadR under "FieldNotes" will be treated as a GenericDocument with the exception that the keyword "FeildNotes" will be added to the GenericDocument created on DataStore to aid in subsequent triage)
