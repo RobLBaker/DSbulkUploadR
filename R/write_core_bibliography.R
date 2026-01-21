@@ -121,8 +121,12 @@ write_core_bibliography <- function(reference_id,
                    #metadataStandardID = ""
                    #licenseTypeID = upload_data$license[row_num]
                    )
-
-  } else if (upload_data$reference_type[row_num] == "GenericDocument") {
+  #treat "FieldNotes" as "GenericDocument" because "FieldNotes is not a real
+  #reference but the decision was made to treat it like a GenericDocument
+  #and add in the keyword "FieldNotes" for later triage.
+  #good luck, later triage team!
+  } else if (upload_data$reference_type[row_num] == "GenericDocument" |
+             upload_data$reference_type[row_num] == "FieldNotes") {
     mylist <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
