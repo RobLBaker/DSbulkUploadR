@@ -25,6 +25,8 @@ In the "reference_type" column put the reference type for the reference to be cr
 
 For a full list of reference types and the appropriate way to specify them, see the [DataStore swagger documentation for the appropriate API](https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes)
 
+One exception is that "FieldNotes" is a valid "reference type" within DSbulkUploadR but is not a reference type on DataStore. Information supplied to DSbulkUploadR as "FieldNotes" will be treated as a "GenericDocument" with the exception that the keyword "FieldNotes" will be added to the GenericDocument creatd on DataStore for triage at a later time.
+
 ## Files to upload
 The file_path column in the input.xlsx file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
 
@@ -154,6 +156,8 @@ The column content_units in the input.xlsx file should contain a comma-separated
 
 ## Keywords
 The keywords column in the input.xlsx file should contain a comma-separated list of keywords to be added to the reference. Each keyword can consist of a single word or multiple words but should not contain special characters (e.g. no quotes, apostrophes, etc). Keywords will automatically be sorted into alphabetical order on DataStore.
+
+For the "reference type" FieldNotes, the keyword "FieldNotes" will automatically be added to the GenericDocument reference created on DataStore.
 
 ## Projects
 The project_id column should contain one or more (separated by a comma) DataStore Project type reference codes. The newly created reference on DataStore will automatically be added to the Project. The Project must already exist on DataStore, however it can be in draft mode.
