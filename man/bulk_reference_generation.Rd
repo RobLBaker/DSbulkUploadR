@@ -38,7 +38,7 @@ The function will first run \code{run_input_validation} on the supplied .txt of 
 \details{
 The function will inform the user of the total number of references to be created, the number of files to be uploaded, and the total volume of data to be uploaded (in GB) and ask the user if they are sure they want to proceed.
 
-The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference.
+The function then creates a draft reference on DataStore for each line in the input .txt and uses the information provided in the .txt to populate the Reference. Finally, all files in the given path for a reference in the .txt will be uploaded to the appropriate reference. All generated references will have the by-or-for-NPS flag set to TRUE. Currently the bulk reference generation tool only supports public references.
 
 The original dataframe generated from the .txt is returned to the user with a single column added: the DataStore reference ID for each newly created reference.
 }
