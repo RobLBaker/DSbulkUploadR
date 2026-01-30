@@ -490,15 +490,16 @@ check_end_after_start <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
-  if(all(upload_data$reference_type == "Project")) {
-    msg <- paste0("All references of are type \"Project\" which does not ",
-                  "require a content enddate.")
-    cli::cli_inform(c("v" = msg))
+  end_dates <- suppressWarnings(lubridate::ymd(upload_data$content_end_date))
+  start_dates <- suppressWarnings(lubridate::ymd(upload_data$content_begin_date))
+
+  if (length(end_dates) == 0 | length(start_dates) == 0) {
+    msg1 <- paste0('All references of are type "', sheet_name, '" which does ',
+                  'not require a content start date or a content end date.')
+    cli::cli_inform(c("v" = msg1))
     return(invisible(NULL))
   }
 
-  end_dates <- lubridate::ymd(upload_data$content_end_date)
-  start_dates <- lubridate::ymd(upload_data$content_begin_date)
   time_dif <- lubridate::interval(start_dates, end_dates)
   if (any(time_dif < 0)) {
     msg <- paste0("Some content end dates predate content start dates. ",
