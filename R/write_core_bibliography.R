@@ -33,10 +33,14 @@ write_core_bibliography <- function(reference_id,
                                     sheet = sheet_name)
 
   # populate draft reference bibliography ----
-  begin_date <- upload_data$content_begin_date[row_num]
+  # Scripts don't have start dates.
+  if (upload_data$reference_type[row_num] != "Script") {
+    begin_date <- upload_data$content_begin_date[row_num]
+  }
 
-  # Projects don't get end dates for this uploader tool.
-  if (upload_data$reference_type[row_num] != "Project") {
+  # Projects and Scripts don't get end dates for this uploader tool.
+  if (upload_data$reference_type[row_num] != "Project" &&
+      upload_data$reference_type[row_num] != "Script") {
     end_date <- upload_data$content_end_date[row_num]
   }
 
