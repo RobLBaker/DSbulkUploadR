@@ -534,8 +534,16 @@ check_dates_past <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
-  today <- Sys.Date()
+
   start_dates <- lubridate::ymd(upload_data$content_begin_date)
+  if (length(start_dates) == 0) {
+    msg1 <- paste0('All references of are type "', sheet_name, '" which does ',
+                   'not require a content start date.')
+    cli::cli_inform(c("v" = msg1))
+    return(invisible(NULL))
+  }
+
+  today <- Sys.Date()
   check_start <- lubridate::interval(start_dates, today)
 
   # Projects don't have end dates:
