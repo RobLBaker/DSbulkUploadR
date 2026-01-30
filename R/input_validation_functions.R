@@ -406,8 +406,8 @@ check_start_date <- function(path = getwd(),
                                     sheet = sheet_name)
   start_dates <- suppressWarnings(upload_data$content_begin_date)
   if (is.null(start_dates)) {
-    msg <- paste0("All references of are type", sheet_name, " which does not ",
-                  "require a content start date.")
+    msg <- paste0('All references of are type "', sheet_name, '" which does ',
+                  'not require a content start date.')
     cli::cli_inform(c("v" = msg))
     return(invisible(NULL))
   }
@@ -449,8 +449,8 @@ check_end_date <- function(path = getwd(),
 
   end_dates <- supressWarnings(upload_data$content_end_date)
   if (is.null(end_dates)) {
-    msg <- paste0("All references of are type", sheet_name, " which does not ",
-                  "require a content end date.")
+    msg <- paste0('All references of are type "', sheet_name, '" which does ',
+                  'not require a content end date.')
     cli::cli_inform(c("v" = msg))
     return(invisible(NULL))
   }
