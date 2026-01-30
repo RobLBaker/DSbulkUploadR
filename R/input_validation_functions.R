@@ -447,7 +447,7 @@ check_end_date <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
-  end_dates <- supressWarnings(upload_data$content_end_date)
+  end_dates <- suppressWarnings(upload_data$content_end_date)
   if (is.null(end_dates)) {
     msg <- paste0('All references of are type "', sheet_name, '" which does ',
                   'not require a content end date.')
