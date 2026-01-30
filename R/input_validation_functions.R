@@ -89,7 +89,8 @@ check_ref_type_supported <- function(path = getwd(),
                       "FieldNotes",
                       "WebSite",
                       "GenericDataset",
-                      "Project")
+                      "Project",
+                      "Script")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
