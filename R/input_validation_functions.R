@@ -404,7 +404,13 @@ check_start_date <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  start_dates <- upload_data$content_begin_date
+  start_dates <- suppressWarnings(upload_data$content_begin_date)
+  if (is.null(start_dates)) {
+    msg <- paste0("The reference type ", sheet_name, " does not require ",
+                  "a start date.")
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
   #valid dates are "TRUE"
   valid_dates <- !is.na(suppressWarnings(lubridate::ymd(start_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
