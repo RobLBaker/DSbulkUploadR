@@ -535,7 +535,7 @@ check_dates_past <- function(path = getwd(),
                                     sheet = sheet_name)
 
 
-  start_dates <- lubridate::ymd(upload_data$content_begin_date)
+  start_dates <- suppressWarnings(lubridate::ymd(upload_data$content_begin_date))
   if (length(start_dates) == 0) {
     msg1 <- paste0('All references of are type "', sheet_name, '" which does ',
                    'not require a content start date.')
