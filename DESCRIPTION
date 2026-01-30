@@ -1,6 +1,6 @@
 Package: DSbulkUploadR
 Title: Creates, populates, and uploads files to multiple DataStore references
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: c( 
     person(given = "Robert",
     family = "Baker",
@@ -14,7 +14,7 @@ License: CC0 + file LICENSE
 BugReports: https://github.com/nationalparkservice/DSbulkUploadR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Remotes:
     nationalparkservice/NPSdatastore
 Imports: 
