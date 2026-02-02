@@ -2,7 +2,7 @@
 #'
 #' `r lifecycle::badge("deprecated")`
 #'
-#' Writes a template input file (e.g. "AutioRecording_input.xlsx") to the specified path. The template input file can then be edited as needed, saved, and passed to the `bulk_reference_generation` function to create the specified references.
+#' Writes a template input file (e.g. "AutioRecording_input.xlsx") to the specified path. The template input file can then be edited as needed, saved, and passed to the `generate_references` function to create the specified references.
 #'
 #' The currently supported reference_types are: AudioRecording.
 #'
