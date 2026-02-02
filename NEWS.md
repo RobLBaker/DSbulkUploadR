@@ -1,9 +1,11 @@
 # DSbulkUploadR v1.0.0 ("Roadless Areas")
+
 ## 2025-02-02
   * big fixes for Script reference type bibliography creation
   * update function name from `bulk_reference_generation` to `generate_references`
 
-# DSbulkUploadR (development version)
+# DSbulkUploadR v.0.0.1 ("development version")
+
 ## 2025-01-30
   * Add support for `by or for NPS` flag on DataStore. This flag will be set to TRUE for all references created using this package.
   
