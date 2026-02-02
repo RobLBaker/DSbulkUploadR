@@ -265,7 +265,7 @@ write_core_bibliography <- function(reference_id,
                                      precision = ""),
 
                    #location = "Fort Collins, CO",
-                   miscellaneousCode = scripting_language[row_num],
+                   miscellaneousCode = upload_data$scripting_language[row_num],
                    #volume = "",
                    #issue = "",
                    #pageRange = "",
