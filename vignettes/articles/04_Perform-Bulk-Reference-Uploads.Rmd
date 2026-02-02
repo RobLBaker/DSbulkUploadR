@@ -14,7 +14,7 @@ Once you have finished filling out your input.xlsx file, you are ready to create
 
 # Testing on the development server
 
-To test your input.xlsx file on the development server, you should consider truncating the input.xlsx file and limiting it to just a few rows (references) to create. Save this truncated version with a new name and pass it to the `bulk_reference_generation()` function while setting the `dev` parameter to `TRUE`. You will also need to specify which sheet within the xlxs you want to use to generate references on DataStore:
+To test your input.xlsx file on the development server, you should consider truncating the input.xlsx file and limiting it to just a few rows (references) to create. Save this truncated version with a new name and pass it to the `generate_references()` function while setting the `dev` parameter to `TRUE`. You will also need to specify which sheet within the xlxs you want to use to generate references on DataStore:
 
 ```{r dev_testing, eval=FALSE}
 dev_refs <- bulk_reference_generation(filename = "truncated_input.xlsx",
@@ -22,7 +22,7 @@ dev_refs <- bulk_reference_generation(filename = "truncated_input.xlsx",
                                       sheet = "AudioRecording",
                                       dev = TRUE))
 ```
-Once the function has run, you can look at your draft references on the [DataStore development server](https://irmadev.nps.gov/DataStore/) to make sure everything is copasetic. Make any necessary adjustments to your full input.xlsx file before using it with the `bulk_reference_generation()` with the `dev` parameter set to `FALSE`.
+Once the function has run, you can look at your draft references on the [DataStore development server](https://irmadev.nps.gov/DataStore/) to make sure everything is copasetic. Make any necessary adjustments to your full input.xlsx file before using it with the `generate_references()` with the `dev` parameter set to `FALSE`.
 
 You may want to check the object `dev_refs` to see a list of the newly created reference numbers, which has been added to the information you supplied in your `truncated_input.xlsx` file.
 
@@ -37,10 +37,10 @@ new_refs <- bulk_reference_generation(filename = "DSbulkUplaodR_input.xlsx",
 ```
 
 ## Address errors and warnings
-If the data validation steps in the `bulk_reference_generation()` function produced any errors, you will have to address those before proceeding. See the [Data Validation Checks](05_Data-Validation-Checks.html) vignette for additional information on these tests and how to fix your input.xlsx file.
+If the data validation steps in the `generate_references()` function produced any errors, you will have to address those before proceeding. See the [Data Validation Checks](05_Data-Validation-Checks.html) vignette for additional information on these tests and how to fix your input.xlsx file.
 
 ## Increase file numbers and sizes
-For safety's sake, the `bulk_reference_generation()` function has a setting for the maximum allowable number of files and volume of data that can be uploaded during a single operation. These defaults are 500 files and 10 GB. You can increase the allowable upload file number and size above the default settings by changing those parameters (see the documentation for `bulk_reference_geneartion()`). For instance, to increase the maximum file number to 5,000 and the maximum volume of data to 500 GB, you would run the following code:
+For safety's sake, the `generate_references()` function has a setting for the maximum allowable number of files and volume of data that can be uploaded during a single operation. These defaults are 500 files and 10 GB. You can increase the allowable upload file number and size above the default settings by changing those parameters (see the documentation for `generate_references()`). For instance, to increase the maximum file number to 5,000 and the maximum volume of data to 500 GB, you would run the following code:
 
 ```{r increase_max, eval = FALSE}
 new_refs <- bulk_reference_generation(filename = "DSbulkUploadR_input.xlsx",
@@ -52,7 +52,7 @@ new_refs <- bulk_reference_generation(filename = "DSbulkUploadR_input.xlsx",
 ```
 
 # Save your output
-In addition to creating new references on DataStore, the `bulk_reference_generation()` function will return a dataframe in R (in these examples saves as the object `dev_refs` or `new_refs`). This dataframe contains all the information you supplied in your input.txt file and one additional column: the DataStore reference ID created for each new reference. 
+In addition to creating new references on DataStore, the `generate_references()` function will return a dataframe in R (in these examples saves as the object `dev_refs` or `new_refs`). This dataframe contains all the information you supplied in your input.txt file and one additional column: the DataStore reference ID created for each new reference. 
 
 You may wish to save this file to your current working directory for later use or your personal records:
 
