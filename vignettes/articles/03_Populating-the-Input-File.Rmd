@@ -12,11 +12,11 @@ knitr::opts_chunk$set(
 # Overview
 The input template is designed to be easy to understand and human-readable with some data validation incorporated into the .xlsx file. Yet, it will be used as computer input and so must be crafted with some rules that may not seem intuitive. Please take care to read these instructions when populating the DSbulkUploadR_input.xlsx template. Do **not** change any of the column names or sheet names. 
 
-Each reference type on DataStore has a specific set of back-end attributes. You must **use a reference-type specific sheet** within the DSbulkdUploadR_input.xlsx file (see [Generate the Input File](02_Generate-the-Input-File.html). The sheets within the input.xlsx may had different columns. If your reference-type specific input.xlsx sheet lacks a column, you can safely ignore the instructions for that column. However, you cannot leave any blanks in the .xlsx sheet for your reference type. Do not delete, edit, or change the column names or sheet names.
+Each reference type on DataStore has a specific set of back-end attributes. You must **use a reference-type specific sheet** within the DSbulkdUploadR_input.xlsx file (see [Generate the Input File](02_Generate-the-Input-File.html). The sheets within the input.xlsx may have different columns. If your reference-type specific input.xlsx sheet lacks a column, you can safely ignore the instructions for that column. However, you **cannot leave any blanks in the .xlsx sheet for your reference type**. Do not delete, edit, or change the column names or sheet names.
 
 Most of the data you supply will be subjected to a series of data validation checks to make sure it is correctly formatted. If any errors are found, you will be given an opportunity to fix them prior to performing the bulk reference generation. But it is much faster to supply the data correctly the first time (and there are likely ways to do it incorrectly that the checks cannot account for). So please read the instructions carefully.
 
-The DSbulkUploadR_input.xlsx template file also has some basic validation built in for some of the simpler columns. However, even this basic validation will not work if you copy and paste data into the sheet so copy and paste with care (why you does the validation ignore copy-paste data you ask? This is a GREAT question and I encourage you to address it directly to Microsoft....good luck).
+The DSbulkUploadR_input.xlsx template file also has some basic validation built in for some of the simpler columns. However, even this basic validation will not work if you copy and paste data into the sheet so copy and paste with care (why does excel validation ignore copy-paste data you ask? This is a GREAT question and I encourage you to address it directly to Microsoft....good luck).
 
 One common problem is with date formats and Excel. Excel LOVES to reformat dates and hates ISO 8601 date format (again why? GREAT question for the Microsoft development team). Please see the section below, "[Working with dates](#working-with-dates)" for how to mitigate the issue.
 
@@ -25,7 +25,7 @@ In the "reference_type" column put the reference type for the reference to be cr
 
 For a full list of reference types and the appropriate way to specify them, see the [DataStore swagger documentation for the appropriate API](https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes)
 
-One exception is that "FieldNotes" is a valid "reference type" within DSbulkUploadR but is not a reference type on DataStore. Information supplied to DSbulkUploadR as "FieldNotes" will be treated as a "GenericDocument" with the exception that the keyword "FieldNotes" will be added to the GenericDocument creatd on DataStore for triage at a later time.
+One exception is that "FieldNotes" is a valid "reference type" within DSbulkUploadR but is not a reference type on DataStore. Information supplied to DSbulkUploadR as "FieldNotes" will be treated as a "GenericDocument" with the exception that the keyword "FieldNotes" will be added to the GenericDocument created on DataStore for triage at a later time.
 
 ## Files to upload
 The file_path column in the input.xlsx file specifies the location of the file(s) to upload to each reference created on DataStore. This could be a full path name starting with "C:\\users\documents\etc" or it could be a relative path from the current directory. You do not need to specify the file name(s), just the path to the files. All of the files within the specified directory will be uploaded to the reference created regardless of file type. 
@@ -35,9 +35,9 @@ This is one of the places you could make a critical mistakes with fairly large c
 Each new reference should have its own file path specified. This means that you need to organize your files such that you have a directory of files associated with a specific reference you intend to create. You should have all the files associated with that reference and nothing else in that directory.
 
 ### Checks on files uploads
-The `generate_references()` function can impose some limits on the total number and size of files to be uploaded. By default, the function will produce a warning if you attempt to upload 250 or more files or 1 or more GB of data at a time (not per reference but for the entire process). The function will produce an error and fail to upload any files if you attempt to upload 500 or more files or 10 GB or more data at a time.  These parameters are easily adjusted to suite your needs. See the documentation on [`bulk_reference_generation`](https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html)
+The `generate_references()` function can impose some limits on the total number and size of files to be uploaded. By default, the function will produce a warning if you attempt to upload 250 or more files or 1 or more GB of data at a time (not per reference but for the entire process). The function will produce an error and fail to upload any files if you attempt to upload 500 or more files or 10 GB or more data at a time.  These parameters are easily adjusted to suite your needs. See the documentation on [`generate_references`](https://nationalparkservice.github.io/DSbulkUploadR/reference/generate_references.html)
 
-Additionally, before the `generate_references()` function creates anything on DataStore, you will be informed of the total number of references the function will create, the total number of files it will upload, and the total data volume (in GB) that will be uploaded. You will have an option to proceed or end the function if any of these values do not look correct to you.
+Additionally, before the `generate_references()` function creates anything on DataStore, you will be informed of the total number of references the function will create, the total number of files it will upload, and the total data volume (rounded to the nearest GB) that will be uploaded. You will have an option to proceed or end the function if any of these values do not look correct to you.
 
 ## 508 
 You will need to supply information on whether the files you are uploading to each reference are 508 compliant ("Yes") or not ("No"). These values apply to ALL of the files in the supplied file path/for a given reference and will be universally applied to all of the files uploaded to each reference. References cannot have mixes of files some of which are 508 compliant and some of which are not.  However, different references can have different 508 compliance values associated with them.
@@ -47,7 +47,7 @@ This column is subject to data validation within excel; when you click on a cell
 ## Reference title
 The column title in the input.xlsx file should contain your Reference Title. Each reference (line in the input.xlsx file) requires a unique title. Supply the title without quotes surrounding it.
 
-Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a veg survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
+Titles should be informative and should not include acronyms (such as NPS units, networks, regions, divisions, etc) that may not be broadly known outside of NPS. In general a title should seek to convey the following information: What, when, and where.  What is in the reference? Where is the information from? When is the information from? For instance a vegetation survey from ROMO 2020-2023 might have the title "Vegetation Survey Data in Rocky Mountain National Park 2020-2023". This clearly conveys what will be in the reference (data on vegetation), where the data are from to NPS and non-NPS users alike (ROMO), and what dates the data span (2020-2023, which may differ from the year it was activated/published).
 
 Titles are limited in length to 512 characters (including spaces).
 
@@ -59,6 +59,12 @@ The column content_begin_date in the input.xlsx file should contain the date tha
 
 ### Content end date
 The column content_end_date in the input.xlsx file should contain the date that the content of the reference/files ends in ISO 8601 format: YYYY-MM-DD. Other formats are not accepted. The content end date should be before today's date and after the content_start_date.
+
+## Version (Script reference only)
+Provide the version number of the script of software being uploaded to DataStore, e.g. 1.0.0 or v0.0.1. The use of semantic versioning is highly recommended. NPS users can reference the section on [Semantic Versioning Guidance](https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/data-publication/SitePages/Documenting-Code.aspx#what-do-i-call-my-releases-%28semantic-versioning-at-nps%29) in the Data Publication Best Practices SharePoint Site for further information.
+
+## Scripting Language (Script reference only)
+The computer language in which most of the script is written, typically exclusing documentation. For instance: R, python, COBOL, etc. 
 
 ## Length of recording
 The length_of_recording column in the input.xlsx file should contain a string of characters describing the duration of the content. For instance, the length_of_recording value may be "5 hours six minutes and 32 sec" (without quotes). This value will be directly used and not parsed into any specific format.
