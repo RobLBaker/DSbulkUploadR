@@ -285,9 +285,9 @@ write_core_bibliography <- function(reference_id,
     )
   }
 
-  #for testing purposes and to look at the json sent:
   bib_body <- rjson::toJSON(bib_body)
-  jsonlite::prettify(bib_body)
+  #for testing purposes and to look at the json sent:
+  #jsonlite::prettify(bib_body)
 
   # make request to populate reference ====
   if (dev == TRUE) {
