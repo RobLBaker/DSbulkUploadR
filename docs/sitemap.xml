@@ -14,7 +14,6 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_keyword.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_owners.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_ref_to_projects.html</loc></url>
-<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_508_format.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_authors_orcid.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_author_email.html</loc></url>
@@ -39,6 +38,7 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_users_AD.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/create_draft_reference.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/DSbulkUploadR-package.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/generate_references.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/index.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/make_input_template.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/pipe.html</loc></url>

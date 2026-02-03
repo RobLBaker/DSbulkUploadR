@@ -33,10 +33,14 @@ write_core_bibliography <- function(reference_id,
                                     sheet = sheet_name)
 
   # populate draft reference bibliography ----
-  begin_date <- upload_data$content_begin_date[row_num]
+  # Scripts don't have start dates.
+  if (upload_data$reference_type[row_num] != "Script") {
+    begin_date <- upload_data$content_begin_date[row_num]
+  }
 
-  # Projects don't get end dates for this uploader tool.
-  if (upload_data$reference_type[row_num] != "Project") {
+  # Projects and Scripts don't get end dates for this uploader tool.
+  if (upload_data$reference_type[row_num] != "Project" &&
+      upload_data$reference_type[row_num] != "Script") {
     end_date <- upload_data$content_end_date[row_num]
   }
 
@@ -240,6 +244,32 @@ write_core_bibliography <- function(reference_id,
                    #issue = "",
                    #pageRange = "",
                    #edition = "",
+                   #dateRange = "",
+                   #meetingPlace = "",
+                   abstract = upload_data$description[row_num],
+                   notes = upload_data$notes[row_num],
+                   purpose = "",
+                   #tableOfContents = "",
+                   publisher = "National Park Service",
+                   contacts1 = contacts,
+                   contacts2 = "",
+                   contacts3 = "",
+                   #metadataStandardID = "",
+                   licenseTypeID = upload_data$license_code[row_num]
+    )
+  } else if (upload_data$reference_type[row_num] == "Script") {
+    mylist <- list(title = upload_data$title[row_num],
+                   issuedDate = list(year = lubridate::year(today),
+                                     month = lubridate::month(today),
+                                     day = lubridate::day(today),
+                                     precision = ""),
+
+                   #location = "Fort Collins, CO",
+                   miscellaneousCode = upload_data$scripting_language[row_num],
+                   #volume = "",
+                   #issue = "",
+                   #pageRange = "",
+                   edition = upload_data$version[row_num],
                    #dateRange = "",
                    #meetingPlace = "",
                    abstract = upload_data$description[row_num],

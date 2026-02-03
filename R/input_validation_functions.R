@@ -89,7 +89,8 @@ check_ref_type_supported <- function(path = getwd(),
                       "FieldNotes",
                       "WebSite",
                       "GenericDataset",
-                      "Project")
+                      "Project",
+                      "Script")
 
   bad_refs <- refs[(!refs %in% supported_refs)]
   bad_refs <- unique(bad_refs)
@@ -403,7 +404,13 @@ check_start_date <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  start_dates <- upload_data$content_begin_date
+  start_dates <- suppressWarnings(upload_data$content_begin_date)
+  if (is.null(start_dates)) {
+    msg <- paste0('All references of are type "', sheet_name, '" which does ',
+                  'not require a content start date.')
+    cli::cli_inform(c("v" = msg))
+    return(invisible(NULL))
+  }
   #valid dates are "TRUE"
   valid_dates <- !is.na(suppressWarnings(lubridate::ymd(start_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
@@ -439,14 +446,15 @@ check_end_date <- function(path = getwd(),
                                                   "/",
                                                   filename),
                                     sheet = sheet_name)
-  if(all(upload_data$reference_type == "Project")) {
-    msg <- paste0("All references of are type \"Project\" which does not ",
-                  "require a content end date.")
+
+  end_dates <- suppressWarnings(upload_data$content_end_date)
+  if (is.null(end_dates)) {
+    msg <- paste0('All references of are type "', sheet_name, '" which does ',
+                  'not require a content end date.')
     cli::cli_inform(c("v" = msg))
     return(invisible(NULL))
   }
 
-  end_dates <- upload_data$content_end_date
   valid_dates <- !is.na(suppressWarnings(lubridate::ymd(end_dates)))
   if (sum(valid_dates) < nrow(upload_data)) {
     msg <- paste0("Some content end dates are not in ISO 8601 format ",
@@ -482,15 +490,16 @@ check_end_after_start <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
-  if(all(upload_data$reference_type == "Project")) {
-    msg <- paste0("All references of are type \"Project\" which does not ",
-                  "require a content enddate.")
-    cli::cli_inform(c("v" = msg))
+  end_dates <- suppressWarnings(lubridate::ymd(upload_data$content_end_date))
+  start_dates <- suppressWarnings(lubridate::ymd(upload_data$content_begin_date))
+
+  if (length(end_dates) == 0 | length(start_dates) == 0) {
+    msg1 <- paste0('All references of are type "', sheet_name, '" which does ',
+                  'not require a content start date or a content end date.')
+    cli::cli_inform(c("v" = msg1))
     return(invisible(NULL))
   }
 
-  end_dates <- lubridate::ymd(upload_data$content_end_date)
-  start_dates <- lubridate::ymd(upload_data$content_begin_date)
   time_dif <- lubridate::interval(start_dates, end_dates)
   if (any(time_dif < 0)) {
     msg <- paste0("Some content end dates predate content start dates. ",
@@ -525,8 +534,16 @@ check_dates_past <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
+
+  start_dates <- suppressWarnings(lubridate::ymd(upload_data$content_begin_date))
+  if (length(start_dates) == 0) {
+    msg1 <- paste0('All references of are type "', sheet_name, '" which does ',
+                   'not require a content start date.')
+    cli::cli_inform(c("v" = msg1))
+    return(invisible(NULL))
+  }
+
   today <- Sys.Date()
-  start_dates <- lubridate::ymd(upload_data$content_begin_date)
   check_start <- lubridate::interval(start_dates, today)
 
   # Projects don't have end dates:

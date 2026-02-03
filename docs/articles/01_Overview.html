@@ -106,7 +106,7 @@
 functions: <code><a href="../reference/write_input_template.html">write_input_template()</a></code> creates an excel
 spreadsheet (DSbulkUploadR_input.xlsx) with a separate sheet for each
 supported reference type. After the .xlsx file is populated, a second
-function <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> takes the data in the
+function <code><a href="../reference/generate_references.html">generate_references()</a></code> takes the data in the
 input.xlsx file and uses it to perform the bulk upload. The bulk upload
 consists of:</p>
 <ol style="list-style-type: decimal">
@@ -118,7 +118,7 @@ to the draft reference(s)</li>
 <li>Connect your reference to a pre-existing DataStore Project
 reference</li>
 </ol>
-<p>The <code>bulk_reference generation()</code> will return a dataframe
+<p>The <code><a href="../reference/generate_references.html">generate_references()</a></code> will return a dataframe
 containing all of the information supplied in the input .xlsx file with
 one additional column containing the datastore reference ID for each
 newly created reference. You may wish to write this dataframe to a .csv,
@@ -148,6 +148,7 @@ reference(s) created</li>
 <li>Web Site</li>
 <li>Generic Dataset</li>
 <li>Field Notes *</li>
+<li>Script</li>
 </ol>
 <ul>
 <li>Field Notes are not an actual reference type on DataStore.

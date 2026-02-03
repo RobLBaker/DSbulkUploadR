@@ -114,9 +114,9 @@ input.xlsx file using the development server.</p>
 <p>To test your input.xlsx file on the development server, you should
 consider truncating the input.xlsx file and limiting it to just a few
 rows (references) to create. Save this truncated version with a new name
-and pass it to the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function
-while setting the <code>dev</code> parameter to <code>TRUE</code>. You
-will also need to specify which sheet within the xlxs you want to use to
+and pass it to the <code><a href="../reference/generate_references.html">generate_references()</a></code> function while
+setting the <code>dev</code> parameter to <code>TRUE</code>. You will
+also need to specify which sheet within the xlxs you want to use to
 generate references on DataStore:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dev_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"truncated_input.xlsx"</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                                      <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
@@ -126,8 +126,8 @@ generate references on DataStore:</p>
 the <a href="https://irmadev.nps.gov/DataStore/" class="external-link">DataStore development
 server</a> to make sure everything is copasetic. Make any necessary
 adjustments to your full input.xlsx file before using it with the
-<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> with the <code>dev</code>
-parameter set to <code>FALSE</code>.</p>
+<code><a href="../reference/generate_references.html">generate_references()</a></code> with the <code>dev</code> parameter
+set to <code>FALSE</code>.</p>
 <p>You may want to check the object <code>dev_refs</code> to see a list
 of the newly created reference numbers, which has been added to the
 information you supplied in your <code>truncated_input.xlsx</code>
@@ -146,23 +146,22 @@ to supply your full (not truncated) input.xlsx file:</p>
 <h3 id="address-errors-and-warnings">Address errors and warnings<a class="anchor" aria-label="anchor" href="#address-errors-and-warnings"></a>
 </h3>
 <p>If the data validation steps in the
-<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function produced any errors,
-you will have to address those before proceeding. See the <a href="05_Data-Validation-Checks.html">Data Validation Checks</a>
+<code><a href="../reference/generate_references.html">generate_references()</a></code> function produced any errors, you
+will have to address those before proceeding. See the <a href="05_Data-Validation-Checks.html">Data Validation Checks</a>
 vignette for additional information on these tests and how to fix your
 input.xlsx file.</p>
 </div>
 <div class="section level3">
 <h3 id="increase-file-numbers-and-sizes">Increase file numbers and sizes<a class="anchor" aria-label="anchor" href="#increase-file-numbers-and-sizes"></a>
 </h3>
-<p>For safety’s sake, the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code>
-function has a setting for the maximum allowable number of files and
-volume of data that can be uploaded during a single operation. These
-defaults are 500 files and 10 GB. You can increase the allowable upload
-file number and size above the default settings by changing those
-parameters (see the documentation for
-<code>bulk_reference_geneartion()</code>). For instance, to increase the
-maximum file number to 5,000 and the maximum volume of data to 500 GB,
-you would run the following code:</p>
+<p>For safety’s sake, the <code><a href="../reference/generate_references.html">generate_references()</a></code> function
+has a setting for the maximum allowable number of files and volume of
+data that can be uploaded during a single operation. These defaults are
+500 files and 10 GB. You can increase the allowable upload file number
+and size above the default settings by changing those parameters (see
+the documentation for <code><a href="../reference/generate_references.html">generate_references()</a></code>). For instance,
+to increase the maximum file number to 5,000 and the maximum volume of
+data to 500 GB, you would run the following code:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"DSbulkUploadR_input.xlsx"</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                          <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
@@ -175,12 +174,11 @@ you would run the following code:</p>
 <h2 id="save-your-output">Save your output<a class="anchor" aria-label="anchor" href="#save-your-output"></a>
 </h2>
 <p>In addition to creating new references on DataStore, the
-<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function will return a
-dataframe in R (in these examples saves as the object
-<code>dev_refs</code> or <code>new_refs</code>). This dataframe contains
-all the information you supplied in your input.txt file and one
-additional column: the DataStore reference ID created for each new
-reference.</p>
+<code><a href="../reference/generate_references.html">generate_references()</a></code> function will return a dataframe in R
+(in these examples saves as the object <code>dev_refs</code> or
+<code>new_refs</code>). This dataframe contains all the information you
+supplied in your input.txt file and one additional column: the DataStore
+reference ID created for each new reference.</p>
 <p>You may wish to save this file to your current working directory for
 later use or your personal records:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">

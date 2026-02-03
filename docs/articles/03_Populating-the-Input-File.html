@@ -181,7 +181,7 @@ nothing else in that directory.</p>
 <div class="section level4">
 <h4 id="checks-on-files-uploads">Checks on files uploads<a class="anchor" aria-label="anchor" href="#checks-on-files-uploads"></a>
 </h4>
-<p>The <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function can impose some
+<p>The <code><a href="../reference/generate_references.html">generate_references()</a></code> function can impose some
 limits on the total number and size of files to be uploaded. By default,
 the function will produce a warning if you attempt to upload 250 or more
 files or 1 or more GB of data at a time (not per reference but for the
@@ -189,12 +189,12 @@ entire process). The function will produce an error and fail to upload
 any files if you attempt to upload 500 or more files or 10 GB or more
 data at a time. These parameters are easily adjusted to suite your
 needs. See the documentation on <a href="https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html"><code>bulk_reference_generation</code></a></p>
-<p>Additionally, before the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code>
-function creates anything on DataStore, you will be informed of the
-total number of references the function will create, the total number of
-files it will upload, and the total data volume (in GB) that will be
-uploaded. You will have an option to proceed or end the function if any
-of these values do not look correct to you.</p>
+<p>Additionally, before the <code><a href="../reference/generate_references.html">generate_references()</a></code> function
+creates anything on DataStore, you will be informed of the total number
+of references the function will create, the total number of files it
+will upload, and the total data volume (in GB) that will be uploaded.
+You will have an option to proceed or end the function if any of these
+values do not look correct to you.</p>
 </div>
 </div>
 <div class="section level3">
@@ -317,10 +317,10 @@ ORCiD profile and what information orcid.org displays about you on the
 <a href="https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/data-publication/SitePages/Reserve-a-DOI.aspx#personal-digital-identifiers-%28orcids%29" class="external-link">NPS
 Data Publication Best Practices SharePoint site page on Persistent
 Identifiers</a> including ORCiDs.</p>
-<p>The <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function will
-automatically extract first name, last name, and ORCiDs based on the
-supplied email addresses and use that information to populate the
-authors of the reference.</p>
+<p>The <code><a href="../reference/generate_references.html">generate_references()</a></code> function will automatically
+extract first name, last name, and ORCiDs based on the supplied email
+addresses and use that information to populate the authors of the
+reference.</p>
 </div>
 <div class="section level3">
 <h3 id="owner-email-addresses">Owner email addresses<a class="anchor" aria-label="anchor" href="#owner-email-addresses"></a>
@@ -335,10 +335,10 @@ particularly useful role for reviewers) as well as have full editorial
 abilities over the reference and can change any field or activate the
 reference.</p>
 <p>In addition to the owners in the owner_email_list field, whoever runs
-the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function will also
-automatically be added as an owner. If the Central Support Office is
-generating your references for you, they can at your request remove
-their names from the owner list for a given reference.</p>
+the <code><a href="../reference/generate_references.html">generate_references()</a></code> function will also automatically
+be added as an owner. If the Central Support Office is generating your
+references for you, they can at your request remove their names from the
+owner list for a given reference.</p>
 </div>
 <div class="section level3">
 <h3 id="licenses">Licenses<a class="anchor" aria-label="anchor" href="#licenses"></a>

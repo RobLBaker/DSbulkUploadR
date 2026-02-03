@@ -103,16 +103,16 @@
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>Carefully constructing and inspecting the input file is very
-important. The <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function will
-run a series of data validation steps to make sure your input file is
-properly formatted. Any errors generated during input data validation
-will need to be fixed before any references are created or files are
-uploaded. These validation steps are meant to help minimize inadvertent
-misuse of the functions but they cannot take the place of careful human
+important. The <code><a href="../reference/generate_references.html">generate_references()</a></code> function will run a
+series of data validation steps to make sure your input file is properly
+formatted. Any errors generated during input data validation will need
+to be fixed before any references are created or files are uploaded.
+These validation steps are meant to help minimize inadvertent misuse of
+the functions but they cannot take the place of careful human
 inspection. Please make sure your input file is properly specified.</p>
 <p>We strongly recommend testing (a subset of?) your input file on the
 development server by setting the parameter <code>dev = TRUE</code> when
-using the <code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function.</p>
+using the <code><a href="../reference/generate_references.html">generate_references()</a></code> function.</p>
 </div>
 <div class="section level2">
 <h2 id="create-an-input-template">Create an input template<a class="anchor" aria-label="anchor" href="#create-an-input-template"></a>
@@ -150,9 +150,9 @@ Audio Recording references and 51 Generic Document references, you will
 need to put the Audio Recording data in the AudioRecording sheet and the
 Generic Document data in the GenericDocument sheet of the
 DSbulkUploadR_input.xlsx file. You will also need to run the
-<code><a href="../reference/bulk_reference_generation.html">bulk_reference_generation()</a></code> function twice: once supplying
-the AudioRecording sheet and once supplying the GenericDocument sheet
-for the DSbulkdUploadR_input.xlsx file.</p>
+<code><a href="../reference/generate_references.html">generate_references()</a></code> function twice: once supplying the
+AudioRecording sheet and once supplying the GenericDocument sheet for
+the DSbulkdUploadR_input.xlsx file.</p>
 </div>
   </div>
 

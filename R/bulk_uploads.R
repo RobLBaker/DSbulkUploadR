@@ -21,8 +21,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' bulk_reference_generation(sheet = "AudioRecording")}
-bulk_reference_generation <- function(path = getwd(),
+#' generate_references(sheet = "AudioRecording")}
+generate_references <- function(path = getwd(),
                                       filename = "DSbulkUploadR_input.xlsx",
                                       sheet,
                                       max_file_upload = 500,
@@ -194,8 +194,9 @@ bulk_reference_generation <- function(path = getwd(),
                       dev = dev)
 
     # add license information ----
-    #cli::cli_inform("Setting license for {ref_code}.")
-    # set license type
+    # set license type: wasn't working in set bibliography.. check to see if
+    # that part of the API endpoint now works
+    # Last check:
     NPSdatastore::set_license(reference_id = ref_code,
                               license_type_id = upload_data$license_code[i],
                               dev = dev,
