@@ -111,11 +111,11 @@ instructions when populating the DSbulkUploadR_input.xlsx template. Do
 <p>Each reference type on DataStore has a specific set of back-end
 attributes. You must <strong>use a reference-type specific
 sheet</strong> within the DSbulkdUploadR_input.xlsx file (see <a href="02_Generate-the-Input-File.html">Generate the Input File</a>. The
-sheets within the input.xlsx may had different columns. If your
+sheets within the input.xlsx may have different columns. If your
 reference-type specific input.xlsx sheet lacks a column, you can safely
-ignore the instructions for that column. However, you cannot leave any
-blanks in the .xlsx sheet for your reference type. Do not delete, edit,
-or change the column names or sheet names.</p>
+ignore the instructions for that column. However, you <strong>cannot
+leave any blanks in the .xlsx sheet for your reference type</strong>. Do
+not delete, edit, or change the column names or sheet names.</p>
 <p>Most of the data you supply will be subjected to a series of data
 validation checks to make sure it is correctly formatted. If any errors
 are found, you will be given an opportunity to fix them prior to
@@ -126,9 +126,9 @@ the instructions carefully.</p>
 <p>The DSbulkUploadR_input.xlsx template file also has some basic
 validation built in for some of the simpler columns. However, even this
 basic validation will not work if you copy and paste data into the sheet
-so copy and paste with care (why you does the validation ignore
-copy-paste data you ask? This is a GREAT question and I encourage you to
-address it directly to Microsoft….good luck).</p>
+so copy and paste with care (why does excel validation ignore copy-paste
+data you ask? This is a GREAT question and I encourage you to address it
+directly to Microsoft….good luck).</p>
 <p>One common problem is with date formats and Excel. Excel LOVES to
 reformat dates and hates ISO 8601 date format (again why? GREAT question
 for the Microsoft development team). Please see the section below, “<a href="#working-with-dates">Working with dates</a>” for how to mitigate
@@ -154,7 +154,7 @@ swagger documentation for the appropriate API</a></p>
 DSbulkUploadR but is not a reference type on DataStore. Information
 supplied to DSbulkUploadR as “FieldNotes” will be treated as a
 “GenericDocument” with the exception that the keyword “FieldNotes” will
-be added to the GenericDocument creatd on DataStore for triage at a
+be added to the GenericDocument created on DataStore for triage at a
 later time.</p>
 </div>
 <div class="section level3">
@@ -188,13 +188,13 @@ files or 1 or more GB of data at a time (not per reference but for the
 entire process). The function will produce an error and fail to upload
 any files if you attempt to upload 500 or more files or 10 GB or more
 data at a time. These parameters are easily adjusted to suite your
-needs. See the documentation on <a href="https://nationalparkservice.github.io/DSbulkUploadR/reference/bulk_reference_generation.html"><code>bulk_reference_generation</code></a></p>
+needs. See the documentation on <a href="https://nationalparkservice.github.io/DSbulkUploadR/reference/generate_references.html"><code>generate_references</code></a></p>
 <p>Additionally, before the <code><a href="../reference/generate_references.html">generate_references()</a></code> function
 creates anything on DataStore, you will be informed of the total number
 of references the function will create, the total number of files it
-will upload, and the total data volume (in GB) that will be uploaded.
-You will have an option to proceed or end the function if any of these
-values do not look correct to you.</p>
+will upload, and the total data volume (rounded to the nearest GB) that
+will be uploaded. You will have an option to proceed or end the function
+if any of these values do not look correct to you.</p>
 </div>
 </div>
 <div class="section level3">
@@ -223,11 +223,12 @@ NPS units, networks, regions, divisions, etc) that may not be broadly
 known outside of NPS. In general a title should seek to convey the
 following information: What, when, and where. What is in the reference?
 Where is the information from? When is the information from? For
-instance a veg survey from ROMO 2020-2023 might have the title
+instance a vegetation survey from ROMO 2020-2023 might have the title
 “Vegetation Survey Data in Rocky Mountain National Park 2020-2023”. This
 clearly conveys what will be in the reference (data on vegetation),
-where the data are from (ROMO), and what dates the data span (2020-2023,
-which may differ from the year it was activated/published).</p>
+where the data are from to NPS and non-NPS users alike (ROMO), and what
+dates the data span (2020-2023, which may differ from the year it was
+activated/published).</p>
 <p>Titles are limited in length to 512 characters (including
 spaces).</p>
 </div>
@@ -256,6 +257,22 @@ date that the content of the reference/files ends in ISO 8601 format:
 YYYY-MM-DD. Other formats are not accepted. The content end date should
 be before today’s date and after the content_start_date.</p>
 </div>
+</div>
+<div class="section level3">
+<h3 id="version-script-reference-only">Version (Script reference only)<a class="anchor" aria-label="anchor" href="#version-script-reference-only"></a>
+</h3>
+<p>Provide the version number of the script of software being uploaded
+to DataStore, e.g. 1.0.0 or v0.0.1. The use of semantic versioning is
+highly recommended. NPS users can reference the section on <a href="https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/data-publication/SitePages/Documenting-Code.aspx#what-do-i-call-my-releases-%28semantic-versioning-at-nps%29" class="external-link">Semantic
+Versioning Guidance</a> in the Data Publication Best Practices
+SharePoint Site for further information.</p>
+</div>
+<div class="section level3">
+<h3 id="scripting-language-script-reference-only">Scripting Language (Script reference only)<a class="anchor" aria-label="anchor" href="#scripting-language-script-reference-only"></a>
+</h3>
+<p>The computer language in which most of the script is written,
+typically exclusing documentation. For instance: R, python, COBOL,
+etc.</p>
 </div>
 <div class="section level3">
 <h3 id="length-of-recording">Length of recording<a class="anchor" aria-label="anchor" href="#length-of-recording"></a>

@@ -94,7 +94,7 @@ write_core_bibliography <- function(reference_id,
   # generate json body for rest api call ====
   #AudioRecordings lack publisher element:
   if (upload_data$reference_type[row_num] == "AudioRecording") {
-    mylist <- list(title = upload_data$title[row_num],
+    bib_body <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
                                      day = lubridate::day(today),
@@ -131,7 +131,7 @@ write_core_bibliography <- function(reference_id,
   #good luck, later triage team!
   } else if (upload_data$reference_type[row_num] == "GenericDocument" |
              upload_data$reference_type[row_num] == "FieldNotes") {
-    mylist <- list(title = upload_data$title[row_num],
+    bib_body <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
                                      day = lubridate::day(today),
@@ -163,7 +163,7 @@ write_core_bibliography <- function(reference_id,
                    #licenseTypeID = upload_data$license[row_num]
                    )
   } else if (upload_data$reference_type[row_num] == "WebSite") {
-      mylist <- list(title = upload_data$title[row_num],
+    bib_body <- list(title = upload_data$title[row_num],
                      issuedDate = list(year = lubridate::year(today),
                                        month = lubridate::month(today),
                                        day = lubridate::day(today),
@@ -195,7 +195,7 @@ write_core_bibliography <- function(reference_id,
                      #licenseTypeID = upload_data$license[row_num]
       )
   } else if (upload_data$reference_type[row_num] == "GenericDataset") {
-    mylist <- list(title = upload_data$title[row_num],
+    bib_body <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
                                      day = lubridate::day(today),
@@ -228,7 +228,7 @@ write_core_bibliography <- function(reference_id,
                    licenseTypeID = upload_data$license_code[row_num]
     )
   } else if (upload_data$reference_type[row_num] == "Project") {
-    mylist <- list(title = upload_data$title[row_num],
+    bib_body <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
                                      day = lubridate::day(today),
@@ -258,7 +258,7 @@ write_core_bibliography <- function(reference_id,
                    licenseTypeID = upload_data$license_code[row_num]
     )
   } else if (upload_data$reference_type[row_num] == "Script") {
-    mylist <- list(title = upload_data$title[row_num],
+    bib_body <- list(title = upload_data$title[row_num],
                    issuedDate = list(year = lubridate::year(today),
                                      month = lubridate::month(today),
                                      day = lubridate::day(today),
@@ -285,9 +285,9 @@ write_core_bibliography <- function(reference_id,
     )
   }
 
+  bib_body <- rjson::toJSON(bib_body)
   #for testing purposes and to look at the json sent:
-  x <- rjson::toJSON(mylist)
-  jsonlite::prettify(x)
+  #jsonlite::prettify(bib_body)
 
   # make request to populate reference ====
   if (dev == TRUE) {
@@ -302,7 +302,7 @@ write_core_bibliography <- function(reference_id,
     url = api_url,
     httr::add_headers('Content-Type' = 'application/json'),
     httr::authenticate(":", "", "ntlm"),
-    body = jsonlite::toJSON(mylist, pretty = TRUE, auto_unbox = TRUE))
+    body = jsonlite::toJSON(bib_body, pretty = TRUE, auto_unbox = TRUE))
 
   return(invisible(NULL))
 }

@@ -1,12 +1,14 @@
 # DSbulkUploadR v1.0.0 ("Roadless Areas")
+## 2026-02-03
+  * Refactor `write_core_bibliography` to have more intuitive variable names
+  * Add documentation on how to fill out the appropriate sheet for Script references.
 
-## 2025-02-02
+## 2026-02-02
   * big fixes for Script reference type bibliography creation
   * update function name from `bulk_reference_generation` to `generate_references`
 
 # DSbulkUploadR v.0.0.1 ("development version")
-
-## 2025-01-30
+## 2026-01-30
   * Add support for `by or for NPS` flag on DataStore. This flag will be set to TRUE for all references created using this package.
   
 ## 2026-01-20
