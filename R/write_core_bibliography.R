@@ -291,15 +291,15 @@ write_core_bibliography <- function(reference_id,
 
   # make request to populate reference ====
   if (dev == TRUE) {
-    api_url <- paste0(.ds_dev_api(),
+    bib_api_url <- paste0(.ds_dev_api(),
                       "Reference/",  reference_id, "/Bibliography")
   } else {
-    api_url <- paste0(.ds_secure_api(),
+    bib_api_url <- paste0(.ds_secure_api(),
                       "Reference/",  reference_id , "/Bibliography")
   }
 
-  req <- httr::PUT(
-    url = api_url,
+  bib_put_req <- httr::PUT(
+    url = bib_api_url,
     httr::add_headers('Content-Type' = 'application/json'),
     httr::authenticate(":", "", "ntlm"),
     body = jsonlite::toJSON(bib_body, pretty = TRUE, auto_unbox = TRUE))
