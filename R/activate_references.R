@@ -19,8 +19,8 @@ activate_references <- function(reference_id,
                                 dev = TRUE) {
   df <- NULL
   for (i in 1:reference_id) {
-    #1) check reference lifecyclestatus; if active do nothing. If draft activate
-    pre_lifecycle <- NPSdatastore::get_lifecycle_info(reference_id[i], dev = dev)
+    pre_lifecycle <- NPSdatastore::get_lifecycle_info(reference_id[i],
+                                                      dev = dev)
     pre_lifecycle <- pre_lifecycle$lifecycle
 
     if (pre_lifecycle == "Draft") {
@@ -37,17 +37,17 @@ activate_references <- function(reference_id,
         cli::cli_warn(c("!" = msg))
         problem <<- "yes"
       })
-
-    post_lifecycle <- NPSdatastore::get_lifecycle_info(reference_id[i], dev = dev)
-    post_lifecycle <- post_lifecycle$lifecycle
-
     } else {
       problems <- "no lifecycle change made"
     }
+    post_lifecycle <- NPSdatastore::get_lifecycle_info(reference_id[i],
+                                                       dev = dev)
+    post_lifecycle <- post_lifecycle$lifecycle
+
     df <- rbind(reference_id[i], pre_lifecycle, post_lifecycle, problem)
   }
   colnames(df) <- c("reference_id", "start_lifecycle",
                     "current_lifecycle", "errors")
-  #return: list of active and non-active reference
+  #return: list of active and non-active references
   return(invisible(df))
 }
