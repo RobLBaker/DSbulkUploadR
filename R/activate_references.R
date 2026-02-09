@@ -12,9 +12,7 @@
 #' @examples
 #'  \dontrun{
 #'  activated_refs <- activate_references(c(1234567, 7654321, 1111111),
-#'                                        dev = TRUE)
-#'
-#' @examples
+#'                                        dev = TRUE)}
 activate_references <- function(reference_id,
                                 dev = TRUE) {
   df <- NULL
