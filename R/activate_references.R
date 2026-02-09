@@ -4,18 +4,19 @@
 #'
 #' Typical errors include: authentication errors (not on VPN), permissions errors (not a reference owner), or business rules violations (the reference lacks one or more fields required for activation).
 #'
-#' @param reference_id
-#' @param dev
-#' @param interactive
+#' @param reference_id String (or integer). One or more 7-digit DataStore reference IDs to be activated
+#' @param dev Logical. Defaults to TRUE. Should the API call be to the development server (TRUE) or the production server (FALSE)
 #'
-#' @returns
+#' @returns dataframe (invisibly)
 #' @export
+#' @examples
+#'  \dontrun{
+#'  activated_refs <- activate_references(c(1234567, 7654321, 1111111),
+#'                                        dev = TRUE)
 #'
 #' @examples
 activate_references <- function(reference_id,
-                                dev = dev,
-                                interactive = FALSE) {
-
+                                dev = TRUE) {
   df <- NULL
   for (i in 1:reference_id) {
     #1) check reference lifecyclestatus; if active do nothing. If draft activate
