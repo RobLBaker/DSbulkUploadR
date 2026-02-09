@@ -61,17 +61,17 @@ write_core_bibliography <- function(reference_id,
     usr_email <- stringr::str_trim(usr_email)
     usr_email <- unique(usr_email)
 
-    req_url <- paste0("https://irmadevservices.nps.gov/",
+    req_ad_ver_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
     bdy <- usr_email
-    req <- httr::POST(req_url,
+    req_ad_ver <- httr::POST(req_ad_ver_url,
                       httr::add_headers('Content-Type' = 'application/json'),
                       body = jsonlite::toJSON(bdy))
-    status_code <- httr::stop_for_status(req)$status_code
+    status_code <- httr::stop_for_status(req_ad_ver)$status_code
     if (!status_code == 200) {
       stop("ERROR: DataStore connection failed.")
     }
-    json <- httr::content(req, "text")
+    json <- httr::content(req_ad_ver, "text")
     rjson <- jsonlite::fromJSON(json)
 
     contacts <- NULL
