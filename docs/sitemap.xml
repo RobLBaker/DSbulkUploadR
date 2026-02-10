@@ -13,8 +13,8 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/LICENSE.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/news/index.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/activate_references.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_editors.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_keyword.html</loc></url>
-<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_owners.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/add_ref_to_projects.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_508_format.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_authors_orcid.html</loc></url>
@@ -23,6 +23,7 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_CUI_label_valid.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_CUI_license_match.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_dates_past.html</loc></url>
+<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_editor_email.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_end_after_start.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_end_date.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_files_exist.html</loc></url>
@@ -30,7 +31,6 @@
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_file_size.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_license_type.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_orcid_format.html</loc></url>
-<url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_owner_email.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_prod_units.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_refs_identical.html</loc></url>
 <url><loc>https://nationalparkservice.github.io/DSbulkUploadR/reference/check_ref_type.html</loc></url>
