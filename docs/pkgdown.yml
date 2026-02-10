@@ -6,8 +6,9 @@ articles:
   articles/02_Generate-the-Input-File: 02_Generate-the-Input-File.html
   articles/03_Populating-the-Input-File: 03_Populating-the-Input-File.html
   articles/04_Perform-Bulk-Reference-Uploads: 04_Perform-Bulk-Reference-Uploads.html
-  articles/05_Data-Validation-Checks-Performed: 05_Data-Validation-Checks-Performed.html
-last_built: 2026-02-09T17:44Z
+  articles/05_Activate-References: 05_Activate-References.html
+  articles/06_Data-Validation-Checks-Performed: 06_Data-Validation-Checks-Performed.html
+last_built: 2026-02-10T17:07Z
 urls:
   reference: https://nationalparkservice.github.io/DSbulkUploadR/reference
   article: https://nationalparkservice.github.io/DSbulkUploadR/articles
