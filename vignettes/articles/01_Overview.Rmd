@@ -22,13 +22,14 @@ The `DSbulkUploadR` package only requires using two R functions:
 
 The `generate_references()` will return a dataframe containing all of the information supplied in the input .xlsx file with one additional column containing the datastore reference ID for each newly created reference. You may wish to write this dataframe to a .csv, .txt, or similar for your records.
 
+After creating the references, may wish to (after appropriate review, if requried) activate the references. You use the reference IDs within the dataframe returned by `generate_references` as the input for the `activate_references` function.
+
 # What this Package Doesn't
 1) Connect to the VPN or to the NPS network for you (you must be connected to the network to use these functions)
 2) Register ORCiDs for authors
 3) Add an author's ORCID to their Active Directory/Entra ID account
 4) Provide peer, technical, administrative, or other review of the reference(s) created
 5) Add taxonomy to the reference(s)
-6) Activate ("publish") the reference(s)
 
 # Supported DataStore Reference Types
 1) Audio Recording
@@ -37,6 +38,7 @@ The `generate_references()` will return a dataframe containing all of the inform
 4) Generic Dataset
 5) Field Notes *
 6) Script
+7) Project
 
 * Field Notes are not an actual reference type on DataStore. Information supplied as "Field Notes" to DSbulkUploadR will be treated as a Generic Document with the exception that the keyword "FieldNotes" will be added to the GenericDocument for triage at a later date. 
 
