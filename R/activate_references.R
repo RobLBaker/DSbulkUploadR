@@ -26,14 +26,14 @@ activate_references <- function(reference_id,
         NPSdatastore::set_lifecycle_active(reference_id[i],
                                        dev = dev,
                                        interactive = FALSE)
-        problem <<- "no"
+        problem <- "no"
       }, error = function(e) {
         msg <- paste0("Reference ", reference_id[i], " could not be activated.",
                       " Make sure you are connected to the VPN and that all ",
                       "the required fields for activating the reference are ",
                       "complete.")
         cli::cli_warn(c("!" = msg))
-        problem <<- "yes"
+        problem <- "yes"
       })
     } else {
       problems <- "no lifecycle change made"
