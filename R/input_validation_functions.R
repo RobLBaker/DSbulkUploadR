@@ -806,7 +806,7 @@ check_editor_email <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
-  owner_email <- NULL
+  editor_email <- NULL
   for (i in 1:nrow(upload_data)) {
     editor_email <-
       append(editor_email,

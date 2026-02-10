@@ -214,13 +214,13 @@ generate_references <- function(path = getwd(),
                           dev = dev)
     }
 
-    # add owners to project (person uploading is also added as an editor) ----
+    # add editors to project (person uploading is also added as an editor) ----
     editors_to_add <- unlist(stringr::str_split(upload_data$editor_email_list[i],
                                                  ", "))
     editors_to_add <- stringr::str_trim(editors_to_add)
 
     add_editors(reference_id = ref_code,
-               owner_list = editors_to_add,
+               editor_list = editors_to_add,
                dev = dev)
 
   }
