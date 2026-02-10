@@ -1,4 +1,9 @@
 # DSbulkUploadR v1.1.0 (under development)
+## 2026-02-10
+  * Add vignette for activating references using `activate_references`
+  * Update all documentation and code to reflect DataStore 4.0.0 use of "owner" rather than "editor"
+  * Update the input.xlsx to have an "owner_email_list" column rather than an "editor_email_list" column
+
 ## 2026-02-09
   * Add function `activate_references`
   
