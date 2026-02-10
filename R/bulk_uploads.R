@@ -133,6 +133,7 @@ generate_references <- function(path = getwd(),
     # upload files to reference ----
     # don't upload if data_upload == FALSE
     if (data_upload == TRUE) {
+
       #translate 508compliance:
       compliant <- NULL
       if (upload_data$files_508_compliant[i] == "yes") {

@@ -61,17 +61,17 @@ write_core_bibliography <- function(reference_id,
     usr_email <- stringr::str_trim(usr_email)
     usr_email <- unique(usr_email)
 
-    req_url <- paste0("https://irmadevservices.nps.gov/",
+    req_ad_ver_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
     bdy <- usr_email
-    req <- httr::POST(req_url,
+    req_ad_ver <- httr::POST(req_ad_ver_url,
                       httr::add_headers('Content-Type' = 'application/json'),
                       body = jsonlite::toJSON(bdy))
-    status_code <- httr::stop_for_status(req)$status_code
+    status_code <- httr::stop_for_status(req_ad_ver)$status_code
     if (!status_code == 200) {
       stop("ERROR: DataStore connection failed.")
     }
-    json <- httr::content(req, "text")
+    json <- httr::content(req_ad_ver, "text")
     rjson <- jsonlite::fromJSON(json)
 
     contacts <- NULL
@@ -291,15 +291,15 @@ write_core_bibliography <- function(reference_id,
 
   # make request to populate reference ====
   if (dev == TRUE) {
-    api_url <- paste0(.ds_dev_api(),
+    bib_api_url <- paste0(.ds_dev_api(),
                       "Reference/",  reference_id, "/Bibliography")
   } else {
-    api_url <- paste0(.ds_secure_api(),
+    bib_api_url <- paste0(.ds_secure_api(),
                       "Reference/",  reference_id , "/Bibliography")
   }
 
-  req <- httr::PUT(
-    url = api_url,
+  bib_put_req <- httr::PUT(
+    url = bib_api_url,
     httr::add_headers('Content-Type' = 'application/json'),
     httr::authenticate(":", "", "ntlm"),
     body = jsonlite::toJSON(bib_body, pretty = TRUE, auto_unbox = TRUE))
