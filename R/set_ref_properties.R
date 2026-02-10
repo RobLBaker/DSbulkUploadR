@@ -342,12 +342,12 @@ set_content_units <- function(reference_id,
   return(invisible(NULL))
 }
 
-#' Add one or more owners to a DataStore reference
+#' Add one or more editors to a DataStore reference
 #'
-#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
+#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an editors (formerly "owners") of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
 #'
 #' @param reference_id String or Integer. The seven-digit DataStore ID for the reference that owners will be added to
-#' @param owner_list String or Vector. The owner(s) that will be added to the reference
+#' @param editor_list String or Vector. The owner(s) that will be added to the reference
 #' @param dev Logical. Whether or not the operations will be performed on the development server. Defaults to TRUE.
 #'
 #' @returns NULL (invisibly)
@@ -355,11 +355,11 @@ set_content_units <- function(reference_id,
 #'
 #' @examples
 #' \dontrun{
-#' add_owners(reference_id = 1234567,
+#' add_editors(reference_id = 1234567,
 #'            owner_list = "john_doe@nps.gov")
 #'            }
-add_owners <- function(reference_id,
-                       owner_list,
+add_editors <- function(reference_id,
+                       editor_list,
                        dev = TRUE) {
   # get user info from email list:
   bdy <- owner_list

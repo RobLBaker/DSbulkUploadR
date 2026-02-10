@@ -226,7 +226,7 @@ run_input_validation <- function(path = getwd(),
            }
   )
 
-  tryCatch(check_owner_email(path = path,
+  tryCatch(check_editor_email(path = path,
                               filename = filename,
                               sheet_name = sheet),
            error = function(e) {
