@@ -17,6 +17,24 @@ Must science products at NPS require some level of review before they can be pub
 
 Anyone conducting review of a DataStore reference will need to be listed as an Editor (formerly "owner") of the reference to be able to access all of the files. Reviewers can temporarily be added as editors for the purpose of review and then removed prior to activation ("publication") if desired.
 
+## Adding Editors
+If you need to add additional editors to a reference for the purpose of review, you can do so using the `add_editors` function:
+
+```{r add editors, eval = FALSE}
+add_editors(reference_id = 1234567,
+            editor_list = "john_doe@nps.gov",
+            dev = FALSE)
+```
+
+## Removing Editors
+You may want to remove some editors from a reference. Perhaps they were reviewers and the review is complete. Or perhaps they ran the `generate_bulk_references` function and were automatically added as editors but do not wish to remain editors. You can remove editors from a reference using the `remove_editors` function.
+
+```{r remove editors, eval = FALSE}
+remove_editors(reference_id = 1234567,
+               editor_list = "john_doe@nps.gov"
+               dev = FALSE)
+```
+
 # Activating References
 After all the references have been appropriately reviewed, you can manually activate references by individually navigating to each reference on DataStore and clicking "Activate" (if you are an editor). However, this may be impractical for large batches of references generated via DSbulkUploadR. 
 
