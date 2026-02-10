@@ -128,8 +128,28 @@ access all of the files. Reviewers can temporarily be added as editors
 for the purpose of review and then removed prior to activation
 (“publication”) if desired.</p>
 <div class="section level3">
-<h3 id="adding">Adding<a class="anchor" aria-label="anchor" href="#adding"></a>
+<h3 id="adding-editors">Adding Editors<a class="anchor" aria-label="anchor" href="#adding-editors"></a>
 </h3>
+<p>If you need to add additional editors to a reference for the purpose
+of review, you can do so using the <code>add_editors</code>
+function:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/add_editors.html">add_editors</a></span><span class="op">(</span>reference_id <span class="op">=</span> <span class="fl">1234567</span>,</span>
+<span>            editor_list <span class="op">=</span> <span class="st">"john_doe@nps.gov"</span>,</span>
+<span>            dev <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="removing-editors">Removing Editors<a class="anchor" aria-label="anchor" href="#removing-editors"></a>
+</h3>
+<p>You may want to remove some editors from a reference. Perhaps they
+were reviewers and the review is complete. Or perhaps they ran the
+<code>generate_bulk_references</code> function and were automatically
+added as editors but do not wish to remain editors. You can remove
+editors from a reference using the <code>remove_editors</code>
+function.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">remove_editors</span>(<span class="at">reference_id =</span> <span class="dv">1234567</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>               <span class="at">editor_list =</span> <span class="st">"john_doe@nps.gov"</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>               <span class="at">dev =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -144,7 +164,7 @@ generated via DSbulkUploadR.</p>
 you to activate many references at once. You can use the reference ID
 column from the dataframe returned by <code>generate_references</code>
 as an input for the <code>activate_references</code> function:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">active_refs</span> <span class="op">&lt;-</span> <span class="fu">DSbulkUploadR</span><span class="fu">::</span><span class="fu"><a href="../reference/activate_references.html">activate_references</a></span><span class="op">(</span><span class="va">new_refs</span><span class="op">$</span><span class="va">reference_id</span>,</span>
 <span>                                                  dev <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
