@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 # Tests run
 The following data validation tests are run (in thisorder) prior to generating any references on DataStore. All validation tests must pass before any further actions are possible. 
 
-Tests are passed with a green check mark (✅)and failw ith a red X (❌).
+Tests are passed with a green check mark (✅)and fail with a red X (❌).
 
 
 * Check that the reference type is valid (`check_ref_type`)
@@ -35,4 +35,4 @@ Tests are passed with a green check mark (✅)and failw ith a red X (❌).
 * Checks that all references have a valid CUI designation (including "PUBLIC") (`check_CUI_label_valid`)
 * Checks that the CUI label and license are compatible (`check_CUI_license_match`)
 * Checks that each reference has one or more valid Producing Units (`check_prod_units`)
-*Checks that each reference has one or more valid Content Units (`check_content_units`)
+* Checks that each reference has one or more valid Content Units (`check_content_units`)
