@@ -91,7 +91,9 @@ All authors must be valid NPS employees or partners (e.g. @nps.gov, @partner.nps
 The `generate_references()` function will automatically extract first name, last name, and ORCiDs based on the supplied email addresses and use that information to populate the authors of the reference.
 
 ## Editor email addresses
-The editor_email_list column in the input.xlsx file should contain a comma-separated list of all the editors' email addresses (formerly reference "owners"). Use the full email address rather than user names (e.g. fist_last@nps.gov not FMLast@nps.gov). All references require at least one owner. 
+The editor_email_list column in the input.xlsx file should contain a comma-separated list of all the editors' email addresses. Use the full email address rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one editor.
+
+*Note: "reference editor" is the new term for "reference owner." This is just a terminology change to better reflect how the role works.*
 
 Reference editors have the ability to see reference in draft form as well as have full editorial abilities over the reference and can change any field or activate the reference. Anyone who will need to review the reference prior to activation/publication should be added as an editor.
 
