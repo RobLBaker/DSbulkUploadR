@@ -103,9 +103,57 @@
     
     
 <div class="section level2">
-<h2 id="a-list-of-all-the-input-data-validation-checks-performed">A list of all the input data validation checks performed<a class="anchor" aria-label="anchor" href="#a-list-of-all-the-input-data-validation-checks-performed"></a>
+<h2 id="tests-run">Tests run<a class="anchor" aria-label="anchor" href="#tests-run"></a>
 </h2>
-<p>coming soon….</p>
+<p>The following data validation tests are run (in thisorder) prior to
+generating any references on DataStore. All validation tests must pass
+before any further actions are possible.</p>
+<p>Tests are passed with a green check mark (✅)and fail with a red X
+(❌).</p>
+<ul>
+<li>Check that the reference type is valid
+(<code>check_ref_type</code>)</li>
+<li>Check that the reference type is supported
+(<code>check_ref_type_supported</code>)</li>
+<li>Check that all reference types within a sheet are the same
+(<code>check_refs_identical</code>)</li>
+<li>Check that each file path supplied in the file_path column contains
+files (<code>check_files_exist</code>)</li>
+<li>Checks whether the total number of files to upload exceeds a
+threshold (<code>check_file_number</code>)</li>
+<li>Checks whether the total file size to upload exceeds a threshold
+(<code>check_file_size</code>)</li>
+<li>Checks whether the files 508 status has been correctly specified
+(<code>check_508_format</code>)</li>
+<li>Checks for duplicate reference titles
+(<code>check_unique_title</code>)</li>
+<li>Checks that all values in the begin_content_date column is in ISO
+8601 format (<code>check_start_date</code>)</li>
+<li>Checks that all values in the end_content_date column is in ISO 8601
+format (<code>check_end_date</code>)</li>
+<li>Checks that for each reference the content end dates occur after
+content start dates (<code>check_end_after_start</code>)</li>
+<li>Checks that all dates occurred in the past
+(<code>check_dates_past</code>)</li>
+<li>Checks that author emails are valid
+(<code>check_author_email</code>)</li>
+<li>Checks that all authors have valid ORCIDs
+(<code>check_authors_orcid</code>)</li>
+<li>Checks that all author ORCIDs are properly formatted
+(<code>check_orcid_format</code>)</li>
+<li>Checks that all editor emails are valid
+(<code>check_editor_email</code>)</li>
+<li>Checks that all references have a valid license type
+(<code>check_license_type</code>)</li>
+<li>Checks that all references have a valid CUI designation (including
+“PUBLIC”) (<code>check_CUI_label_valid</code>)</li>
+<li>Checks that the CUI label and license are compatible
+(<code>check_CUI_license_match</code>)</li>
+<li>Checks that each reference has one or more valid Producing Units
+(<code>check_prod_units</code>)</li>
+<li>Checks that each reference has one or more valid Content Units
+(<code>check_content_units</code>)</li>
+</ul>
 </div>
   </div>
 
