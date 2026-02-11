@@ -1,4 +1,4 @@
-# DSbulkUploadR v1.1.0 (under development)
+# DSbulkUploadR v1.1.0 ("Rickets Glenn")
 ## 2026-02-11
   * Add vignette detailing data validation functions
 
@@ -38,8 +38,6 @@
   
 ## 2025-11-17
   * Update readme to include full list of currently supported reference types.
-
-## 2025-11-17
   * Update documentation to specify correct input file format (.xlsx rather than .txt)
   
 ## 2025-11-14
