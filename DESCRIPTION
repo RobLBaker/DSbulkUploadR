@@ -1,6 +1,6 @@
 Package: DSbulkUploadR
 Title: Creates, populates, and uploads files to multiple DataStore references
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c( 
     person(given = "Robert",
     family = "Baker",
