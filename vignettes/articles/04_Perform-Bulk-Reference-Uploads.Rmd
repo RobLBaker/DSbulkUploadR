@@ -60,13 +60,3 @@ You may wish to save this file to your current working directory for later use o
 readr::write_csv(new_refs,
                  "new_reference_ids.csv")
 ```
-
-# Review and activate references
-You're not done yet! 
-
-You should carefully inspect each reference you create and make sure each reference gets the appropriate review (peer, technical, or administrative) as required for that reference. Most references should at a minimum receive a technical review to make sure the reference is sound and an administrative review to make sure that, among other things, sensitive information is not inadvertently being released.
-
-In draft format, only owners will be able to access the draft references. Reviewers will need to be added to the owner list of each reference prior to review. You may wish to remove reviewers from the owners list after the review is complete.
-
-After all the references have been appropriately reviewed, you can manually navigate to each draft reference on DataStore and click the "Activate" button to publish them!
-

@@ -785,9 +785,9 @@ check_orcid_format <- function(path = getwd(),
 }
 
 
-#' Checks owner emails for valid NPS emails
+#' Checks editor emails for valid NPS emails
 #'
-#' Reads in the specified sheet from an .xlsx file and checks that all email addresses in the owner_email_list column are valid using the AD API.
+#' Reads in the specified sheet from an .xlsx file and checks that all email addresses in the editor_email_list column are valid using the AD API.
 #'
 #' @inheritParams check_ref_type
 #'
@@ -796,8 +796,8 @@ check_orcid_format <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_owner_email()}
-check_owner_email <- function(path = getwd(),
+#' check_editor_email()}
+check_editor_email <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
 
@@ -806,17 +806,17 @@ check_owner_email <- function(path = getwd(),
                                                   filename),
                                     sheet = sheet_name)
 
-  owner_email <- NULL
+  editor_email <- NULL
   for (i in 1:nrow(upload_data)) {
-    owner_email <-
-      append(owner_email,
-             unlist(stringr::str_split(upload_data$owner_email_list[i], ",")))
+    editor_email <-
+      append(editor_email,
+             unlist(stringr::str_split(upload_data$editor_email_list[i], ",")))
   }
-  owner_email <- stringr::str_trim(owner_email)
-  owner_email <- unique(owner_email)
+  editor_email <- stringr::str_trim(editor_email)
+  editor_email <- unique(editor_email)
   req_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
-  bdy <- owner_email
+  bdy <- editor_email
   req <- httr::POST(req_url,
                     httr::add_headers('Content-Type' = 'application/json'),
                     body = rjson::toJSON(bdy))
@@ -828,11 +828,11 @@ check_owner_email <- function(path = getwd(),
   rjson <- jsonlite::fromJSON(json)
 
   if (all(rjson$found)) {
-    cli::cli_inform(c("v" = "All owner emails are valid."))
+    cli::cli_inform(c("v" = "All editor emails are valid."))
   } else {
-    bad_owner_emails <- dplyr::filter(rjson, found==FALSE)$searchTerm
+    bad_editor_emails <- dplyr::filter(rjson, found==FALSE)$searchTerm
     msg <- paste0("Please supply valid emails. The following emails ",
-                  "are invalid: {bad_owner_emails}.")
+                  "are invalid: {bad_editor_emails}.")
     cli::cli_abort(c("x" = msg))
   }
   return(invisible(NULL))

@@ -342,12 +342,12 @@ set_content_units <- function(reference_id,
   return(invisible(NULL))
 }
 
-#' Add one or more owners to a DataStore reference
+#' Add one or more editors to a DataStore reference
 #'
-#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an owners/owners of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
+#' Accepts a comma separated list of valid nps (or nps partner) email addresses and adds the people specified via email address as an editors (formerly "owners") of the specified DataStore reference. Use the email address not the upn/username, e.g. first_last@nps.gov not FMLast@npsg.gov.
 #'
 #' @param reference_id String or Integer. The seven-digit DataStore ID for the reference that owners will be added to
-#' @param owner_list String or Vector. The owner(s) that will be added to the reference
+#' @param editor_list String or Vector. The owner(s) that will be added to the reference
 #' @param dev Logical. Whether or not the operations will be performed on the development server. Defaults to TRUE.
 #'
 #' @returns NULL (invisibly)
@@ -355,14 +355,14 @@ set_content_units <- function(reference_id,
 #'
 #' @examples
 #' \dontrun{
-#' add_owners(reference_id = 1234567,
-#'            owner_list = "john_doe@nps.gov")
+#' add_editors(reference_id = 1234567,
+#'            editor_list = "john_doe@nps.gov")
 #'            }
-add_owners <- function(reference_id,
-                       owner_list,
+add_editors <- function(reference_id,
+                       editor_list,
                        dev = TRUE) {
   # get user info from email list:
-  bdy <- owner_list
+  bdy <- editor_list
   bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = FALSE)
   req_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
@@ -378,11 +378,11 @@ add_owners <- function(reference_id,
 
   bdy <- NULL
   for (i in 1:nrow(rjson)) {
-    owners <- list("userCode" = rjson$userPrincipalName[i],
+    editors <- list("userCode" = rjson$userPrincipalName[i],
                    "lastName" = rjson$sn[i],
                    "fistName" = rjson$givenName[i],
                    "email" = rjson$mail[i])
-      bdy <- append(bdy, list(owners))
+      bdy <- append(bdy, list(editors))
     }
   bdy <- jsonlite::toJSON(bdy, pretty = TRUE, auto_unbox = TRUE)
 
@@ -412,10 +412,10 @@ add_owners <- function(reference_id,
 
 #' Remove editors (owners) from a DataStore reference
 #'
-#' You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all owners from a reference; all references must have at least one owner/editor. For a given reference ID, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
+#' You must be an owner/editor of the reference to remove owners/editors from the reference. You cannot remove all editors from a reference; all references must have at least one owner/editor. For a given reference ID, you can supply one or more owners/editors to be removed from that reference. Owners/editors to be removed should be supplied as a comma-separated list of email addresses (e.g. john_doe@nps.gov), not upns or AD usernames (e.g. not jdoe@nps.gov).
 #'
 #' @param reference_id String. Contains one 7-digit DataStore reference IDs
-#' @param owner_list String or list. Contains one or more owner/editor email addresses to be removed from the specified reference.
+#' @param editor_list String or list. Contains one or more owner/editor email addresses to be removed from the specified reference.
 #' @param dev Logical. Defaults to TRUE. Determines whether the operation will be executed on the development server (TRUE) or the production server (FALSE).
 #'
 #' @returns NULL (invisibly)
@@ -424,15 +424,15 @@ add_owners <- function(reference_id,
 #' @examples
 #' \dontrun{
 #'    remove_editors(reference_id = 1234567,
-#'                  owner_list = c("john_doe@nps.gov",
+#'                  editor_list = c("john_doe@nps.gov",
 #'                                 "jane_doe@partner.nps.gov"))
 #'    }
 remove_editors <- function(reference_id,
-                          owner_list,
+                          editor_list,
                           dev = TRUE) {
 
   #get upn for each email in a list of emails:
-  bdy <- jsonlite::toJSON(owner_list, pretty = TRUE, auto_unbox = FALSE)
+  bdy <- jsonlite::toJSON(editor_list, pretty = TRUE, auto_unbox = FALSE)
   req_url <- paste0("https://irmadevservices.nps.gov/",
                     "adverification/v1/rest/lookup/email")
   req <- httr::POST(req_url,
@@ -446,13 +446,13 @@ remove_editors <- function(reference_id,
   rjson <- jsonlite::fromJSON(json)
 
   # store upn for email supplied:
-  owners <- NULL
+  editors <- NULL
   for (i in 1:nrow(rjson)) {
     upns <- rjson$userPrincipalName[i]
-    owners <- append(owners, upns)
+    editors <- append(editors, upns)
   }
   #remove editors/owners one at a time:
-  for (i in 1:length(seq_along(owners))) {
+  for (i in 1:length(seq_along(editors))) {
 
   # construct request URL
     if(dev == TRUE){
@@ -460,13 +460,13 @@ remove_editors <- function(reference_id,
                          "Reference/",
                          reference_id,
                          "/Owners?userCode=",
-                         owners[i])
+                         editors[i])
     } else {
       delete_url <- paste0(.ds_secure_api(),
                          "Reference/",
                          reference_id,
                          "/Owners?userCode=",
-                         owners[i])
+                         editors[i])
     }
 
     req2 <- httr::DELETE(delete_url,

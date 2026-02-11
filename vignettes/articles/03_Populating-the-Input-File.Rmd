@@ -90,12 +90,14 @@ All authors must be valid NPS employees or partners (e.g. @nps.gov, @partner.nps
 
 The `generate_references()` function will automatically extract first name, last name, and ORCiDs based on the supplied email addresses and use that information to populate the authors of the reference.
 
-## Owner email addresses
-The owner_email_list column in the input.xlsx file should contain a comma-separated list of all the owners' email addresses. Use the full email address rather than user names (e.g. fist_last@nps.gov not FMLast@nps.gov). All references require at least one owner. 
+## Editor email addresses
+The editor_email_list column in the input.xlsx file should contain a comma-separated list of all the editors' email addresses. Use the full email address rather than user names (e.g. first_last@nps.gov not FMLast@nps.gov). All references require at least one editor.
 
-Reference owners have the ability to see reference in draft form (a particularly useful role for reviewers) as well as have full editorial abilities over the reference and can change any field or activate the reference. 
+*Note: "reference editor" is the new term for "reference owner." This is just a terminology change to better reflect how the role works.*
 
-In addition to the owners in the owner_email_list field, whoever runs the `generate_references()` function will also automatically be added as an owner. If the Central Support Office is generating your references for you, they can at your request remove their names from the owner list for a given reference.
+Reference editors assigned to a reference can view and edit it while it is in draft mode. They can change any field or activate the reference. Anyone who needs to review the reference prior to activation/publication should be added as an editor.
+
+In addition to the editors in the editor_email_list field, whoever runs the `generate_references()` function will also automatically be added as an editor. If the Central Support Office is generating your references for you, they will remove their names from the editor list at your request.
 
 ## Licenses
 The license_code column in input.xlsx should contain a numeric code (1,2,3,4 or 5) corresponding to a license for the reference on DataStore. A Creative Commons Zero (CC0) license is the preferred license for all public content on DataStore. Valid codes are as follows: 

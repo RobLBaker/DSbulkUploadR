@@ -61,7 +61,10 @@
       <a href="../articles/04_Perform-Bulk-Reference-Uploads.html">Perform-Bulk-Reference-Uploads</a>
     </li>
     <li>
-      <a href="../articles/05_Data-Validation-Checks-Performed.html">Data Validation Checks Performed</a>
+      <a href="../articles/05_Activate-References.html">05_Activate-References</a>
+    </li>
+    <li>
+      <a href="../articles/06_Data-Validation-Checks-Performed.html">Data Validation Checks Performed</a>
     </li>
   </ul>
 </li>
@@ -340,22 +343,23 @@ addresses and use that information to populate the authors of the
 reference.</p>
 </div>
 <div class="section level3">
-<h3 id="owner-email-addresses">Owner email addresses<a class="anchor" aria-label="anchor" href="#owner-email-addresses"></a>
+<h3 id="editor-email-addresses">Editor email addresses<a class="anchor" aria-label="anchor" href="#editor-email-addresses"></a>
 </h3>
-<p>The owner_email_list column in the input.xlsx file should contain a
-comma-separated list of all the owners’ email addresses. Use the full
-email address rather than user names (e.g. <a href="mailto:fist_last@nps.gov" class="email">fist_last@nps.gov</a> not
-<a href="mailto:FMLast@nps.gov" class="email">FMLast@nps.gov</a>). All
-references require at least one owner.</p>
-<p>Reference owners have the ability to see reference in draft form (a
-particularly useful role for reviewers) as well as have full editorial
-abilities over the reference and can change any field or activate the
-reference.</p>
-<p>In addition to the owners in the owner_email_list field, whoever runs
-the <code><a href="../reference/generate_references.html">generate_references()</a></code> function will also automatically
-be added as an owner. If the Central Support Office is generating your
-references for you, they can at your request remove their names from the
-owner list for a given reference.</p>
+<p>The editor_email_list column in the input.xlsx file should contain a
+comma-separated list of all the editors’ email addresses (formerly
+reference “owners”). Use the full email address rather than user names
+(e.g. <a href="mailto:fist_last@nps.gov" class="email">fist_last@nps.gov</a> not <a href="mailto:FMLast@nps.gov" class="email">FMLast@nps.gov</a>). All references require at least one
+owner.</p>
+<p>Reference editors have the ability to see reference in draft form as
+well as have full editorial abilities over the reference and can change
+any field or activate the reference. Anyone who will need to review the
+reference prior to activation/publication should be added as an
+editor.</p>
+<p>In addition to the editors in the editor_email_list field, whoever
+runs the <code><a href="../reference/generate_references.html">generate_references()</a></code> function will also
+automatically be added as an editor. If the Central Support Office is
+generating your references for you, they can at your request remove
+their names from the editor list for a given reference.</p>
 </div>
 <div class="section level3">
 <h3 id="licenses">Licenses<a class="anchor" aria-label="anchor" href="#licenses"></a>

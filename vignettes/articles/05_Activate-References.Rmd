@@ -1,0 +1,64 @@
+---
+title: "05_Activate-References"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Overview
+Once you have generated references, they will be in a "Draft" status by default. Draft status means that they are not published and cannot be viewed by anyone in the public. Further, anyone not listed as an Editor (formerly "owner") of the reference will be unable to make edits or download files. To complete the task of publishing your references, you must activate the references.
+
+# Review Prior to Activation
+Most science products at NPS require some level of review before they can be published (Activated). There are three types of review, peer review, technical review, and administrative review. Many products may be exempt from peer review, but few are exempt from technical review or administrative review. To learn more about the review requirements for your references, consult the [IMD Best Practices for Peer Review](https://doimspp.sharepoint.com/sites/nps-nrss-imdiv/SitePages/Best-Practices-for-Peer-Review.aspx) SharePoint page.
+
+Anyone conducting review of a DataStore reference will need to be listed as an Editor (formerly "owner") of the reference to be able to access all of the files. Reviewers can temporarily be added as editors for the purpose of review and then removed prior to activation ("publication") if desired.
+
+## Adding Editors
+If you need to add additional editors to a reference for the purpose of review, you can do so using the `add_editors` function:
+
+```{r add editors, eval = FALSE}
+add_editors(reference_id = 1234567,
+            editor_list = "john_doe@nps.gov",
+            dev = FALSE)
+```
+
+## Removing Editors
+You may want to remove some editors from a reference. Perhaps they were reviewers and the review is complete. Or perhaps they ran the `generate_bulk_references` function and were automatically added as editors but do not wish to remain editors. You can remove editors from a reference using the `remove_editors` function.
+
+```{r remove editors, eval = FALSE}
+remove_editors(reference_id = 1234567,
+               editor_list = "john_doe@nps.gov"
+               dev = FALSE)
+```
+
+# Activating References
+After all the references have been appropriately reviewed, you can manually activate references by individually navigating to each reference on DataStore and clicking "Activate" (if you are an editor). However, this may be impractical for large batches of references generated via DSbulkUploadR. 
+
+The DSbulkUploader function `activate_references` allows you to activate many references at once. You can use the reference ID column from the dataframe returned by `generate_references` as an input for the `activate_references` function:
+
+```{r activate_references, eval = FALSE}
+
+active_refs <- DSbulkUploadR::activate_references(new_refs$reference_id,
+                                                  dev = FALSE)
+```
+
+The `activate_references` function will return a dataframe that gives you the reference ID, the initial status of that reference ("Draft"), the current status after attempting to activate it (hopefully "Active") and an indication of whether any problems were encountered.
+
+# Troubleshooting
+You may receive warnings while running `activate_references` and/or you may notice that not all of the references are in the "Active" lifecycle upon inspecting the dataframe returned by `activate_references`. Common problems include:
+
+1) You must be on the VPN (or otherwise connected to the NPS network)
+2) You must be an editor of each reference
+3) DataStore is persnickety
+4) Each reference must have all the required fields prior to activation
+
+
+First, insure that you are on the VPN (or connected to the NPS network in an NPS office). Then make sure you are listed as an editor (formerly "owner") of each reference that failed to activate. 
+
+Often, problems with activating references are due to DataStore failures and re-running the `activate_references` function can result in success. You can re-run it exactly as is without needing to filter for only references that are still in the "Draft" status. Attempting to re-activate an already active reference won't cause any harm, however it does take some time to make the appropriate API calls. If you have lots of references you may wish to filter the dataframe returned from `activate_references` (in the example above, the object "active_refs") for only references that are still in "Draft" status and use that filtered dataframe as the input for another call to the `activate_references` function. 
+
+If all else fails, it is time to navigate to the DataStore website and attempt to manually resolve the issue. If you can't tell at first glance what went wrong, you can click the Activate button and the DataStore website will give a general indication of where the failure occurred (e.g. "Not all required fields on the Core tab are complete"). Manually fill in the required information, then activate the reference.
