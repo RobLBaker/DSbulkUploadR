@@ -1,5 +1,5 @@
 ---
-title: "Data Validation Checks Performed"
+title: "Data-Validation-Checks-Performed"
 ---
 
 ```{r, include = FALSE}
@@ -10,29 +10,29 @@ knitr::opts_chunk$set(
 ```
 
 # Tests run
-The following data validation tests are run (in thisorder) prior to generating any references on DataStore. All validation tests must pass before any further actions are possible. 
+The following data validation tests are run (in this order) prior to generating any references on DataStore. All validation tests must pass before any further actions are possible. 
 
 Tests are passed with a green check mark (✅)and fail with a red X (❌).
 
 
-* Check that the reference type is valid (`check_ref_type`)
-* Check that the reference type is supported (`check_ref_type_supported`)
-* Check that all reference types within a sheet are the same (`check_refs_identical`)
-* Check that each file path supplied in the file_path column contains files (`check_files_exist`)
-* Checks whether the total number of files to upload exceeds a threshold (`check_file_number`)
-* Checks whether the total file size to upload exceeds a threshold (`check_file_size`)
-* Checks whether the files 508 status has been correctly specified (`check_508_format`)
-* Checks for duplicate reference titles (`check_unique_title`)
-* Checks that all values in the begin_content_date column is in ISO 8601 format (`check_start_date`)
-* Checks that all values in the end_content_date column is in ISO 8601 format (`check_end_date`)
-* Checks that for each reference the content end dates occur after content start dates (`check_end_after_start`)
-* Checks that all dates occurred in the past (`check_dates_past`)
-* Checks that author emails are valid (`check_author_email`)
-* Checks that all authors have valid ORCIDs (`check_authors_orcid`)
-* Checks that all author ORCIDs are properly formatted (`check_orcid_format`)
-* Checks that all editor emails are valid (`check_editor_email`)
-* Checks that all references have a valid license type (`check_license_type`)
-* Checks that all references have a valid CUI designation (including "PUBLIC") (`check_CUI_label_valid`)
-* Checks that the CUI label and license are compatible (`check_CUI_license_match`)
-* Checks that each reference has one or more valid Producing Units (`check_prod_units`)
-* Checks that each reference has one or more valid Content Units (`check_content_units`)
+* Check that the reference type is valid [`check_ref_type`](../reference/check_ref_type.html)
+* Check that the reference type is supported [`check_ref_type_supported`](../reference/check_ref_type_supported.html)
+* Check that all reference types within a sheet are the same [`check_refs_identical`](../reference/check_refs_identical.html)
+* Check that each file path supplied in the file_path column contains files [`check_files_exist`](../reference/check_files_exist.html)
+* Checks whether the total number of files to upload exceeds a threshold [`check_file_number`](../reference/check_file_number.html)
+* Checks whether the total file size to upload exceeds a threshold [`check_file_size`](../reference/check_file_size.html)
+* Checks whether the files 508 status has been correctly specified [`check_508_format`](../reference/check_508_format.html)
+* Checks for duplicate reference titles [`check_unique_title`](../reference/check_unique_title.html)
+* Checks that all values in the begin_content_date column is in ISO 8601 format [`check_start_date`](../reference/check_start_date.html)
+* Checks that all values in the end_content_date column is in ISO 8601 format [`check_end_date`](../reference/check_end_date.html)
+* Checks that for each reference the content end dates occur after content start dates [`check_end_after_start`](../reference/check_end_after_start.html)
+* Checks that all dates occurred in the past [`check_dates_past`](../reference/check_dates_past.html)
+* Checks that author emails are valid [`check_author_email`](../reference/check_author_email.html)
+* Checks that all authors have valid ORCIDs [`check_authors_orcid`](../reference/check_authors_orcid.html)
+* Checks that all author ORCIDs are properly formatted [`check_orcid_format`](../reference/check_orcid_format.html)
+* Checks that all editor emails are valid [`check_editor_email`](../reference/check_editor_email.html)
+* Checks that all references have a valid license type [`check_license_type`](../reference/check_license_type.html)
+* Checks that all references have a valid CUI designation (including "PUBLIC") [`check_CUI_label_valid`](../reference/check_CUI_label_valid.html)
+* Checks that the CUI label and license are compatible [`check_CUI_license_match`](../reference/check_CUI_license_match.html)
+* Checks that each reference has one or more valid Producing Units [`check_prod_units`](../reference/check_prod_units.html)
+* Checks that each reference has one or more valid Content Units [`check_content_units`](../reference/check_content_units.html)
