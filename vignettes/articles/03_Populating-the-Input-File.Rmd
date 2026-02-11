@@ -97,7 +97,7 @@ The editor_email_list column in the input.xlsx file should contain a comma-separ
 
 Reference editors assigned to a reference can view and edit it while it is in draft mode. They can change any field or activate the reference. Anyone who needs to review the reference prior to activation/publication should be added as an editor.
 
-In addition to the editors in the editor_email_list field, whoever runs the `generate_references()` function will also automatically be added as an editor. If the Central Support Office is generating your references for you, they can at your request remove their names from the editor list for a given reference.
+In addition to the editors in the editor_email_list field, whoever runs the `generate_references()` function will also automatically be added as an editor. If the Central Support Office is generating your references for you, they will remove their names from the editor list at your request.
 
 ## Licenses
 The license_code column in input.xlsx should contain a numeric code (1,2,3,4 or 5) corresponding to a license for the reference on DataStore. A Creative Commons Zero (CC0) license is the preferred license for all public content on DataStore. Valid codes are as follows: 
