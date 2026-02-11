@@ -1087,7 +1087,6 @@ check_content_units <- function(path = getwd(),
   return(invisible(NULL))
 }
 
-#uses AD to verify users upn. Will not work after transition to entraID.
 #' Checks whether a upn supplied is valid.
 #'
 #' `r lifecycle::badge("deprecated")`
