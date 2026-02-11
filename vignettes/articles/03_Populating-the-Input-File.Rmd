@@ -95,7 +95,7 @@ The editor_email_list column in the input.xlsx file should contain a comma-separ
 
 *Note: "reference editor" is the new term for "reference owner." This is just a terminology change to better reflect how the role works.*
 
-Reference editors have the ability to see reference in draft form as well as have full editorial abilities over the reference and can change any field or activate the reference. Anyone who will need to review the reference prior to activation/publication should be added as an editor.
+Reference editors assigned to a reference can view and edit it while it is in draft mode. They can change any field or activate the reference. Anyone who needs to review the reference prior to activation/publication should be added as an editor.
 
 In addition to the editors in the editor_email_list field, whoever runs the `generate_references()` function will also automatically be added as an editor. If the Central Support Office is generating your references for you, they can at your request remove their names from the editor list for a given reference.
 
