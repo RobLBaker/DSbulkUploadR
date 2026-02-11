@@ -1,4 +1,7 @@
 # DSbulkUploadR v1.1.0 (under development)
+## 2026-02-11
+  * Add vignette detailing data validation functions
+
 ## 2026-02-10
   * Add vignette for activating references using `activate_references`
   * Update all documentation and code to reflect DataStore 4.0.0 use of "owner" rather than "editor"
