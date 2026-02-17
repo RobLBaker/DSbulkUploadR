@@ -6,7 +6,7 @@
 \alias{DSbulkUploadR-package}
 \title{DSbulkUploadR: Creates, populates, and uploads files to multiple DataStore references}
 \description{
-Efficiently creates, populates, and uploads files to multiple DataStore references using user-supplied .txt file with predefined fields.
+Efficiently creates, populates, and uploads files to multiple DataStore references by generating an .xlsx file with predefined fields to be populated by the user.
 }
 \seealso{
 Useful links:

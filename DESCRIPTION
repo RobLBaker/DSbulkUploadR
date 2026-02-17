@@ -9,7 +9,7 @@ Authors@R: c(
     comment = c(ORCID = "0000-0001-7591-5035"))
     )
 Maintainer: Rob Baker <robert_baker@nps.gov>
-Description: Efficiently creates, populates, and uploads files to multiple DataStore references using user-supplied .txt file with predefined fields.
+Description: Efficiently creates, populates, and uploads files to multiple DataStore references by generating an .xlsx file with predefined fields to be populated by the user. 
 License: CC0 + file LICENSE
 BugReports: https://github.com/nationalparkservice/DSbulkUploadR/issues
 Encoding: UTF-8
