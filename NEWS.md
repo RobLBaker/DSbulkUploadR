@@ -1,3 +1,7 @@
+# DSbulkUploadR v1.1.1 (development version)
+## 2026-02-17
+  * Fix broken link in Readme
+
 # DSbulkUploadR v1.1.0 ("Rickets Glenn")
 ## 2026-02-11
   * Add vignette detailing data validation functions
