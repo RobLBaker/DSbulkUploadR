@@ -1100,6 +1100,7 @@ check_content_units <- function(path = getwd(),
 #' @examples
 #' \dontrun{
 #' check_projects_numeric(sheet_name = "Script")
+#' }
 check_projects_numeric <- function(path = getwd(),
                            filename = "DSbulkUploadR_input.xlsx",
                            sheet_name) {
@@ -1134,11 +1135,19 @@ check_projects_numeric <- function(path = getwd(),
   return(invisible(NULL))
 }
 
-
-
-
-
-
+#' Checks for valid projects
+#'
+#' The function Initiates an API call to datastore to make sure that a project is valid. Potential reasons for check to fail with an error include: The reference ID number does not go to a valid DataStore reference, the valid referenceis not a Project type reference, the user not being on the VPN/on an NPS network, the project may not be public, the project may not be active, or the user may not have permissions to access or edit the project.
+#'
+#' @inheritParams check_ref_type
+#' @param dev Logical. Whether or not the API calls should be made to the development (TRUE) or production (FALSE) server. Defaults to TRUE.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#' @examples
+#' \dontrun{
+#' check_projects_valid(sheet_name = "Script")
+#' }
 check_projects_valid <- function(path = getwd(),
                                  filename = "DSbulkUploadR_input.xlsx",
                                  sheet_name,
