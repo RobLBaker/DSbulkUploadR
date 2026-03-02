@@ -1137,7 +1137,7 @@ check_projects_numeric <- function(path = getwd(),
 
 #' Checks for valid projects
 #'
-#' The function Initiates an API call to datastore to make sure that a project is valid. Potential reasons for check to fail with an error include: The reference ID number does not go to a valid DataStore reference, the valid referenceis not a Project type reference, the user not being on the VPN/on an NPS network, the project may not be public, the project may not be active, or the user may not have permissions to access or edit the project.
+#' The function Initiates an API call to datastore to make sure that a project is valid. Potential reasons for check to fail with an error include: The reference ID number does not go to a valid DataStore reference, the valid reference is not a Project type reference, the user not being on the VPN/on an NPS network, the project may not be public, the project may not be active, or the user may not have permissions to access or edit the project.
 #'
 #' @inheritParams check_ref_type
 #' @param dev Logical. Whether or not the API calls should be made to the development (TRUE) or production (FALSE) server. Defaults to TRUE.
