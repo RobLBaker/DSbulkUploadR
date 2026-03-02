@@ -202,16 +202,24 @@ generate_references <- function(path = getwd(),
                               license_type_id = upload_data$license_code[i],
                               dev = dev,
                               interactive = FALSE)
+
     # add reference to project(s) (but NOT if the ref IS a project) ----
     if (upload_data$reference_type[i] != "Project") {
-      projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
+      if(upload_data$project_id[i] == "NA") {
+        project_data$project_id[i] <- NA
+      }
+      if (!is.na(upload_data$project_id[i])) {
+        projects_to_add <- unlist(stringr::str_split(upload_data$project_id[i],
                                                ", "))
-      projects_to_add <- stringr::str_trim(projects_to_add)
-
-      #cli::cli_inform("Adding reference {ref_code} to project   {upload_data$project_id[i]}.")
-      add_ref_to_projects(reference_id = ref_code,
-                          project_id = projects_to_add,
-                          dev = dev)
+        projects_to_add <- stringr::str_trim(projects_to_add)
+        for (j in 1: projects_to_add) {
+          if (!is.na(projects_to_add[j])) {
+            add_ref_to_projects(reference_id = ref_code,
+                                project_id = projects_to_add[j],
+                                dev = dev)
+          }
+        }
+      }
     }
 
     # add editors to project (person uploading is also added as an editor) ----
