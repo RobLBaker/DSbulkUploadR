@@ -168,6 +168,6 @@ The keywords column in the input.xlsx file should contain a comma-separated list
 For the "reference type" FieldNotes, the keyword "FieldNotes" will automatically be added to the GenericDocument reference created on DataStore.
 
 ## Projects
-The project_id column should contain one or more (separated by a comma) DataStore Project type reference codes. The newly created reference on DataStore will automatically be added to the Project. The Project must already exist on DataStore, however it can be in draft mode.
+The project_id column should contain one or more (separated by a comma) DataStore Project type reference codes. The newly created reference on DataStore will automatically be added to the Project. The Project must already exist on DataStore and must be activated. If there is no project associated with the reference, leave the cell blank or enter NA.
 
 
