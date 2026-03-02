@@ -36,3 +36,5 @@ Tests are passed with a green check mark (✅)and fail with a red X (❌).
 * Checks that the CUI label and license are compatible [`check_CUI_license_match`](../reference/check_CUI_license_match.html)
 * Checks that each reference has one or more valid Producing Units [`check_prod_units`](../reference/check_prod_units.html)
 * Checks that each reference has one or more valid Content Units [`check_content_units`](../reference/check_content_units.html)
+[`check_projects_numeric`](../reference/check_projects_numeric.html)
+[`check_projects_valid`](../reference/check_projects_valid.html)
