@@ -1,4 +1,11 @@
 # DSbulkUploadR v1.1.1 (development version)
+## 2026-03-02
+  * Add input validation to check that projects are numeric
+  * Add input validation to check that projects are valid (and the user has access to them)
+  * Add both new input validation tests to run_input_validation.R
+  * Update `generate_bulk_references` to handle multiple projects and handle projects that are "NA" or <NA>
+  * Update vignette to explain how to input lack of a Project for a reference
+  
 ## 2026-02-17
   * Fix broken link in Readme
 
