@@ -1047,7 +1047,7 @@ check_prod_units <- function(path = getwd(),
 #'
 #' @examples
 #' \dontrun{
-#' check_content_units("test_file.xlsx")}
+#' check_content_units(sheet_name = "GenericDocument")}
 check_content_units <- function(path = getwd(),
                                filename = "DSbulkUploadR_input.xlsx",
                                sheet_name) {
@@ -1086,6 +1086,134 @@ check_content_units <- function(path = getwd(),
   }
   return(invisible(NULL))
 }
+
+
+#' Checks that Project IDs are numeric
+#'
+#' The function checks that all project IDs are numeric (or NA). If projects are all numeric (or NA), the test passes. Otherwise it fails with a warning.
+#'
+#' @inheritParams check_ref_type
+#'
+#' @returns NULL (invisibly)
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' check_projects_numeric(sheet_name = "Script")
+#' }
+check_projects_numeric <- function(path = getwd(),
+                           filename = "DSbulkUploadR_input.xlsx",
+                           sheet_name) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+
+  projects <- NULL
+  for (i in 1:nrow(upload_data)) {
+    projects <-
+      append(projects,
+             unlist(stringr::str_split(upload_data$project_id[i], ", ")))
+  }
+  projects[projects == "NA"] <- NA
+
+  tryCatch(
+    {
+    projects <- as.numeric(projects)
+    },
+    error = function(e) {
+      msg <- "The project_id must be a numeric value or NA"
+      cli::cli_abort(c("x" = msg))
+    },
+    warning = function(w) {
+      msg <- "The project_id must be a numeric value or NA"
+      cli::cli_abort(c("x" = msg))
+    })
+  msg <- paste0("All project IDs are numeric or NA.")
+  cli::cli_inform(c("v" = msg))
+  return(invisible(NULL))
+}
+
+#' Checks for valid projects
+#'
+#' The function Initiates an API call to datastore to make sure that a project is valid. Potential reasons for check to fail with an error include: The reference ID number does not go to a valid DataStore reference, the valid reference is not a Project type reference, the user not being on the VPN/on an NPS network, the project may not be public, the project may not be active, or the user may not have permissions to access or edit the project.
+#'
+#' @inheritParams check_ref_type
+#' @param dev Logical. Whether or not the API calls should be made to the development (TRUE) or production (FALSE) server. Defaults to TRUE.
+#'
+#' @returns NULL (invisibly)
+#' @export
+#' @examples
+#' \dontrun{
+#' check_projects_valid(sheet_name = "Script")
+#' }
+check_projects_valid <- function(path = getwd(),
+                                 filename = "DSbulkUploadR_input.xlsx",
+                                 sheet_name,
+                                 dev = TRUE) {
+
+  upload_data <- readxl::read_excel(path = paste0(path,
+                                                  "/",
+                                                  filename),
+                                    sheet = sheet_name)
+
+  projects <- NULL
+  for (i in 1:nrow(upload_data)) {
+    # handle lists of projects:
+    projects <-
+      append(projects,
+             unlist(stringr::str_split(upload_data$project_id[i], ", ")))
+  }
+  #convert character NAs to <NA> NAs
+  projects[projects == "NA"] <- NA
+
+  bad_project_ids <- NULL
+  for (i in 1:length(projects)) {
+    if (!is.na(projects[[i]])) {
+      if (dev == TRUE) {
+        get_url <- paste0(.ds_dev_api(),
+                          "Profile?q=",
+                          projects[[i]])
+        } else {
+          get_url <- paste0(.ds_secure_api(),
+                            "Profile?q=",
+                            projects[[i]])
+        }
+
+      req <- httr::GET(get_url,
+                       httr::authenticate(":", "", "ntlm"),
+                       httr::add_headers('Content-Type'='application/json'))
+
+      status_code <- httr::stop_for_status(req)$status_code
+      if(!status_code == 200){
+        cli::cli_abort(c("x" = "ERROR: DataStore connection failed."))
+        return(invisible(NULL))
+      }
+      json <- httr::content(req, "text")
+      rjson <- jsonlite::fromJSON(json)
+
+      # if the reference doesn't exist or isn't a Project:
+      if (length(seq_along(rjson)) == 0) {
+        bad_project_ids <- append(bad_project_ids, projects[[i]])
+      } else if (rjson$referenceType != "Project") {
+        bad_project_ids <- append(bad_project_ids, projects[[i]])
+      }
+    }
+  }
+  if (!is.null(bad_project_ids)) {
+    msg <- paste0("The following project IDs are invalid, inactive, not ",
+                  "projects, or you lack the appropriate permissions to ",
+                  "access them: {.var {bad_project_ids}}.")
+    cli::cli_abort(c("x" = msg))
+    return("test complete")
+  } else {
+    msg <- paste0("All project ids are valid and activated.")
+    cli::cli_inform(c("v" = msg))
+  }
+  return(invisible(NULL))
+}
+
 
 #' Checks whether a upn supplied is valid.
 #'
