@@ -1,4 +1,8 @@
 # DSbulkUploadR v1.1.1 (development version)
+## 2026-04-03
+  * Updated links and documentation in preparation for migration to DGEC
+  * Added files required for DGEC compliance: CONTRIBUTING and code.json
+
 ## 2026-03-02
   * Add `check_projects_numeric` input validation to check that projects are numeric
   * Add `check_projects_valid` input validation to check that projects are valid (and the user has access to them)

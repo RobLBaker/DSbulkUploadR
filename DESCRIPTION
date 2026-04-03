@@ -11,7 +11,7 @@ Authors@R: c(
 Maintainer: Rob Baker <robert_baker@nps.gov>
 Description: Efficiently creates, populates, and uploads files to multiple DataStore references by generating an .xlsx file with predefined fields to be populated by the user. 
 License: CC0 + file LICENSE
-BugReports: https://github.com/nationalparkservice/DSbulkUploadR/issues
+BugReports: https://github.com/DOI-nps/DSbulkUploadR/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
@@ -34,7 +34,7 @@ Imports:
     XML
 Remotes:
     nationalparkservice/NPSdatastore
-URL: https://github.com/nationalparkservice/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR, https://nationalparkservice.github.io/DSbulkUploadR/
+URL: https://github.com/DOI-nps/DSbulkUploadR, https://DOI-nps.github.io/DSbulkUploadR, https://DOI-nps.github.io/DSbulkUploadR/
 Config/Needs/website: rmarkdown
 Suggests: 
     rmarkdown

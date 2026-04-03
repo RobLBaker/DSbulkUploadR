@@ -11,10 +11,10 @@ Efficiently creates, populates, and uploads files to multiple DataStore referenc
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/nationalparkservice/DSbulkUploadR}
-  \item \url{https://nationalparkservice.github.io/DSbulkUploadR}
-  \item \url{https://nationalparkservice.github.io/DSbulkUploadR/}
-  \item Report bugs at \url{https://github.com/nationalparkservice/DSbulkUploadR/issues}
+  \item \url{https://github.com/DOI-nps/DSbulkUploadR}
+  \item \url{https://DOI-nps.github.io/DSbulkUploadR}
+  \item \url{https://DOI-nps.github.io/DSbulkUploadR/}
+  \item Report bugs at \url{https://github.com/DOI-nps/DSbulkUploadR/issues}
 }
 
 }
