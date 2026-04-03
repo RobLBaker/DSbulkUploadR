@@ -23,7 +23,7 @@
     "tags": [
       "NRSS",
       "IMD",
-      "CSO"
+      "CSO",
       "DataStore",
       "API",
       "R",
@@ -40,7 +40,8 @@
       "email": "robert_baker@nps.gov"
     },
     "date": {
-      "metadataLastUpdated": "2026-04-02
+      "metadataLastUpdated": "2026-04-02"
     }
   }
 ]
+
