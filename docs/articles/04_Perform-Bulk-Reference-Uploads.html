@@ -121,7 +121,7 @@ and pass it to the <code><a href="../reference/generate_references.html">generat
 setting the <code>dev</code> parameter to <code>TRUE</code>. You will
 also need to specify which sheet within the xlxs you want to use to
 generate references on DataStore:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dev_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"truncated_input.xlsx"</span>,</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>dev_refs <span class="ot">&lt;-</span> <span class="fu">generate_references</span>(<span class="at">filename =</span> <span class="st">"truncated_input.xlsx"</span>,</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>                                      <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>                                      <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                                      <span class="at">dev =</span> <span class="cn">TRUE</span>)<span class="er">)</span></span></code></pre></div>
@@ -141,7 +141,7 @@ file.</p>
 </h2>
 <p>Creating references is the easy part! Run the following line of code
 to supply your full (not truncated) input.xlsx file:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"DSbulkUplaodR_input.xlsx"</span>,</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">generate_references</span>(<span class="at">filename =</span> <span class="st">"DSbulkUplaodR_input.xlsx"</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                          <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>                          <span class="at">dev =</span> <span class="cn">FALSE</span>)<span class="er">)</span></span></code></pre></div>
@@ -165,7 +165,7 @@ and size above the default settings by changing those parameters (see
 the documentation for <code><a href="../reference/generate_references.html">generate_references()</a></code>). For instance,
 to increase the maximum file number to 5,000 and the maximum volume of
 data to 500 GB, you would run the following code:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">bulk_reference_generation</span>(<span class="at">filename =</span> <span class="st">"DSbulkUploadR_input.xlsx"</span>,</span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>new_refs <span class="ot">&lt;-</span> <span class="fu">generate_references</span>(<span class="at">filename =</span> <span class="st">"DSbulkUploadR_input.xlsx"</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>                          <span class="at">path =</span> <span class="fu">getwd</span>(),</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                          <span class="at">sheet =</span> <span class="st">"AudioRecording"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>                          <span class="at">max_file_upload =</span> <span class="dv">5000</span>,</span>

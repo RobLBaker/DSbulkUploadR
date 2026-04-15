@@ -1,4 +1,12 @@
 # DSbulkUploadR v1.1.1 (development version)
+## 2026-04-14
+  * migrate repo from github.com/nationalparkservice to github.com/doi-nps
+  * Fix documentation issues from repo review
+
+## 2026-04-14
+  * Remove hidden files
+  * Repo code review completed
+
 ## 2026-04-03
   * Updated links and documentation in preparation for migration to DGEC
   * Added files required for DGEC compliance: CONTRIBUTING and code.json

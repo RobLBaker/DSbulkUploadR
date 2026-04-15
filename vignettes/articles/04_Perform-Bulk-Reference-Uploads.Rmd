@@ -17,7 +17,7 @@ Once you have finished filling out your input.xlsx file, you are ready to create
 To test your input.xlsx file on the development server, you should consider truncating the input.xlsx file and limiting it to just a few rows (references) to create. Save this truncated version with a new name and pass it to the `generate_references()` function while setting the `dev` parameter to `TRUE`. You will also need to specify which sheet within the xlxs you want to use to generate references on DataStore:
 
 ```{r dev_testing, eval=FALSE}
-dev_refs <- bulk_reference_generation(filename = "truncated_input.xlsx",
+dev_refs <- generate_references(filename = "truncated_input.xlsx",
                                       path = getwd(),
                                       sheet = "AudioRecording",
                                       dev = TRUE))
@@ -30,7 +30,7 @@ You may want to check the object `dev_refs` to see a list of the newly created r
 Creating references is the easy part! Run the following line of code to supply your full (not truncated) input.xlsx file:
 
 ```{r DSuploads, eval = FALSE}
-new_refs <- bulk_reference_generation(filename = "DSbulkUplaodR_input.xlsx",
+new_refs <- generate_references(filename = "DSbulkUplaodR_input.xlsx",
                           path = getwd(),
                           sheet = "AudioRecording",
                           dev = FALSE))
@@ -43,7 +43,7 @@ If the data validation steps in the `generate_references()` function produced an
 For safety's sake, the `generate_references()` function has a setting for the maximum allowable number of files and volume of data that can be uploaded during a single operation. These defaults are 500 files and 10 GB. You can increase the allowable upload file number and size above the default settings by changing those parameters (see the documentation for `generate_references()`). For instance, to increase the maximum file number to 5,000 and the maximum volume of data to 500 GB, you would run the following code:
 
 ```{r increase_max, eval = FALSE}
-new_refs <- bulk_reference_generation(filename = "DSbulkUploadR_input.xlsx",
+new_refs <- generate_references(filename = "DSbulkUploadR_input.xlsx",
                           path = getwd(),
                           sheet = "AudioRecording",
                           max_file_upload = 5000,
