@@ -1,4 +1,7 @@
 # DSbulkUploadR v1.1.1 (development version)
+## 2026-05-08
+  * Add github actions r-cmd-check
+  
 ## 2026-04-14
   * migrate repo from github.com/nationalparkservice to github.com/doi-nps
   * Fix documentation issues from repo review

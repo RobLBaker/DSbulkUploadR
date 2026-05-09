@@ -1,3 +1,7 @@
+ <!-- badges: start -->
+  [![R-CMD-check](https://github.com/DOI-NPS/DSbulkUploadR/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/DOI-NPS/DSbulkUploadR/actions/workflows/R-CMD-check.yaml/badge.svghttps://github.com/DOI-NPS/DSbulkUploadR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DOI-NPS/DSbulkUploadR/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 # DSbulkUploadR
 The DSbulkUploadR (DataStore Bulk Uploader) is designed to help efficiently transfer data to DataStore, create the appropriate references, and automate populating them to the greatest extent possible.
 
