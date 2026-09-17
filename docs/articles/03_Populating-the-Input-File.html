@@ -113,7 +113,7 @@ instructions when populating the DSbulkUploadR_input.xlsx template. Do
 <strong>not</strong> change any of the column names or sheet names.</p>
 <p>Each reference type on DataStore has a specific set of back-end
 attributes. You must <strong>use a reference-type specific
-sheet</strong> within the DSbulkdUploadR_input.xlsx file (see <a href="02_Generate-the-Input-File.html">Generate the Input File</a>. The
+sheet</strong> within the DSbulkdUploadR_input.xlsx file (see <a href="02_Generate-the-Input-File.html">Generate the Input File</a>). The
 sheets within the input.xlsx may have different columns. If your
 reference-type specific input.xlsx sheet lacks a column, you can safely
 ignore the instructions for that column. However, you <strong>cannot
@@ -151,7 +151,7 @@ not “Audio recording”. A drop-down menu on the .xlsx input sheet should
 supply the correct reference name, capitalization, etc for each
 sheet.</p>
 <p>For a full list of reference types and the appropriate way to specify
-them, see the <a href="https://irmaservices.nps.gov/datastore/v7/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
+them, see the <a href="https://irmaservices.nps.gov/datastore/v8/documentation/datastore-api.html#/Lookup%20Lists/FixedList_GetReferenceTypes" class="external-link">DataStore
 swagger documentation for the appropriate API</a></p>
 <p>One exception is that “FieldNotes” is a valid “reference type” within
 DSbulkUploadR but is not a reference type on DataStore. Information
@@ -265,6 +265,18 @@ not enter “NA”, “NULL” or any other missing value code</em>. For all
 other reference types, if the column “content_end_date” is present you
 must supply a content end date for each reference.</p>
 </div>
+<div class="section level4">
+<h4 id="date-published">Date published<a class="anchor" aria-label="anchor" href="#date-published"></a>
+</h4>
+<p>Only for Reports. This is the date that the Report was originally
+published. Leave blank if unpublished.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="publisher">Publisher<a class="anchor" aria-label="anchor" href="#publisher"></a>
+</h3>
+<p>Only for Reports. In the case of many reports that are “by or for
+NPS” the publisher is likely “National Park Service”.</p>
 </div>
 <div class="section level3">
 <h3 id="version-script-reference-only">Version (Script reference only)<a class="anchor" aria-label="anchor" href="#version-script-reference-only"></a>
