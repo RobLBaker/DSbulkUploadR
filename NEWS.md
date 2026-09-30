@@ -1,4 +1,7 @@
 # DSbulkUploadR v1.1.1 (development version)
+## 2026-09-29
+  * Update bibliography call to include URLs for website reference types
+  
 ## 2026-09-01
   * Update `generate_bulk_references` console output
   * Add ability to activate references directly from `generate_bulk_references`
